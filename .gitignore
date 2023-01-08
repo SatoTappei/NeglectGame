@@ -62,3 +62,5 @@ UserSettings/
 Assets/ExampleAssets/
 Assets/TutorialInfo/
 Assets/_Local/
+Assets/Scripts/ZString/EnumUtil.cs
+Assets/Scripts/ZString/

@@ -9,7 +9,7 @@ public class InGameStream : MonoBehaviour
 {
     void Start()
     {
-        Debug.Log("ÇÕÇÎÇÌÅ[ÇÈÇ«");
+        //Debug.Log("ÇÕÇÎÇÌÅ[ÇÈÇ«");
     }
 
     void Update()
