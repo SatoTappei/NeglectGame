@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initLetter: HOGE
   _ruleArr:
+  - _target: 69
+    _rewrite:
+    - A
   - _target: 65
     _rewrite:
     - AB
     - AC
-  - _target: 69
-    _rewrite:
-    - A
