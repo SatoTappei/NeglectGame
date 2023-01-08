@@ -1,5 +1,4 @@
 ★タスク
-	各種ライブラリの導入
 
 ★概要
 	放置ゲー
@@ -15,5 +14,6 @@
 	Dotween
 	MessagePipe
 	VContainer
+	ZString
 
 ★外部素材
