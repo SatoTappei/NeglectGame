@@ -21,6 +21,8 @@ public class DungeonBuilder : MonoBehaviour
     readonly int DecreaseDist = 2;
     //readonly int MaxDist = 8;
     readonly int SaveStackCap = 4;
+    readonly int PassDicCap = 64;
+    readonly int EdgePassSetCap = 16;
 
     // TODO:現在は仮のためここにLSystemの参照を持たせているが、後々移動させることを留意しておく
     [SerializeField] LSystem _lSystem;
@@ -31,10 +33,15 @@ public class DungeonBuilder : MonoBehaviour
 
     List<Vector3Int> _posList = new List<Vector3Int>(10);
     //int _dist;
+    Dictionary<Vector3Int, GameObject> _passDic;
+    /// <summary>各通路の両端を保持しておく</summary>
+    HashSet<Vector3Int> _edgePassSet;
 
     void Start()
     {
         //_dist = MaxDist;
+        _passDic = new Dictionary<Vector3Int, GameObject>(PassDicCap);
+        _edgePassSet = new HashSet<Vector3Int>(EdgePassSetCap);
         Convert(_lSystem.Generate());
     }
 
@@ -88,7 +95,17 @@ public class DungeonBuilder : MonoBehaviour
     {
         for (int i = 0; i < dist; i++)
         {
-            Instantiate(_passPrefab, startPos + dir * i * PrefabScale, Quaternion.identity, _parent);
+            Vector3Int pos = startPos + dir * i * PrefabScale;
+            // 同じ座標に生成しないようにチェック
+            if (_passDic.ContainsKey(pos)) continue;
+
+            GameObject go = Instantiate(_passPrefab, pos, Quaternion.identity, _parent);
+            // 生成した通路を弄るために辞書に追加しておく
+            _passDic.Add(pos, go);
+
+            // 始点と終点を専用のコレクションに追加する
+            if (i == 0 || i == dist - 1)
+                _edgePassSet.Add(pos);
         }
     }
 
