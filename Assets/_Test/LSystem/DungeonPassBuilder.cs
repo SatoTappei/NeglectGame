@@ -23,6 +23,11 @@ public class DungeonPassBuilder : MonoBehaviour
     readonly int PassDicCap = 64;
     readonly int EdgePassSetCap = 16;
 
+    readonly int bForward = 0b1000;
+    readonly int bBack = 0b0100;
+    readonly int bLeft = 0b0010;
+    readonly int bRight = 0b0001;
+
     // TODO:現在は仮のためここにLSystemの参照を持たせているが、後々移動させることを留意しておく
     [SerializeField] LSystem _lSystem;
     [Header("ダンジョンの通路を構成する部品")]
@@ -120,58 +125,54 @@ public class DungeonPassBuilder : MonoBehaviour
     void FixPass()
     {
         DungeonPassHelper helper = new DungeonPassHelper();
-        // 通路の端の座標を渡してどの方向に接続されているか調べてもらう
         foreach(Vector3Int pos in _edgePassSet)
         {
-            // 座標と通路の全座標が入ったCollectionを渡す
-            HashSet<Direction> dirSet = helper.GetNeighbour(pos, _passDic.Keys);
-            Quaternion rot = Quaternion.identity;
+            // その座標が前後左右どの方向に接続されているか、いくつ接続されているか
+            (int dirs, int count) = helper.GetNeighbourInt(pos, _passDic.Keys);
+            bool dirForward = (dirs & bForward) == bForward;
+            bool dirBack =    (dirs & bBack)    == bBack;
+            bool dirLeft =    (dirs & bLeft)    == bLeft;
+            bool dirRight =   (dirs & bRight)   == bRight;
 
-            switch (dirSet.Count)
+            Quaternion rot = Quaternion.identity;
+            switch (count)
             {
                 // 行き止まり
                 case 1:
-                    if (dirSet.Contains(Direction.Back))    rot.eulerAngles = new Vector3(0, 180, 0);
-                    if (dirSet.Contains(Direction.Right))   rot.eulerAngles = new Vector3(0, 90, 0);
-                    if (dirSet.Contains(Direction.Left))    rot.eulerAngles = new Vector3(0, -90, 0);
-                    Destroy(_passDic[pos]);
+                    if      (dirBack)  rot.eulerAngles = new Vector3(0, 180, 0);
+                    else if (dirRight) rot.eulerAngles = new Vector3(0, 90, 0);
+                    else if (dirLeft)  rot.eulerAngles = new Vector3(0, -90, 0);
+
                     Instantiate(_passEndPrefab, pos, rot);
                     break;
                 // 角
                 case 2:
                     // 上下もしくは左右に接続されている場合は通路なので何もしない
-                    if ((dirSet.Contains(Direction.Forward) && dirSet.Contains(Direction.Back)) ||
-                        (dirSet.Contains(Direction.Right)   && dirSet.Contains(Direction.Left)))
+                    if ((dirForward && dirBack) || (dirRight && dirLeft)) 
                         continue;
 
-                    if (dirSet.Contains(Direction.Forward) && dirSet.Contains(Direction.Right))
-                        rot.eulerAngles = new Vector3(0, 180, 0);
-                    if (dirSet.Contains(Direction.Left) && dirSet.Contains(Direction.Forward))
-                        rot.eulerAngles = new Vector3(0, 90, 0);
-                    if (dirSet.Contains(Direction.Right) && dirSet.Contains(Direction.Back))
-                        rot.eulerAngles = new Vector3(0, -90, 0);
+                    if      (dirForward && dirRight) rot.eulerAngles = new Vector3(0, 180, 0);
+                    else if (dirLeft && dirForward)  rot.eulerAngles = new Vector3(0, 90, 0);
+                    else if (dirRight && dirBack)    rot.eulerAngles = new Vector3(0, -90, 0);
 
-                    Destroy(_passDic[pos]);
                     Instantiate(_cornerPrefab, pos, rot);
                     break;
                 // 丁字路
                 case 3:
-                    if (dirSet.Contains(Direction.Forward) && dirSet.Contains(Direction.Back) && dirSet.Contains(Direction.Left))
-                        rot.eulerAngles = new Vector3(0, 180, 0);
-                    if (dirSet.Contains(Direction.Back) && dirSet.Contains(Direction.Right) && dirSet.Contains(Direction.Left))
-                        rot.eulerAngles = new Vector3(0, 90, 0);
-                    if (dirSet.Contains(Direction.Forward) && dirSet.Contains(Direction.Right) && dirSet.Contains(Direction.Left))
-                        rot.eulerAngles = new Vector3(0, -90, 0);
+                    if      (dirForward && dirBack && dirLeft)  rot.eulerAngles = new Vector3(0, 180, 0);
+                    else if (dirBack && dirRight && dirLeft)    rot.eulerAngles = new Vector3(0, 90, 0);
+                    else if (dirForward && dirRight && dirLeft) rot.eulerAngles = new Vector3(0, -90, 0);
 
-                    Destroy(_passDic[pos]);
                     Instantiate(_tJunctionPrefab, pos, rot);
                     break;
                 // 十字路
                 case 4:
-                    Destroy(_passDic[pos]);
                     Instantiate(_crossPrefab, pos, rot);
                     break;
             }
+
+            // 置き換えるので元あったオブジェクトは削除する
+            Destroy(_passDic[pos]);
         }
     }
 
