@@ -5,7 +5,7 @@ using Cysharp.Text;
 using RewriteRule = LSystemRuleSO.RewriteRule;
 
 /// <summary>
-/// 確率的LSystemを用いた地形生成を行う
+/// 確率的LSystemを用いて文字列の生成を行う
 /// </summary>
 public class LSystem : MonoBehaviour
 {
@@ -15,10 +15,8 @@ public class LSystem : MonoBehaviour
     [Range(0, 10)]
     [SerializeField] int _iteration;
 
-    void Start()
-    {
-        string result = Generate(_ruleSO.InitLetter, _ruleSO.RuleArr);
-    }
+    /// <summary>インスペクターに割り当てた値で文字列の生成を行う</summary>
+    public string Generate() => Generate(_ruleSO.InitLetter, _ruleSO.RuleArr);
 
     string Generate(string letter, RewriteRule[] ruleArr)
     {
@@ -37,10 +35,10 @@ public class LSystem : MonoBehaviour
             return builder.ToString();
 
         // 全てのルールを適用して書き換える
+        // 書き換え方が複数ある場合は同確率でランダムに適用する
         foreach (RewriteRule rule in ruleArr)
             builder.Replace(rule.Target, rule.Rewrite[Random.Range(0, rule.Rewrite.Length)]);
-
-        Debug.Log(currentIte + "回目の書き換えの結果: " + builder.ToString());
+        //Debug.Log(currentIte + "回目の書き換えの結果: " + builder.ToString());
         
         return Recursive(builder, ruleArr, currentIte);
     }
