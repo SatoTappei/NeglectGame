@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// LSystemの亀のパラメータ
+/// LSystemの亀のパラメータのクラス
 /// </summary>
 public class TurtleParam
 {

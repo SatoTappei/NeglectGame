@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ruleSO: {fileID: 11400000, guid: ac10940bd32771f428736f804df0ff87, type: 2}
-  _iteration: 2
+  _iteration: 3
 --- !u!114 &1443101058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,6 +492,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lSystem: {fileID: 1443101057}
   _passPrefab: {fileID: 13582061540714980, guid: 12da37d7052c59f428a4cc211293b693, type: 3}
+  _cornerPrefab: {fileID: 13582061540714980, guid: bbbfe323d9d30014393707dfad7b1ede, type: 3}
+  _tJunctionPrefab: {fileID: 13582061540714980, guid: 3b55cf294ae1bed41af2624b619a88ec, type: 3}
+  _crossPrefab: {fileID: 13582061540714980, guid: c382ad309a465224cbbf4df4f86db381, type: 3}
+  _passEndPrefab: {fileID: 13582061540714980, guid: 9475f240b967ae84b8c337eb124c3dcc, type: 3}
   _parent: {fileID: 1861081676}
 --- !u!1 &1861081675
 GameObject:

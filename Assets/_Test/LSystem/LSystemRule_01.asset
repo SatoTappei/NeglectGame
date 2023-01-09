@@ -18,4 +18,3 @@ MonoBehaviour:
     _rewrite:
     - '[+F]F[-F]'
     - '[-F]F[+F]'
-    - '[+F][-F]'

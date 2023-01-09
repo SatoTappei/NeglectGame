@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 18916187375985392}
   - component: {fileID: 28443385910767218}
   m_Layer: 0
-  m_Name: Dungeon_PassFloor
+  m_Name: Dungeon_Pass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
