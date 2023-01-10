@@ -36,25 +36,6 @@ internal class DungeonHelper
         return dirSet;
     }
 
-    // 現状DungeonRoomBuilderからしか呼ばれていない
-    //internal Vector3Int GetSidePlace(Direction dir)
-    //{
-    //    switch (dir)
-    //    {
-    //        case Direction.Forward:
-    //            return Vector3Int.forward * PrefabScale;
-    //        case Direction.Back:
-    //            return Vector3Int.back * PrefabScale;
-    //        case Direction.Left:
-    //            return Vector3Int.left * PrefabScale;
-    //        case Direction.Right:
-    //            return Vector3Int.right * PrefabScale;
-    //        default:
-    //            Debug.LogError("列挙型Directionで定義されていない値です。: " + dir);
-    //            return Vector3Int.zero;
-    //    }
-    //}
-
     /// <summary>
     /// 隣にオブジェクトがある方向と接続数をバイナリで返す
     /// 指定された方向が含まれているかどうかの判定はこちらを使う
