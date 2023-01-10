@@ -10,14 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87143c507a6d14144933f25f5582a337, type: 3}
-  m_Name: LSystemRule_01
+  m_Name: LSystemRule_Test
   m_EditorClassIdentifier: 
-  _initLetter: HOGE
+  _initLetter: F
   _ruleArr:
-  - _target: 69
+  - _target: 70
     _rewrite:
-    - A
-  - _target: 65
-    _rewrite:
-    - AB
-    - AC
+    - F[F[F]]
