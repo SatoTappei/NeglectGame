@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Direction = DungeonBuildingHelper.Direction;
 
 /// <summary>
 /// 文字列に対応したダンジョンの通路を建てるコンポーネント
@@ -17,53 +16,45 @@ public class DungeonPassBuilder : MonoBehaviour
         Load = ']',
     }
 
-    readonly int PrefabScale = 3;
+    readonly int MaxPassDist = 8;
     readonly int DecreaseDist = 2;
     readonly int SaveStackCap = 4;
     readonly int PassDicCap = 64;
     readonly int EdgePassSetCap = 16;
 
-    readonly int bForward = 0b1000;
-    readonly int bBack = 0b0100;
-    readonly int bLeft = 0b0010;
-    readonly int bRight = 0b0001;
-
-    // TODO:現在は仮のためここにLSystemの参照を持たせているが、後々移動させることを留意しておく
-    [SerializeField] LSystem _lSystem;
-    [Header("ダンジョンの通路を構成する部品")]
+    [Header("通路を構成するプレハブ")]
     [SerializeField] GameObject _passPrefab;
     [SerializeField] GameObject _cornerPrefab;
     [SerializeField] GameObject _tJunctionPrefab;
     [SerializeField] GameObject _crossPrefab;
     [SerializeField] GameObject _passEndPrefab;
-    [Header("生成した部品の親")]
+    [Header("生成したプレハブの親")]
     [SerializeField] Transform _parent;
 
-    //List<Vector3Int> _posList = new List<Vector3Int>(10);
+    DungeonHelper _helper;
     Dictionary<Vector3Int, GameObject> _passDic;
-    /// <summary>各通路の両端を保持しておく</summary>
+    /// <summary生成後に見た目を修正するために条件を満たした通路を保持しておく</summary>
     HashSet<Vector3Int> _fixPassSet;
 
-    void Start()
+    void Awake()
     {
-        //_dist = MaxDist;
+        _helper = new DungeonHelper();
         _passDic = new Dictionary<Vector3Int, GameObject>(PassDicCap);
         _fixPassSet = new HashSet<Vector3Int>(EdgePassSetCap);
-        ConvertToGameObject(_lSystem.Generate());
     }
 
+    /// <summary>全ての生成した通路のマスの座標を取得する</summary>
+    internal IReadOnlyCollection<Vector3Int> GetPassPosAll() => _passDic.Keys;
+
     /// <summary>文字列をダンジョンの部品プレハブに変換する</summary>
-    void ConvertToGameObject(string str)
+    internal void ConvertToGameObject(string str)
     {
         // セーブ/ロードのコマンド用
         Stack<TurtleParam> saveStack = new Stack<TurtleParam>(SaveStackCap);
 
         Vector3Int currentPos = Vector3Int.zero;
-        //Vector3Int tempPos = Vector3Int.zero;
         Vector3Int dir = Vector3Int.forward;
-        int dist = 8;
-
-        //_posList.Add(currentPos);
+        int dist = MaxPassDist;
         
         foreach (char command in str)
         {
@@ -71,15 +62,15 @@ public class DungeonPassBuilder : MonoBehaviour
             {
                 case TurtleCommand.Forward:
                     GeneratePass(currentPos, dir, dist);
-                    currentPos = currentPos + dir * dist * PrefabScale;
+                    currentPos = currentPos + dir * dist * _helper.PrefabScale;
                     dist -= DecreaseDist;
                     dist = Mathf.Max(1, dist);
                     break;
                 case TurtleCommand.RotRight:
-                    dir = RotDir(dir, isPositive: true);
+                    dir = Rotate(dir, isPositive: true);
                     break;
                 case TurtleCommand.RotLeft:
-                    dir = RotDir(dir, isPositive: false);
+                    dir = Rotate(dir, isPositive: false);
                     break;
                 case TurtleCommand.Save:
                     saveStack.Push(new TurtleParam(currentPos, dir, dist));
@@ -104,7 +95,7 @@ public class DungeonPassBuilder : MonoBehaviour
     {
         for (int i = 0; i < dist; i++)
         {
-            Vector3Int pos = startPos + dir * i * PrefabScale;
+            Vector3Int pos = startPos + dir * i * _helper.PrefabScale;
             // 同じ座標に生成しないようにチェック
             if (_passDic.ContainsKey(pos)) continue;
 
@@ -126,15 +117,14 @@ public class DungeonPassBuilder : MonoBehaviour
     /// <summary>通路を違和感のない見た目に修正する</summary>
     void FixPass()
     {
-        DungeonPassHelper helper = new DungeonPassHelper();
         foreach(Vector3Int pos in _fixPassSet)
         {
             // その座標が前後左右どの方向に接続されているか、いくつ接続されているか
-            (int dirs, int count) = helper.GetNeighbourInt(pos, _passDic.Keys);
-            bool dirForward = (dirs & bForward) == bForward;
-            bool dirBack =    (dirs & bBack)    == bBack;
-            bool dirLeft =    (dirs & bLeft)    == bLeft;
-            bool dirRight =   (dirs & bRight)   == bRight;
+            (int dirs, int count) = _helper.GetNeighbourInt(pos, _passDic.Keys);
+            bool dirForward = (dirs & _helper.BForward) == _helper.BForward;
+            bool dirBack =    (dirs & _helper.BBack)    == _helper.BBack;
+            bool dirLeft =    (dirs & _helper.BLeft)    == _helper.BLeft;
+            bool dirRight =   (dirs & _helper.BRight)   == _helper.BRight;
 
             Quaternion rot = Quaternion.identity;
             switch (count)
@@ -145,7 +135,7 @@ public class DungeonPassBuilder : MonoBehaviour
                     else if (dirRight) rot.eulerAngles = new Vector3(0, 90, 0);
                     else if (dirLeft)  rot.eulerAngles = new Vector3(0, -90, 0);
 
-                    Instantiate(_passEndPrefab, pos, rot);
+                    Instantiate(_passEndPrefab, pos, rot, _parent);
                     break;
                 // 角
                 case 2:
@@ -157,7 +147,7 @@ public class DungeonPassBuilder : MonoBehaviour
                     else if (dirLeft && dirForward)  rot.eulerAngles = new Vector3(0, 90, 0);
                     else if (dirRight && dirBack)    rot.eulerAngles = new Vector3(0, -90, 0);
 
-                    Instantiate(_cornerPrefab, pos, rot);
+                    Instantiate(_cornerPrefab, pos, rot, _parent);
                     break;
                 // 丁字路
                 case 3:
@@ -165,11 +155,11 @@ public class DungeonPassBuilder : MonoBehaviour
                     else if (dirBack && dirRight && dirLeft)    rot.eulerAngles = new Vector3(0, 90, 0);
                     else if (dirForward && dirRight && dirLeft) rot.eulerAngles = new Vector3(0, -90, 0);
 
-                    Instantiate(_tJunctionPrefab, pos, rot);
+                    Instantiate(_tJunctionPrefab, pos, rot, _parent);
                     break;
                 // 十字路
                 case 4:
-                    Instantiate(_crossPrefab, pos, rot);
+                    Instantiate(_crossPrefab, pos, rot, _parent);
                     break;
             }
 
@@ -180,7 +170,7 @@ public class DungeonPassBuilder : MonoBehaviour
 
     /// <summary>前後左右の方向を回転させる</summary>
     /// <param name="isPositive">trueだと前右後左の時計回り、falseだと反時計回り</param>
-    Vector3Int RotDir(Vector3Int currentDir, bool isPositive)
+    Vector3Int Rotate(Vector3Int currentDir, bool isPositive)
     {
         if (currentDir == Vector3Int.forward)
         {

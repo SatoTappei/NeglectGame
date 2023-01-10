@@ -5,20 +5,20 @@ using UnityEngine;
 /// <summary>
 /// LSystemの亀のパラメータのクラス
 /// </summary>
-public class TurtleParam
+internal class TurtleParam
 {
     Vector3Int _pos;
     Vector3Int _dir;
     int _dist;
 
-    public TurtleParam(Vector3Int pos, Vector3Int dir, int dist)
+    internal TurtleParam(Vector3Int pos, Vector3Int dir, int dist)
     {
         _pos = pos;
         _dir = dir;
         _dist = dist;
     }
 
-    public Vector3Int Pos => _pos;
-    public Vector3Int Dir => _dir;
-    public int Dist => _dist;
+    internal Vector3Int Pos => _pos;
+    internal Vector3Int Dir => _dir;
+    internal int Dist => _dist;
 }
