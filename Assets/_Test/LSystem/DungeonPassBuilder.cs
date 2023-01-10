@@ -42,13 +42,13 @@ public class DungeonPassBuilder : MonoBehaviour
     //List<Vector3Int> _posList = new List<Vector3Int>(10);
     Dictionary<Vector3Int, GameObject> _passDic;
     /// <summary>各通路の両端を保持しておく</summary>
-    HashSet<Vector3Int> _edgePassSet;
+    HashSet<Vector3Int> _fixPassSet;
 
     void Start()
     {
         //_dist = MaxDist;
         _passDic = new Dictionary<Vector3Int, GameObject>(PassDicCap);
-        _edgePassSet = new HashSet<Vector3Int>(EdgePassSetCap);
+        _fixPassSet = new HashSet<Vector3Int>(EdgePassSetCap);
         ConvertToGameObject(_lSystem.Generate());
     }
 
@@ -115,9 +115,11 @@ public class DungeonPassBuilder : MonoBehaviour
             // 生成した通路を弄るために辞書に追加しておく
             _passDic.Add(pos, go);
 
-            // 始点と終点を専用のコレクションに追加する
-            if (i == 0 || i == dist - 1)
-                _edgePassSet.Add(pos);
+            bool require = i / 2 == 1;
+            // 条件で絞ったマスと始点と終点を専用のコレクションに追加する
+            // 条件を消すと精度が上がるが処理負荷も跳ね上がる
+            if (require || i == 0 || i == dist - 1)
+                _fixPassSet.Add(pos);
         }
     }
 
@@ -125,7 +127,7 @@ public class DungeonPassBuilder : MonoBehaviour
     void FixPass()
     {
         DungeonPassHelper helper = new DungeonPassHelper();
-        foreach(Vector3Int pos in _edgePassSet)
+        foreach(Vector3Int pos in _fixPassSet)
         {
             // その座標が前後左右どの方向に接続されているか、いくつ接続されているか
             (int dirs, int count) = helper.GetNeighbourInt(pos, _passDic.Keys);
