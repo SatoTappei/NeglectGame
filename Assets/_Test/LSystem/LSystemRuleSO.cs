@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 /// <summary>
-/// LSystemで生成する際のルールを記載するSO
+/// LSystemで生成する際のルールを記述するSO
 /// </summary>
 [CreateAssetMenu(fileName = "LSystemRule_")]
 public class LSystemRuleSO : ScriptableObject

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 /// <summary>
 /// ダンジョン生成を制御するコンポーネント
@@ -13,6 +14,10 @@ public class DungeonBuilder : MonoBehaviour
 
     void Start()
     {
+        // ダンジョン生成時にアニメーションさせるのでCapacityを増やして警告を消す
+        // 処理負荷が問題になった場合はアニメーションをやめること
+        DOTween.SetTweensCapacity(500, 50);
+
         // ダンジョン生成の基礎となる文字列を生成する
         string str = _lSystem.Generate();
         
