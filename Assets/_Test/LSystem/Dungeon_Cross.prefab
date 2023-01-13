@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 10344231661235088}
   - component: {fileID: 18916187375985392}
   - component: {fileID: 28443385910767218}
+  - component: {fileID: -6445542746915000778}
   m_Layer: 0
   m_Name: Dungeon_Cross
   m_TagString: Untagged
@@ -83,3 +84,15 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-6445542746915000778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13582061540714980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8da3f4086e7613b4fa7bce0e303a2c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
