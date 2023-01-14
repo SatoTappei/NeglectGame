@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +18,8 @@ public class DungeonRoomBuilder : MonoBehaviour
     [Header("生成したプレハブの親")]
     [SerializeField] Transform _parent;
 
+    [SerializeField] GameObject _test;
+
     DungeonHelper _helper;
     Dictionary<Vector3Int, GameObject> _roomDic;
 
@@ -34,106 +36,150 @@ public class DungeonRoomBuilder : MonoBehaviour
         Dictionary<Vector3Int, Direction> placeDic = new Dictionary<Vector3Int, Direction>(PlaceDicCap);
         InsertToDic(placeDic, passAll);
 
-        //List<Vector3Int> blockPosSet = new List<Vector3Int>(BlockPosSetCap);
+        //// ランダムに1箇所取得する
+        //// 取得した箇所が生成不可能な箇所だった場合は再取得する必要がある
+        //KeyValuePair<Vector3Int, Direction> paair = placeDic.ElementAtOrDefault(Random.Range(0, placeDic.Count));
+        //DungeonRoomData data = _roomDataArr[0];
+        //Quaternion rot = GetInverseRot(paair.Value);
+
+        //Instantiate(data.GetPrefab(), paair.Key, rot, _parent);
+
+        // 生成不可能な座標を保持しておくハッシュセット
+        HashSet<Vector3Int> blockPosSet = new HashSet<Vector3Int>(BlockPosSetCap);
+
+        // 
         int index = 0;
-        foreach (KeyValuePair<Vector3Int, Direction> pair in placeDic)
+        // ランダムに並び替えた設置個所の辞書を順に走査する
+        foreach (KeyValuePair<Vector3Int, Direction> pair in placeDic.OrderBy(_ => System.Guid.NewGuid()))
         {
-            // その座標に設置する部屋を決定する
-            // 完全なランダムではなく、ボス部屋、お宝部屋など必要な全ての種類の部屋が1つ生成されるようにする
-            // 必要な部屋が全部生成された後、マストじゃない部屋を生成する
-
+            // 生成する部屋のデータ
             DungeonRoomData data = _roomDataArr[index];
-            Quaternion rot = GetInverseRot(pair.Value);
 
-            Instantiate(data.GetPrefab(), pair.Key, rot, _parent);
+            var ret = Check(pair.Key, pair.Value, data.Size, blockPosSet,passAll);
 
-            // 他の部屋が占領している座標の場合は生成しない
-            //if (blockPosSet.Contains(pair.Key)) continue;
+            // まずはその位置に必要な種類の部屋が生成できるか調べる
+            if (ret.Item1)
+            {
+                Quaternion rot = GetInverseRot(pair.Value);
+                Instantiate(data.GetPrefab(), pair.Key, rot, _parent);
 
-            //Quaternion rot = GetInverseRot(pair.Value);
+                foreach(var v in ret.Item2)
+                {
+                    blockPosSet.Add(v);
+                    //Instantiate(_test, v, Quaternion.identity);
+                }
+            }
+            else
+            {
 
-            //// ここから要リファクタリング
-            //// 2*2の場合は計4マス、3*3の場合は計9マス調べる
-            //for(int i = 0; i < _roomDataArr.Length; i++)
-            //{
-            //    DungeonRoomData room = _roomDataArr[i];
-
-            //    if (room.MaxQuantity == -1)
-            //    {
-            //        GameObject go = Instantiate(room.GetPrefab(), pair.Key, rot, _parent);
-            //        _roomDic.Add(pair.Key, go);
-            //        break;
-            //    }
-
-            //    if (room.CheckAvailable())
-            //    {
-            //        if (room.Size > 1)
-            //        {
-            //            // ブロックする領域の計算
-            //            int length = Mathf.CeilToInt(room.Size / 2);
-            //            List<Vector3Int> tempList = new List<Vector3Int>();
-            //            if (Fits(length, placeDic, pair, ref tempList))
-            //            {
-            //                blockPosSet.AddRange(tempList);
-            //                var building = Instantiate(room.GetPrefab(), pair.Key, rot);
-            //                _roomDic.Add(pair.Key, building);
-
-            //                // 余白の部分も部屋として追加する
-            //                foreach(var pos in tempList)
-            //                {
-            //                    _roomDic.Add(pos, building);
-            //                }
-            //            }
-
-            //            GameObject go = Instantiate(room.GetPrefab(), pair.Key, rot, _parent);
-            //            _roomDic.Add(pair.Key, go);
-            //        }
-            //        else
-            //        {
-            //            GameObject go = Instantiate(room.GetPrefab(), pair.Key, rot, _parent);
-            //            _roomDic.Add(pair.Key, go);
-            //        }
-            //        break;
-            //    }
-            //}
-            // リファクタリングここまで
+            }
         }
     }
 
-    // リファクタリング必要メソッド
-    bool Fits(int length, Dictionary<Vector3Int, Direction> placeDic,
-        KeyValuePair<Vector3Int, Direction> pair, ref List<Vector3Int> tempList)
+    (bool,HashSet<Vector3Int>) Check(Vector3Int pos, Direction dir, int size, IReadOnlyCollection<Vector3Int> blockPosSet, IReadOnlyCollection<Vector3Int> set2)
     {
-        Vector3Int dir = Vector3Int.zero;
-        // 前ももしくは後ろ向きの場合は左右にマージンが必要
-        if (pair.Value == Direction.Forward || pair.Value == Direction.Back)
+        HashSet<Vector3Int> tempSet = new HashSet<Vector3Int>();
+
+        // 左右と奥行を調べる
+        switch (dir)
         {
-            dir = Vector3Int.right;
-        }
-        else
-        {
-            // 左右向きの場合は上下にマージンが必要
-            dir = new Vector3Int(0, 0, 1);
+            case Direction.Forward:
+                // 奥行分繰り返す
+                for(int i = 0; i < size; i++)
+                {
+                    Vector3Int tempPos = new Vector3Int(pos.x, pos.y, pos.z + i * _helper.PrefabScale);
+                    // 原点をブロックする箇所として追加
+                    tempSet.Add(tempPos);
+                    //Instantiate(_test, tempPos, Quaternion.identity);
+                    // 左右の幅分をブロックする箇所として追加
+                    for (int j = 1; j <= size; j++)
+                    {
+                        Vector3Int SideLeft = tempPos + Vector3Int.left * j * _helper.PrefabScale;
+                        Vector3Int SideRight = tempPos + Vector3Int.right * j * _helper.PrefabScale;
+
+                        tempSet.Add(SideLeft);
+                        tempSet.Add(SideRight);
+                        //Instantiate(_test, SideLeft, Quaternion.identity);
+                        //Instantiate(_test, SideRight, Quaternion.identity);
+                    }
+                }
+                break;
+            case Direction.Back:
+                // 奥行分繰り返す
+                for (int i = 0; i < size; i++)
+                {
+                    Vector3Int tempPos = new Vector3Int(pos.x, pos.y, pos.z - i * _helper.PrefabScale);
+                    // 原点をブロックする箇所として追加
+                    tempSet.Add(tempPos);
+
+                    // 左右の幅分をブロックする箇所として追加
+                    for (int j = 1; j <= size; j++)
+                    {
+                        Vector3Int SideLeft = tempPos + Vector3Int.left * j * _helper.PrefabScale;
+                        Vector3Int SideRight = tempPos + Vector3Int.right * j * _helper.PrefabScale;
+
+                        tempSet.Add(SideLeft);
+                        tempSet.Add(SideRight);
+                    }
+                }
+                break;
+            case Direction.Left:
+                // 奥行分繰り返す
+                for (int i = 0; i < size; i++)
+                {
+                    Vector3Int tempPos = new Vector3Int(pos.x - i * _helper.PrefabScale, pos.y, pos.z);
+                    // 原点をブロックする箇所として追加
+                    tempSet.Add(tempPos);
+
+                    // 左右の幅分をブロックする箇所として追加
+                    for (int j = 1; j <= size; j++)
+                    {
+                        Vector3Int SideLeft = tempPos + Vector3Int.forward * j * _helper.PrefabScale;
+                        Vector3Int SideRight = tempPos + Vector3Int.back * j * _helper.PrefabScale;
+
+                        tempSet.Add(SideLeft);
+                        tempSet.Add(SideRight);
+                    }
+                }
+                break;
+            case Direction.Right:
+                // 奥行分繰り返す
+                for (int i = 0; i < size; i++)
+                {
+                    Vector3Int tempPos = new Vector3Int(pos.x + i * _helper.PrefabScale, pos.y, pos.z);
+                    // 原点をブロックする箇所として追加
+                    tempSet.Add(tempPos);
+
+                    // 左右の幅分をブロックする箇所として追加
+                    for (int j = 1; j <= size; j++)
+                    {
+                        Vector3Int SideLeft = tempPos + Vector3Int.forward * j * _helper.PrefabScale;
+                        Vector3Int SideRight = tempPos + Vector3Int.back * j * _helper.PrefabScale;
+
+                        tempSet.Add(SideLeft);
+                        tempSet.Add(SideRight);
+                    }
+                }
+                break;
         }
 
-        // その部屋の幅の半径分のループが必要
-        for(int i = 1; i < length; i++)
+        bool flag = true;
+        foreach(var v in tempSet)
         {
-            // 中心から左右に調べていく
-            Vector3Int pos1 = pair.Key + dir * i;
-            Vector3Int pos2 = pair.Key - dir * i;
+            bool b = !blockPosSet.Contains(v);
+            bool bb = !set2.Contains(v);
 
-            // その位置が既に埋まっている場合はfalseを返す
-            if (!placeDic.ContainsKey(pos1) || !placeDic.ContainsKey(pos2))
+            if (b && bb)
             {
-                return false;
+                
             }
-
-            // 埋まっていない場合はそこに部屋を生成できるので一時保存リストに追加する
-            tempList.Add(pos1);
-            tempList.Add(pos2);
+            else
+            {
+                flag = false;
+            }
         }
-        return true;
+
+        return (flag,tempSet);
     }
 
     /// <summary>部屋が生成可能な場所を辞書に挿入する</summary>
