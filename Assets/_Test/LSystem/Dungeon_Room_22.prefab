@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 5651749153634971707}
   - component: {fileID: 943681927582905449}
   m_Layer: 0
-  m_Name: Dungeon_Room
+  m_Name: Dungeon_Room_22
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

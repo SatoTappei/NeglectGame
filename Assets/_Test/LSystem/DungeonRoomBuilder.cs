@@ -12,6 +12,7 @@ public class DungeonRoomBuilder : MonoBehaviour
     readonly int RoomDicCap = 16;
     readonly int PlaceDicCap = 64;
     readonly int BlockPosSetCap = 64;
+    readonly int RoomRangeSetCap = 9;
 
     [Header("部屋のプレハブ")]
     [SerializeField] DungeonRoomData[] _roomDataArr;
@@ -22,11 +23,14 @@ public class DungeonRoomBuilder : MonoBehaviour
 
     DungeonHelper _helper;
     Dictionary<Vector3Int, GameObject> _roomDic;
-
+    /// <summary>何度も部屋の範囲を格納するのでメンバ変数として保持しておく</summary>
+    HashSet<Vector3Int> _roomRangeSet;
+    
     void Awake()
     {
         _helper = new DungeonHelper();
         _roomDic = new Dictionary<Vector3Int, GameObject>(RoomDicCap);
+        _roomRangeSet = new HashSet<Vector3Int>(RoomRangeSetCap);
     }
 
     /// <summary>部屋の生成を行う</summary>
@@ -41,96 +45,93 @@ public class DungeonRoomBuilder : MonoBehaviour
         foreach (Vector3Int pos in passAll)
             blockPosSet.Add(pos);
 
-        // 
+        // ???何かに使う
         int index = 0;
+
         // ランダムに並び替えた設置個所の辞書を順に走査する
         foreach (KeyValuePair<Vector3Int, Direction> pair in placeDic.OrderBy(_ => System.Guid.NewGuid()))
         {
             // 生成する部屋のデータ
+            // 生成する部屋は必ず生成しなくてはいけない部屋が優先
+            // 残ったところを穴埋めしていくように部屋を生成する
             DungeonRoomData data = _roomDataArr[index];
 
-            HashSet<Vector3Int> ret = GetRoomRangeSet(pair.Key, pair.Value, data.Size);
+            HashSet<Vector3Int> roomRangeSet = GetRoomRangeSet(pair.Key, pair.Value, data.Width, data.Depth);
 
-            if (Available(ret,blockPosSet))
+            if (IsAvailable(roomRangeSet, blockPosSet))
             {
                 Quaternion rot = GetInverseRot(pair.Value);
-                Instantiate(data.GetPrefab(), pair.Key, rot, _parent);
-
-                foreach (var v in ret)
+                if (data.IsAvailable())
                 {
-                    blockPosSet.Add(v);
-                    //Instantiate(_test, v, Quaternion.identity);
+                    Instantiate(data.GetPrefab(), pair.Key, rot, _parent);
+                    // 部屋同士が重ならないように生成した部屋の座標をコレクションに格納していく
+                    foreach (Vector3Int pos in roomRangeSet)
+                        blockPosSet.Add(pos);
                 }
-            }
-            else
-            {
-
+                else
+                {
+                    index++;
+                }
             }
         }
     }
 
-    /// <summary>範囲内に部屋が無いかチェック</summary>
-    bool Available(IReadOnlyCollection<Vector3Int> coll, IReadOnlyCollection<Vector3Int> set)
+    /// <summary>範囲内に既に部屋が無いかチェック</summary>
+    bool IsAvailable(IReadOnlyCollection<Vector3Int> roomRangeSet, IReadOnlyCollection<Vector3Int> blockPosSet)
     {
-        foreach (var v in coll)
+        foreach (Vector3Int pos in roomRangeSet)
         {
-            if (set.Contains(v))
-            {
+            if (blockPosSet.Contains(pos)) 
                 return false;
-            }
         }
 
         return true;
     }
 
     /// <summary>生成する部屋の範囲を取得する</summary>
-    HashSet<Vector3Int> GetRoomRangeSet(Vector3Int pos, Direction dir, int size)
+    HashSet<Vector3Int> GetRoomRangeSet(Vector3Int pos, Direction dir, int width, int depth)
     {
-        HashSet<Vector3Int> roomRangeSet = new HashSet<Vector3Int>();
+        _roomRangeSet.Clear();
 
-        for(int i = 0; i < size; i++)
+        for(int i = 0; i < depth; i++)
         {
             Vector3Int center = pos;
             switch (dir)
             {
                 case Direction.Forward:
-                    //Vector3Int posF = new Vector3Int(pos.x, pos.y, pos.z + i * _helper.PrefabScale);
                     center.z += i * _helper.PrefabScale;
                     AddSet(center, Vector3Int.left, Vector3Int.right);
                     break;
                 case Direction.Back:
-                    //Vector3Int posB = new Vector3Int(pos.x, pos.y, pos.z - i * _helper.PrefabScale);
                     center.z -= i * _helper.PrefabScale;
                     AddSet(center, Vector3Int.left, Vector3Int.right);
                     break;
                 case Direction.Left:
-                    //Vector3Int posL = new Vector3Int(pos.x - i * _helper.PrefabScale, pos.y, pos.z);
                     center.x -= i * _helper.PrefabScale;
                     AddSet(center, Vector3Int.forward, Vector3Int.back);
                     break;
                 case Direction.Right:
-                    //Vector3Int posR = new Vector3Int(pos.x + i * _helper.PrefabScale, pos.y, pos.z);
                     center.x += i * _helper.PrefabScale;
                     AddSet(center, Vector3Int.forward, Vector3Int.back);
                     break;
             }
         }
 
-        return roomRangeSet;
+        return _roomRangeSet;
 
         // 指定された座標とその上下もしくは左右の座標を追加していく
         void AddSet(Vector3Int center, Vector3Int dir1, Vector3Int dir2)
         {
             // 原点を追加
-            roomRangeSet.Add(center);
+            _roomRangeSet.Add(center);
             // 左右の幅分を追加
-            for (int j = 1; j <= size; j++)
+            for (int i = 1; i <= width / 2; i++)
             {
-                Vector3Int side1 = center + dir1 * j * _helper.PrefabScale;
-                Vector3Int side2 = center + dir2 * j * _helper.PrefabScale;
+                Vector3Int side1 = center + dir1 * i * _helper.PrefabScale;
+                Vector3Int side2 = center + dir2 * i * _helper.PrefabScale;
 
-                roomRangeSet.Add(side1);
-                roomRangeSet.Add(side2);
+                _roomRangeSet.Add(side1);
+                _roomRangeSet.Add(side2);
             }
         }
     }

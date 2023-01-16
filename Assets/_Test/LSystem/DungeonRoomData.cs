@@ -10,12 +10,14 @@ using System;
 internal class DungeonRoomData
 {
     [SerializeField] GameObject[] _prefabArr;
-    [SerializeField] int _size;
+    [SerializeField] int _width;
+    [SerializeField] int _depth;
     [SerializeField] int _maxQuantity;
     int _currentQuantity;
 
     internal int MaxQuantity => _maxQuantity;
-    internal int Size => _size;
+    internal int Width => _width;
+    internal int Depth => _depth;
 
     internal GameObject GetPrefab()
     {
@@ -27,7 +29,7 @@ internal class DungeonRoomData
     }
 
     /// <summary>‚±‚êˆÈã¶¬‰Â”\‚©’²‚×‚é</summary>
-    internal bool CheckAvailable() => _currentQuantity < _maxQuantity;
+    internal bool IsAvailable() => _currentQuantity < _maxQuantity;
 
     //internal void Reset() => _currentQuantity = 0;
 }
