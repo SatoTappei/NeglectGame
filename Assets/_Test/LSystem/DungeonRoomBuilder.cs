@@ -45,35 +45,44 @@ public class DungeonRoomBuilder : MonoBehaviour
         foreach (Vector3Int pos in passAll)
             blockPosSet.Add(pos);
 
-        // ???何かに使う
-        int index = 0;
-
+        // 生成する部屋の番号
+        int roomIndex = 0;
         // ランダムに並び替えた設置個所の辞書を順に走査する
         foreach (KeyValuePair<Vector3Int, Direction> pair in placeDic.OrderBy(_ => System.Guid.NewGuid()))
         {
             // 生成する部屋のデータ
-            // 生成する部屋は必ず生成しなくてはいけない部屋が優先
-            // 残ったところを穴埋めしていくように部屋を生成する
-            DungeonRoomData data = _roomDataArr[index];
+            DungeonRoomData data = _roomDataArr[roomIndex];
 
             HashSet<Vector3Int> roomRangeSet = GetRoomRangeSet(pair.Key, pair.Value, data.Width, data.Depth);
 
             if (IsAvailable(roomRangeSet, blockPosSet))
             {
-                Quaternion rot = GetInverseRot(pair.Value);
                 if (data.IsAvailable())
                 {
+                    Quaternion rot = GetInverseRot(pair.Value);
                     Instantiate(data.GetPrefab(), pair.Key, rot, _parent);
                     // 部屋同士が重ならないように生成した部屋の座標をコレクションに格納していく
                     foreach (Vector3Int pos in roomRangeSet)
                         blockPosSet.Add(pos);
+
+                    // 通路を出入口と接続させる
+                    Convert(pair.Key, rot);
                 }
                 else
                 {
-                    index++;
+                    // 生成する部屋が無ければループを抜ける
+                    if (++roomIndex > _roomDataArr.Length - 1) break;
                 }
             }
         }
+    }
+
+    /// <summary>部屋と通路を接続させる</summary>
+    void Convert(Vector3Int pos, Quaternion rot)
+    {
+        // 通路に対して部屋が接続されると通路の接続数が+1される
+        // ある通路に対して反対側からも部屋が接続される場合がある
+        Instantiate(_test, pos, Quaternion.identity); // 出入口を示すためのテスト用
     }
 
     /// <summary>範囲内に既に部屋が無いかチェック</summary>
