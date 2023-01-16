@@ -9,7 +9,7 @@ using Direction = DungeonHelper.Direction;
 /// </summary>
 public class DungeonRoomBuilder : MonoBehaviour
 {
-    readonly int RoomDicCap = 16;
+    readonly int RoomEntranceDicCap = 16;
     readonly int PlaceDicCap = 64;
     readonly int BlockPosSetCap = 64;
     readonly int RoomRangeSetCap = 9;
@@ -22,14 +22,16 @@ public class DungeonRoomBuilder : MonoBehaviour
     [SerializeField] GameObject _test;
 
     DungeonHelper _helper;
-    Dictionary<Vector3Int, GameObject> _roomDic;
+    Dictionary<Vector3Int, Direction> _roomEntranceDic;
     /// <summary>何度も部屋の範囲を格納するのでメンバ変数として保持しておく</summary>
     HashSet<Vector3Int> _roomRangeSet;
-    
+
+    internal Dictionary<Vector3Int, Direction> RoomEntranceDic => _roomEntranceDic;
+
     void Awake()
     {
         _helper = new DungeonHelper();
-        _roomDic = new Dictionary<Vector3Int, GameObject>(RoomDicCap);
+        _roomEntranceDic = new Dictionary<Vector3Int, Direction>(RoomEntranceDicCap);
         _roomRangeSet = new HashSet<Vector3Int>(RoomRangeSetCap);
     }
 
@@ -66,7 +68,8 @@ public class DungeonRoomBuilder : MonoBehaviour
                         blockPosSet.Add(pos);
 
                     // 通路を出入口と接続させる
-                    Convert(pair.Key, rot);
+                    //Convert(pair.Key, rot);
+                    _roomEntranceDic.Add(pair.Key, pair.Value);
                 }
                 else
                 {
@@ -80,9 +83,10 @@ public class DungeonRoomBuilder : MonoBehaviour
     /// <summary>部屋と通路を接続させる</summary>
     void Convert(Vector3Int pos, Quaternion rot)
     {
-        // 通路に対して部屋が接続されると通路の接続数が+1される
-        // ある通路に対して反対側からも部屋が接続される場合がある
+
         Instantiate(_test, pos, Quaternion.identity); // 出入口を示すためのテスト用
+
+
     }
 
     /// <summary>範囲内に既に部屋が無いかチェック</summary>

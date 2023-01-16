@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Direction = DungeonHelper.Direction;
 
 /// <summary>
 /// 文字列に対応したダンジョンの通路を建てるコンポーネント
@@ -30,6 +31,7 @@ public class DungeonPassBuilder : MonoBehaviour
     [SerializeField] GameObject _passEndPrefab;
     [Header("生成したプレハブの親")]
     [SerializeField] Transform _parent;
+    //[SerializeField] GameObject _test;
 
     DungeonHelper _helper;
     Dictionary<Vector3Int, GameObject> _passDic;
@@ -127,6 +129,7 @@ public class DungeonPassBuilder : MonoBehaviour
             bool dirRight =   (dirs & _helper.BRight)   == _helper.BRight;
 
             Quaternion rot = Quaternion.identity;
+            GameObject go = null;
             switch (count)
             {
                 // 行き止まり
@@ -135,7 +138,7 @@ public class DungeonPassBuilder : MonoBehaviour
                     else if (dirRight) rot.eulerAngles = new Vector3(0, 90, 0);
                     else if (dirLeft)  rot.eulerAngles = new Vector3(0, -90, 0);
 
-                    Instantiate(_passEndPrefab, pos, rot, _parent);
+                    go = Instantiate(_passEndPrefab, pos, rot, _parent);
                     break;
                 // 角
                 case 2:
@@ -147,7 +150,7 @@ public class DungeonPassBuilder : MonoBehaviour
                     else if (dirLeft && dirForward)  rot.eulerAngles = new Vector3(0, 90, 0);
                     else if (dirRight && dirBack)    rot.eulerAngles = new Vector3(0, -90, 0);
 
-                    Instantiate(_cornerPrefab, pos, rot, _parent);
+                    go = Instantiate(_cornerPrefab, pos, rot, _parent);
                     break;
                 // 丁字路
                 case 3:
@@ -155,16 +158,107 @@ public class DungeonPassBuilder : MonoBehaviour
                     else if (dirBack && dirRight && dirLeft)    rot.eulerAngles = new Vector3(0, 90, 0);
                     else if (dirForward && dirRight && dirLeft) rot.eulerAngles = new Vector3(0, -90, 0);
 
-                    Instantiate(_tJunctionPrefab, pos, rot, _parent);
+                    go = Instantiate(_tJunctionPrefab, pos, rot, _parent);
                     break;
                 // 十字路
                 case 4:
-                    Instantiate(_crossPrefab, pos, rot, _parent);
+                    go = Instantiate(_crossPrefab, pos, rot, _parent);
                     break;
             }
 
             // 置き換えるので元あったオブジェクトは削除する
             Destroy(_passDic[pos]);
+
+            // TODO:応急処置的に追加しているのでよく検討する
+            _passDic[pos] = go;
+        }
+    }
+
+    internal void FixConnectRoomEntrance(IReadOnlyDictionary<Vector3Int, Direction> dic)
+    {
+        // 通路に対して部屋が接続されると通路の接続数が+1される
+        // ある通路に対して反対側からも部屋が接続される場合がある
+        foreach (var v in dic)
+        {
+            GameObject go = _passDic[v.Key - GetSidePos(v.Value)];
+
+            // TODO:名前で判定して処理を分岐する、テストなので別の方法を検討する必要あり
+            //      反対側からの接続が考慮されていないので直す
+            //      応じた回転を行う
+            switch (go.name)
+            {
+                case "Dungeon_Pass(Clone)":
+                    Instantiate(_tJunctionPrefab, v.Key - GetSidePos(v.Value), Quaternion.identity);
+                    Destroy(go);
+                    break;
+                case "Dungeon_PassEnd(Clone)":
+                    // 正面の場合と左右に生成された場合で分岐しないといけない
+                    if ((v.Value == Direction.Forward &&  Hoge(go) == Direction.Back) ||
+                        (v.Value == Direction.Back && Hoge(go) == Direction.Forward) ||
+                        (v.Value == Direction.Left && Hoge(go) == Direction.Right) ||
+                        (v.Value == Direction.Right && Hoge(go) == Direction.Left))
+                    {
+                        Instantiate(_passPrefab, v.Key - GetSidePos(v.Value), Quaternion.identity);
+                    }
+                    else
+                    {
+                        Instantiate(_cornerPrefab, v.Key - GetSidePos(v.Value), Quaternion.identity);
+                    }
+                    Destroy(go);
+                    break;
+                case "Dungeon_Corner(Clone)":
+                    Instantiate(_tJunctionPrefab, v.Key - GetSidePos(v.Value), Quaternion.identity);
+                    Destroy(go);
+                    break;
+                case "Dungeon_TJunction(Clone)":
+                    Instantiate(_crossPrefab, v.Key - GetSidePos(v.Value), Quaternion.identity);
+                    Destroy(go);
+                    break;
+            }
+            //Instantiate(_test, v.Key - GetSidePos(v.Value), Quaternion.identity);
+        }
+
+        Direction Hoge(GameObject go)
+        {
+            Debug.Log(go.transform.rotation.y);
+            if (go.transform.rotation.y == 0)
+            {
+                return Direction.Forward; 
+            }
+            if (go.transform.rotation.y == 0.7071068f)
+            {
+                return Direction.Right;
+            }
+            if (go.transform.rotation.y == -0.7071068f)
+            {
+                return Direction.Left;
+            }
+            if (go.transform.rotation.y == 1)
+            {
+                return Direction.Back;
+            }
+
+            Debug.LogError("なんか変");
+            return Direction.Forward;
+        }
+    }
+
+    // TODO:DungeonRoomBuilderにも同じメソッドがあるのでリファクタリングする
+    Vector3Int GetSidePos(Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.Forward:
+                return Vector3Int.forward * _helper.PrefabScale;
+            case Direction.Back:
+                return Vector3Int.back * _helper.PrefabScale;
+            case Direction.Left:
+                return Vector3Int.left * _helper.PrefabScale;
+            case Direction.Right:
+                return Vector3Int.right * _helper.PrefabScale;
+            default:
+                Debug.LogError("列挙型Directionで定義されていない値です。: " + dir);
+                return Vector3Int.zero;
         }
     }
 

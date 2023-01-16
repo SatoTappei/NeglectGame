@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Direction = DungeonHelper.Direction;
 
 /// <summary>
 /// ダンジョン生成を制御するコンポーネント
@@ -27,10 +28,9 @@ public class DungeonBuilder : MonoBehaviour
         
         // 通路に隣接した箇所に部屋を生成する
         _dungeonRoomBuilder.GenerateRoom(passColl);
-    }
 
-    void Update()
-    {
-        
+        // 部屋とつながるよう通路を修正する
+        Dictionary<Vector3Int, Direction> roomEntranceDic = _dungeonRoomBuilder.RoomEntranceDic;
+        _dungeonPassBuilder.FixConnectRoomEntrance(roomEntranceDic);
     }
 }
