@@ -164,9 +164,9 @@ public class DungeonPassBuilder : MonoBehaviour
                     break;
                 // 丁字路
                 case 3:
-                    if      (dirForward && dirBack && dirLeft)  rotY = 180;
-                    else if (dirBack && dirRight && dirLeft)    rotY = 90;
-                    else if (dirForward && dirRight && dirLeft) rotY = -90;
+                    if      (dirForward && dirBack && dirLeft)  rotY = 90;
+                    else if (/*dirBack*/dirForward && dirRight && dirLeft)    rotY = 180;
+                    else if (dirForward && dirBack && dirRight) rotY = -90;
 
                     go = _tJunctionPrefab;
                     shape = ComponentShape.TJunction;
@@ -214,8 +214,6 @@ public class DungeonPassBuilder : MonoBehaviour
                 case 3:
                     Destroy(frontmassData.Obj);
 
-
-
                     // 隣接マスの情報と部屋がどの方向に向いているかがわかっている
                     Quaternion rot3 = Quaternion.identity;
                     // 通路に部屋が隣接して生成されるパターン
@@ -229,9 +227,6 @@ public class DungeonPassBuilder : MonoBehaviour
                     // 通路の端で部屋2つが挟み込むパターン
                     if (frontmassData.Shape == ComponentShape.PassEnd)
                     {
-                        // 視認しやすいように目印を置いておく、テスト用
-                        Instantiate(_test, frontPos, Quaternion.identity);
-
                         if(frontmassData.Dir == Direction.Right)
                         {
                             rot3.eulerAngles = new Vector3(0, 90, 0);
@@ -248,23 +243,50 @@ public class DungeonPassBuilder : MonoBehaviour
                         {
                             rot3.eulerAngles = new Vector3(0, 180, 0);
                         }
-
-                        //if (dir == Direction.Forward) rot3.eulerAngles = new Vector3(0, -90, 0);
-                        //if (dir == Direction.Back) rot3.eulerAngles = new Vector3(0, 90, 0);
-                        //if (dir == Direction.Left) rot3.eulerAngles = new Vector3(0, 180, 0);
-                        //if (dir == Direction.Right) rot3.eulerAngles = new Vector3(0, 0, 0);
                     }
                     // 通路の角に部屋が生成されるパターン
                     if (frontmassData.Shape == ComponentShape.Corner)
                     {
-
+                        if (dir == Direction.Forward)
+                        {
+                            if (frontmassData.Dir == Direction.Forward)
+                            {
+                                rot3.eulerAngles = new Vector3(0, 90, 0);
+                            }
+                            else if (frontmassData.Dir == Direction.Left)
+                            {
+                                rot3.eulerAngles = new Vector3(0, -90, 0);
+                            }
+                        }
+                        else if(dir == Direction.Back)
+                        {
+                            if (frontmassData.Dir == Direction.Back)
+                            {
+                                rot3.eulerAngles = new Vector3(0, -90, 0);
+                                
+                            }
+                            else if (frontmassData.Dir == Direction.Right)
+                            {
+                                rot3.eulerAngles = new Vector3(0, 90, 0);
+                            }
+                        }
+                        else if (dir == Direction.Left)
+                        {
+                            if (frontmassData.Dir == Direction.Back)
+                            {
+                                rot3.eulerAngles = new Vector3(0, -180, 0);
+                                Debug.Log("うしろ");
+                            }
+                        }
+                        else if (dir == Direction.Right)
+                        {
+                            if (frontmassData.Dir == Direction.Right)
+                            {
+                                rot3.eulerAngles = new Vector3(0, 180, 0);
+                                Debug.Log("みぎ");
+                            }
+                        }
                     }
-
-                    //Quaternion rot3 = Quaternion.identity;
-                    //if (dir == Direction.Forward || dir == Direction.Back)
-                    //{
-                    //    rot3.eulerAngles = new Vector3(0, 90, 0);
-                    //}
 
                     frontmassData.Obj = Instantiate(_tJunctionPrefab, frontPos, rot3);
                     break;
@@ -273,28 +295,106 @@ public class DungeonPassBuilder : MonoBehaviour
 
                     Quaternion rot = Quaternion.identity;
 
-                    if ((dir == Direction.Forward && frontmassData.Dir == Direction.Back) ||
-                        (dir == Direction.Back && frontmassData.Dir == Direction.Forward) ||
-                        (dir == Direction.Left && frontmassData.Dir == Direction.Right) ||
-                        (dir == Direction.Right && frontmassData.Dir == Direction.Left))
+                    if ((dir == Direction.Forward && frontmassData.Dir == Direction.Forward) ||
+                        (dir == Direction.Back && frontmassData.Dir == Direction.Back) ||
+                        (dir == Direction.Left && frontmassData.Dir == Direction.Left) ||
+                        (dir == Direction.Right && frontmassData.Dir == Direction.Right))
                     {
-                        //if (dir == Direction.Forward || dir == Direction.Back)
-                        //{
-                        //    if(frontmassData.Dir == Direction.Right)
-                        //    {
-                        //        rot.eulerAngles = new Vector3Int(0, -90, 0);
-                        //    }
-                        //    if(frontmassData.Dir == Direction.Left)
-                        //    {
-                        //        rot.eulerAngles = new Vector3Int(0, 90, 0);
-                        //    }
-                        //}
+
+
+                        if (dir == Direction.Left || dir == Direction.Right)
+                        {
+                            rot.eulerAngles = new Vector3(0, 90, 0);
+                        }
 
                         frontmassData.Obj = Instantiate(_passPrefab, frontPos, rot);
                     }
                     else
                     {
-                        frontmassData.Obj = Instantiate(_cornerPrefab, frontPos, Quaternion.identity);
+                        Quaternion rot2 = Quaternion.identity;
+
+                        if (dir == Direction.Forward)
+                        {
+                            if (frontmassData.Dir == Direction.Forward)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 11, 0);
+                            }
+                            else if (frontmassData.Dir == Direction.Left)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 180, 0);
+                            }
+                            if (frontmassData.Dir == Direction.Back)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 33, 0);
+
+                            }
+                            else if (frontmassData.Dir == Direction.Right)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 90, 0);
+                            }
+                        }
+                        else if (dir == Direction.Back)
+                        {
+                            if (frontmassData.Dir == Direction.Forward)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 11, 0);
+                            }
+                            else if (frontmassData.Dir == Direction.Left)
+                            {
+                                rot2.eulerAngles = new Vector3(0, -90, 0);
+                            }
+                            if (frontmassData.Dir == Direction.Back)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 33, 0);
+
+                            }
+                            else if (frontmassData.Dir == Direction.Right)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 0, 0);
+                            }
+                        }
+                        else if (dir == Direction.Left)
+                        {
+                            if (frontmassData.Dir == Direction.Forward)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 0, 0);
+                            }
+                            else if (frontmassData.Dir == Direction.Left)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 22, 0);
+                            }
+                            if (frontmassData.Dir == Direction.Back)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 90, 0);
+
+                            }
+                            else if (frontmassData.Dir == Direction.Right)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 44, 0);
+                            }
+                        }
+                        else if (dir == Direction.Right)
+                        {
+                            if (frontmassData.Dir == Direction.Forward)
+                            {
+                                rot2.eulerAngles = new Vector3(0, -90, 0);
+                            }
+                            else if (frontmassData.Dir == Direction.Left)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 22, 0);
+                            }
+                            if (frontmassData.Dir == Direction.Back)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 180, 0);
+
+                            }
+                            else if (frontmassData.Dir == Direction.Right)
+                            {
+                                rot2.eulerAngles = new Vector3(0, 44, 0);
+                            }
+                        }
+
+                        frontmassData.Obj = Instantiate(_cornerPrefab, frontPos, rot2);
                     }
                     break;
                 case 1:
@@ -302,30 +402,6 @@ public class DungeonPassBuilder : MonoBehaviour
                     frontmassData.Obj = Instantiate(_passEndPrefab, frontPos, Quaternion.identity);
                     break;
             }
-        }
-
-        Direction Hoge(GameObject go)
-        {
-            Debug.Log(go.transform.rotation.y);
-            if (go.transform.rotation.y == 0)
-            {
-                return Direction.Forward; 
-            }
-            if (go.transform.rotation.y == 0.7071068f)
-            {
-                return Direction.Right;
-            }
-            if (go.transform.rotation.y == -0.7071068f)
-            {
-                return Direction.Left;
-            }
-            if (go.transform.rotation.y == 1)
-            {
-                return Direction.Back;
-            }
-
-            Debug.LogError("なんか変");
-            return Direction.Forward;
         }
     }
 
