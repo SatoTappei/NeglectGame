@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Direction = DungeonHelper.Direction;
+using ComponentShape = DungeonComponentData.ComponentShape;
 
 /// <summary>
 /// 文字列に対応したダンジョンの通路を建てるコンポーネント
 /// </summary>
 public class DungeonPassBuilder : MonoBehaviour
 {
-    enum TurtleCommand
+    enum Command
     {
         Forward = 'F',
         RotRight = '+',
@@ -31,114 +32,122 @@ public class DungeonPassBuilder : MonoBehaviour
     [SerializeField] GameObject _passEndPrefab;
     [Header("生成したプレハブの親")]
     [SerializeField] Transform _parent;
-    //[SerializeField] GameObject _test;
+    // わかりやすいようにするためのテスト用のプレハブ
+    [SerializeField] GameObject _test;
 
     DungeonHelper _helper;
-    Dictionary<Vector3Int, GameObject> _passDic;
-    /// <summary生成後に見た目を修正するために条件を満たした通路を保持しておく</summary>
+    Dictionary<Vector3Int, DungeonComponentData> _passMassDic;
+    /// <summary>生成後に見た目を修正するために条件を満たした通路を保持しておく</summary>
     HashSet<Vector3Int> _fixPassSet;
 
     void Awake()
     {
         _helper = new DungeonHelper();
-        _passDic = new Dictionary<Vector3Int, GameObject>(PassDicCap);
+        _passMassDic = new Dictionary<Vector3Int, DungeonComponentData>(PassDicCap);
         _fixPassSet = new HashSet<Vector3Int>(EdgePassSetCap);
     }
 
-    /// <summary>全ての生成した通路のマスの座標を取得する</summary>
-    internal IReadOnlyCollection<Vector3Int> GetPassPosAll() => _passDic.Keys;
+    internal IReadOnlyDictionary<Vector3Int, DungeonComponentData> GetMassDataAll() => _passMassDic;
 
-    /// <summary>文字列をダンジョンの部品プレハブに変換する</summary>
-    internal void ConvertToGameObject(string str)
+    internal void BuildDungeonPass(string str)
     {
         // セーブ/ロードのコマンド用
-        Stack<TurtleParam> saveStack = new Stack<TurtleParam>(SaveStackCap);
+        Stack<CursorParam> saveStack = new Stack<CursorParam>(SaveStackCap);
 
         Vector3Int currentPos = Vector3Int.zero;
-        Vector3Int dir = Vector3Int.forward;
+        Vector3Int dirVec = Vector3Int.forward;
         int dist = MaxPassDist;
         
         foreach (char command in str)
         {
-            switch ((TurtleCommand)command)
+            switch ((Command)command)
             {
-                case TurtleCommand.Forward:
-                    GeneratePass(currentPos, dir, dist);
-                    currentPos = currentPos + dir * dist * _helper.PrefabScale;
+                // 直線の通路を生成して通路の先に基準点を移す
+                case Command.Forward:
+                    GeneratePassStraight(currentPos, dirVec, dist);
+                    currentPos = currentPos + dirVec * dist * _helper.PrefabScale;
                     dist -= DecreaseDist;
                     dist = Mathf.Max(1, dist);
                     break;
-                case TurtleCommand.RotRight:
-                    dir = Rotate(dir, isPositive: true);
+                // 基準点を右に90°回転させる
+                case Command.RotRight:
+                    dirVec = RotDirVec90(dirVec, isPositive: true);
                     break;
-                case TurtleCommand.RotLeft:
-                    dir = Rotate(dir, isPositive: false);
+                // 基準点を左に90°回転させる
+                case Command.RotLeft:
+                    dirVec = RotDirVec90(dirVec, isPositive: false);
                     break;
-                case TurtleCommand.Save:
-                    saveStack.Push(new TurtleParam(currentPos, dir, dist));
+                // 現在の基準点をスタックに積む
+                case Command.Save:
+                    saveStack.Push(new CursorParam(currentPos, dirVec, dist));
                     //Debug.Log($"Push:{currentPos},{dir},{dist}");
                     break;
-                case TurtleCommand.Load:
+                // スタックから基準点を取り出してその位置に基準点を変更する
+                case Command.Load:
                     if (saveStack.Count == 0) break;
-                    TurtleParam param = saveStack.Pop();
+                    CursorParam param = saveStack.Pop();
                     currentPos = param.Pos;
-                    dir        = param.Dir;
-                    dist       = param.Dist;
+                    dirVec = param.DirVec;
+                    dist = param.Dist;
                     //Debug.Log($"Pop:{currentPos},{dir},{dist}");
                     break;
             }
         }
 
-        FixPass();
+        FixPassVisual();
     }
 
-    /// <summary>直線の通路を生成する</summary>
-    void GeneratePass(Vector3Int startPos, Vector3Int dir, int dist)
+    void GeneratePassStraight(Vector3Int startPos, Vector3Int dirVec, int dist)
     {
         for (int i = 0; i < dist; i++)
         {
-            Vector3Int pos = startPos + dir * i * _helper.PrefabScale;
-            // 同じ座標に生成しないようにチェック
-            if (_passDic.ContainsKey(pos)) continue;
+            Vector3Int pos = startPos + dirVec * i * _helper.PrefabScale;
+
+            if (_passMassDic.ContainsKey(pos)) continue;
 
             Quaternion rot = Quaternion.identity;
-            if (dir == Vector3Int.right || dir == Vector3Int.left) rot = Quaternion.Euler(0, 90, 0);
+            if      (dirVec == Vector3Int.right) rot = Quaternion.Euler(0, 90, 0);
+            else if (dirVec == Vector3Int.left)  rot = Quaternion.Euler(0, -90, 0);
 
             GameObject go = Instantiate(_passPrefab, pos, rot, _parent);
-            // 生成した通路を弄るために辞書に追加しておく
-            _passDic.Add(pos, go);
+            Direction dir = DungeonComponentData.ConvertToDir(dirVec);
+            DungeonComponentData massData = new DungeonComponentData(pos, dir, ComponentShape.Pass, go, 2);
+            
+            _passMassDic.Add(pos, massData);
 
-            bool require = i / 2 == 1;
-            // 条件で絞ったマスと始点と終点を専用のコレクションに追加する
-            // 条件を消すと精度が上がるが処理負荷も跳ね上がる
-            if (require || i == 0 || i == dist - 1)
+            // 奇数個目のマスと始点と終点を専用のコレクションに追加する
+            // 条件を消すと見た目の修正時の精度が上がるが処理負荷も跳ね上がる
+            if ((i / 2 == 1) || i == 0 || i == dist - 1)
                 _fixPassSet.Add(pos);
         }
     }
 
-    /// <summary>通路を違和感のない見た目に修正する</summary>
-    void FixPass()
+    void FixPassVisual()
     {
         foreach(Vector3Int pos in _fixPassSet)
         {
-            // その座標が前後左右どの方向に接続されているか、いくつ接続されているか
-            (int dirs, int count) = _helper.GetNeighbourInt(pos, _passDic.Keys);
+            // その座標が前後左右どの方向に接続されているかで向きを変更
+            // いくつ接続されているかで対応する見た目に変更する
+            (int dirs, int count) = _helper.GetNeighbourInt(pos, _passMassDic.Keys);
             bool dirForward = (dirs & _helper.BForward) == _helper.BForward;
             bool dirBack =    (dirs & _helper.BBack)    == _helper.BBack;
             bool dirLeft =    (dirs & _helper.BLeft)    == _helper.BLeft;
             bool dirRight =   (dirs & _helper.BRight)   == _helper.BRight;
 
-            Quaternion rot = Quaternion.identity;
+            //Quaternion rot = Quaternion.identity;
+            float rotY = 0;
             GameObject go = null;
+            ComponentShape shape = ComponentShape.Pass;
             switch (count)
             {
                 // 行き止まり
                 case 1:
-                    if      (dirBack)  rot.eulerAngles = new Vector3(0, 180, 0);
-                    else if (dirRight) rot.eulerAngles = new Vector3(0, 90, 0);
-                    else if (dirLeft)  rot.eulerAngles = new Vector3(0, -90, 0);
+                    if      (dirForward)  rotY = 180;
+                    else if (dirRight) rotY = -90;
+                    else if (dirLeft)  rotY = 90;
 
-                    go = Instantiate(_passEndPrefab, pos, rot, _parent);
+                    go = _passEndPrefab;
+                    shape = ComponentShape.PassEnd;
                     break;
                 // 角
                 case 2:
@@ -146,76 +155,153 @@ public class DungeonPassBuilder : MonoBehaviour
                     if ((dirForward && dirBack) || (dirRight && dirLeft)) 
                         continue;
 
-                    if      (dirForward && dirRight) rot.eulerAngles = new Vector3(0, 180, 0);
-                    else if (dirLeft && dirForward)  rot.eulerAngles = new Vector3(0, 90, 0);
-                    else if (dirRight && dirBack)    rot.eulerAngles = new Vector3(0, -90, 0);
+                    if      (dirForward && dirRight) rotY = 180;
+                    else if (dirLeft && dirForward)  rotY = 90;
+                    else if (dirRight && dirBack)    rotY = -90;
 
-                    go = Instantiate(_cornerPrefab, pos, rot, _parent);
+                    go = _cornerPrefab;
+                    shape = ComponentShape.Corner;
                     break;
                 // 丁字路
                 case 3:
-                    if      (dirForward && dirBack && dirLeft)  rot.eulerAngles = new Vector3(0, 180, 0);
-                    else if (dirBack && dirRight && dirLeft)    rot.eulerAngles = new Vector3(0, 90, 0);
-                    else if (dirForward && dirRight && dirLeft) rot.eulerAngles = new Vector3(0, -90, 0);
+                    if      (dirForward && dirBack && dirLeft)  rotY = 180;
+                    else if (dirBack && dirRight && dirLeft)    rotY = 90;
+                    else if (dirForward && dirRight && dirLeft) rotY = -90;
 
-                    go = Instantiate(_tJunctionPrefab, pos, rot, _parent);
+                    go = _tJunctionPrefab;
+                    shape = ComponentShape.TJunction;
                     break;
                 // 十字路
                 case 4:
-                    go = Instantiate(_crossPrefab, pos, rot, _parent);
+                    go = _crossPrefab;
+                    shape = ComponentShape.Cross;
                     break;
             }
 
-            // 置き換えるので元あったオブジェクトは削除する
-            Destroy(_passDic[pos]);
+            Quaternion rot = Quaternion.Euler(0, rotY, 0);
 
-            // TODO:応急処置的に追加しているのでよく検討する
-            _passDic[pos] = go;
+            // 置き換えるので元あったオブジェクトは削除する
+            Destroy(_passMassDic[pos].Obj);
+            _passMassDic[pos].Dir = DungeonComponentData.ConvertToDir(rotY);
+            _passMassDic[pos].Shape = shape;
+            _passMassDic[pos].Obj = Instantiate(go, pos, rot, _parent);
+            _passMassDic[pos].Connect = count;
         }
     }
 
-    internal void FixConnectRoomEntrance(IReadOnlyDictionary<Vector3Int, Direction> dic)
+    /// <summary>部屋の出入口の正面のマスを操作するので先に部屋を生成しておく必要がある</summary>
+    internal void FixConnectRoomEntrance(IReadOnlyDictionary<Vector3Int, Direction> roomEntranceDataAll)
     {
         // 通路に対して部屋が接続されると通路の接続数が+1される
         // ある通路に対して反対側からも部屋が接続される場合がある
-        foreach (var v in dic)
+        // TODO:辞書型のpairを一旦変数に代入して見やすくしてから処理する
+        foreach (KeyValuePair<Vector3Int, Direction> pair in roomEntranceDataAll)
         {
-            GameObject go = _passDic[v.Key - GetSidePos(v.Value)];
+            Vector3Int pos = pair.Key;
+            Direction dir = pair.Value;
+            // 出入口の座標と部屋が向いている方向から部屋の正面の座標を求める
+            Vector3Int frontPos = pos - ConvertToVec3(dir);
+            DungeonComponentData frontmassData = _passMassDic[frontPos];
 
-            // TODO:名前で判定して処理を分岐する、テストなので別の方法を検討する必要あり
-            //      反対側からの接続が考慮されていないので直す
-            //      応じた回転を行う
-            switch (go.name)
+            frontmassData.Connect++;
+
+            switch (frontmassData.Connect)
             {
-                case "Dungeon_Pass(Clone)":
-                    Instantiate(_tJunctionPrefab, v.Key - GetSidePos(v.Value), Quaternion.identity);
-                    Destroy(go);
+                case 4:
+                    Destroy(frontmassData.Obj);
+                    frontmassData.Obj = Instantiate(_crossPrefab, frontPos, Quaternion.identity);
                     break;
-                case "Dungeon_PassEnd(Clone)":
-                    // 正面の場合と左右に生成された場合で分岐しないといけない
-                    if ((v.Value == Direction.Forward &&  Hoge(go) == Direction.Back) ||
-                        (v.Value == Direction.Back && Hoge(go) == Direction.Forward) ||
-                        (v.Value == Direction.Left && Hoge(go) == Direction.Right) ||
-                        (v.Value == Direction.Right && Hoge(go) == Direction.Left))
+                case 3:
+                    Destroy(frontmassData.Obj);
+
+
+
+                    // 隣接マスの情報と部屋がどの方向に向いているかがわかっている
+                    Quaternion rot3 = Quaternion.identity;
+                    // 通路に部屋が隣接して生成されるパターン
+                    if (frontmassData.Shape == ComponentShape.Pass)
                     {
-                        Instantiate(_passPrefab, v.Key - GetSidePos(v.Value), Quaternion.identity);
+                        if (dir == Direction.Forward) rot3.eulerAngles = new Vector3(0, 180, 0);
+                        if (dir == Direction.Back) rot3.eulerAngles = new Vector3(0, 0, 0);
+                        if (dir == Direction.Left) rot3.eulerAngles = new Vector3(0, 90, 0);
+                        if (dir == Direction.Right) rot3.eulerAngles = new Vector3(0, -90, 0);
+                    }
+                    // 通路の端で部屋2つが挟み込むパターン
+                    if (frontmassData.Shape == ComponentShape.PassEnd)
+                    {
+                        // 視認しやすいように目印を置いておく、テスト用
+                        Instantiate(_test, frontPos, Quaternion.identity);
+
+                        if(frontmassData.Dir == Direction.Right)
+                        {
+                            rot3.eulerAngles = new Vector3(0, 90, 0);
+                        }
+                        else if(frontmassData.Dir == Direction.Left)
+                        {
+                            rot3.eulerAngles = new Vector3(0, -90, 0);
+                        }
+                        else if (frontmassData.Dir == Direction.Forward)
+                        {
+                            rot3.eulerAngles = new Vector3(0, 0, 0);
+                        }
+                        else if (frontmassData.Dir == Direction.Back)
+                        {
+                            rot3.eulerAngles = new Vector3(0, 180, 0);
+                        }
+
+                        //if (dir == Direction.Forward) rot3.eulerAngles = new Vector3(0, -90, 0);
+                        //if (dir == Direction.Back) rot3.eulerAngles = new Vector3(0, 90, 0);
+                        //if (dir == Direction.Left) rot3.eulerAngles = new Vector3(0, 180, 0);
+                        //if (dir == Direction.Right) rot3.eulerAngles = new Vector3(0, 0, 0);
+                    }
+                    // 通路の角に部屋が生成されるパターン
+                    if (frontmassData.Shape == ComponentShape.Corner)
+                    {
+
+                    }
+
+                    //Quaternion rot3 = Quaternion.identity;
+                    //if (dir == Direction.Forward || dir == Direction.Back)
+                    //{
+                    //    rot3.eulerAngles = new Vector3(0, 90, 0);
+                    //}
+
+                    frontmassData.Obj = Instantiate(_tJunctionPrefab, frontPos, rot3);
+                    break;
+                case 2:
+                    Destroy(frontmassData.Obj);
+
+                    Quaternion rot = Quaternion.identity;
+
+                    if ((dir == Direction.Forward && frontmassData.Dir == Direction.Back) ||
+                        (dir == Direction.Back && frontmassData.Dir == Direction.Forward) ||
+                        (dir == Direction.Left && frontmassData.Dir == Direction.Right) ||
+                        (dir == Direction.Right && frontmassData.Dir == Direction.Left))
+                    {
+                        //if (dir == Direction.Forward || dir == Direction.Back)
+                        //{
+                        //    if(frontmassData.Dir == Direction.Right)
+                        //    {
+                        //        rot.eulerAngles = new Vector3Int(0, -90, 0);
+                        //    }
+                        //    if(frontmassData.Dir == Direction.Left)
+                        //    {
+                        //        rot.eulerAngles = new Vector3Int(0, 90, 0);
+                        //    }
+                        //}
+
+                        frontmassData.Obj = Instantiate(_passPrefab, frontPos, rot);
                     }
                     else
                     {
-                        Instantiate(_cornerPrefab, v.Key - GetSidePos(v.Value), Quaternion.identity);
+                        frontmassData.Obj = Instantiate(_cornerPrefab, frontPos, Quaternion.identity);
                     }
-                    Destroy(go);
                     break;
-                case "Dungeon_Corner(Clone)":
-                    Instantiate(_tJunctionPrefab, v.Key - GetSidePos(v.Value), Quaternion.identity);
-                    Destroy(go);
-                    break;
-                case "Dungeon_TJunction(Clone)":
-                    Instantiate(_crossPrefab, v.Key - GetSidePos(v.Value), Quaternion.identity);
-                    Destroy(go);
+                case 1:
+                    Destroy(frontmassData.Obj);
+                    frontmassData.Obj = Instantiate(_passEndPrefab, frontPos, Quaternion.identity);
                     break;
             }
-            //Instantiate(_test, v.Key - GetSidePos(v.Value), Quaternion.identity);
         }
 
         Direction Hoge(GameObject go)
@@ -244,7 +330,7 @@ public class DungeonPassBuilder : MonoBehaviour
     }
 
     // TODO:DungeonRoomBuilderにも同じメソッドがあるのでリファクタリングする
-    Vector3Int GetSidePos(Direction dir)
+    Vector3Int ConvertToVec3(Direction dir)
     {
         switch (dir)
         {
@@ -262,33 +348,32 @@ public class DungeonPassBuilder : MonoBehaviour
         }
     }
 
-    /// <summary>前後左右の方向を回転させる</summary>
     /// <param name="isPositive">trueだと前右後左の時計回り、falseだと反時計回り</param>
-    Vector3Int Rotate(Vector3Int currentDir, bool isPositive)
+    Vector3Int RotDirVec90(Vector3Int dirVec, bool isPositive)
     {
-        if (currentDir == Vector3Int.forward)
+        if (dirVec == Vector3Int.forward)
         {
             if (isPositive) return Vector3Int.right;
             else            return Vector3Int.left;
         }
-        else if (currentDir == Vector3Int.right)
+        else if (dirVec == Vector3Int.right)
         {
             if (isPositive) return Vector3Int.back;
             else            return Vector3Int.forward;
         }
-        else if (currentDir == Vector3Int.back)
+        else if (dirVec == Vector3Int.back)
         {
             if (isPositive) return Vector3Int.left;
             else            return Vector3Int.right;
         }
-        else if (currentDir == Vector3Int.left)
+        else if (dirVec == Vector3Int.left)
         {
             if (isPositive) return Vector3Int.forward;
             else            return Vector3Int.back;
         }
         else
         {
-            Debug.LogError("上下左右以外の角度です。: " + currentDir);
+            Debug.LogError("上下左右以外の角度です。: " + dirVec);
             return Vector3Int.zero;
         }
     }

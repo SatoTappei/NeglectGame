@@ -10,13 +10,13 @@ using System;
 public class LSystemRuleSO : ScriptableObject
 {
     [Serializable]
-    public struct RewriteRule
+    internal struct RewriteRule
     {
         [SerializeField] char _target;
         [SerializeField] string[] _rewrite;
 
-        public string Target => _target.ToString();
-        public string[] Rewrite => _rewrite;
+        internal string Target => _target.ToString();
+        internal string[] Rewrite => _rewrite;
     }
 
     [Header("‰Šú•¶Žš—ñ")]
@@ -24,6 +24,6 @@ public class LSystemRuleSO : ScriptableObject
     [Header("‘‚«Š·‚¦ƒ‹[ƒ‹")]
     [SerializeField] RewriteRule[] _ruleArr;
 
-    public string InitLetter => _initLetter;
-    public RewriteRule[] RuleArr => _ruleArr;
+    internal string InitLetter => _initLetter;
+    internal RewriteRule[] RuleArr => _ruleArr;
 }
