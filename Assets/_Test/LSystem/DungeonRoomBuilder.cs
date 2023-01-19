@@ -10,9 +10,7 @@ using Direction = DungeonHelper.Direction;
 public class DungeonRoomBuilder : MonoBehaviour
 {
     readonly int RoomEntranceDicCap = 16;
-    readonly int PlaceDicCap = 64;
-    readonly int BlockPosSetCap = 64;
-    readonly int RoomRangeSetCap = 9;
+    readonly int RoomRangeSetCap = 25;
 
     [Header("生成する部屋のデータ")]
     [SerializeField] DungeonRoomData[] _roomDataArr;
@@ -35,7 +33,7 @@ public class DungeonRoomBuilder : MonoBehaviour
     }
 
     /// <summary>通路の周囲に部屋を建てるので、先に通路を建てている必要がある</summary>
-    internal void BuildDungeonRoom(IReadOnlyDictionary<Vector3Int, DungeonComponentData> massDataAll)
+    internal void BuildDungeonRoom(IReadOnlyDictionary<Vector3Int, DungeonPassMassData> massDataAll)
     {
         // 部屋を建てる候補として通路の側の座標を辞書型で受け取る
         IReadOnlyCollection<Vector3Int> massPosAll = (IReadOnlyCollection<Vector3Int>)massDataAll.Keys;
@@ -54,7 +52,7 @@ public class DungeonRoomBuilder : MonoBehaviour
             {
                 if (data.IsAvailable())
                 {
-                    Quaternion rot = GetInverseRot(dir);
+                    Quaternion rot = _helper.ConvertToInverseRot(dir);
                     Instantiate(data.GetPrefab(), pos, rot, _parent);
                     // 部屋同士が重ならないように生成した部屋の座標をコレクションに格納していく
                     foreach (Vector3Int v in roomRangeSet)
@@ -79,7 +77,7 @@ public class DungeonRoomBuilder : MonoBehaviour
 
         foreach (Vector3Int pos in massPosAll)
         {
-            (int dirs, _) = _helper.GetNeighbourInt(pos, massPosAll);
+            (int dirs, _) = _helper.GetNeighbourBinary(pos, massPosAll);
 
             // 各方向に通路が無ければその方向を部屋を生成可能な場所として辞書に追加する
             if ((dirs & _helper.BForward) != _helper.BForward) Add(Direction.Forward);
@@ -89,7 +87,7 @@ public class DungeonRoomBuilder : MonoBehaviour
 
             void Add(Direction dir)
             {
-                Vector3Int placePos = pos + GetSidePos(dir);
+                Vector3Int placePos = pos + _helper.ConvertToPos(dir);
                 // 重複チェック
                 if (dic.ContainsKey(placePos)) return;
                 dic.Add(placePos, dir);
@@ -157,43 +155,5 @@ public class DungeonRoomBuilder : MonoBehaviour
         }
 
         return true;
-    }
-
-    /// <summary>方向と逆の回転を取得する</summary>
-    Quaternion GetInverseRot(Direction dir)
-    {
-        switch (dir)
-        {
-            case Direction.Forward:
-                return Quaternion.Euler(0, 0, 0);
-            case Direction.Back:
-                return Quaternion.Euler(0, 180, 0);
-            case Direction.Left:
-                return Quaternion.Euler(0, -90, 0);
-            case Direction.Right:
-                return Quaternion.Euler(0, 90, 0);
-            default:
-                Debug.LogError("列挙型Directionで定義されていない値です。: " + dir);
-                return Quaternion.identity;
-        }
-    }
-
-    /// <summary>方向に応じた1マス脇の座標を返す</summary>
-    Vector3Int GetSidePos(Direction dir)
-    {
-        switch (dir)
-        {
-            case Direction.Forward:
-                return Vector3Int.forward * _helper.PrefabScale;
-            case Direction.Back:
-                return Vector3Int.back * _helper.PrefabScale;
-            case Direction.Left:
-                return Vector3Int.left * _helper.PrefabScale;
-            case Direction.Right:
-                return Vector3Int.right * _helper.PrefabScale;
-            default:
-                Debug.LogError("列挙型Directionで定義されていない値です。: " + dir);
-                return Vector3Int.zero;
-        }
     }
 }

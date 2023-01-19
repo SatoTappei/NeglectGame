@@ -21,15 +21,11 @@ internal class DungeonRoomData
 
     internal GameObject GetPrefab()
     {
-        // 生成数を数えるためにカウントを増やす
         _currentQuantity++;
 
         int r = UnityEngine.Random.Range(0, _prefabArr.Length);
         return _prefabArr[r];
     }
 
-    /// <summary>これ以上生成可能か調べる</summary>
     internal bool IsAvailable() => _currentQuantity < _maxQuantity;
-
-    //internal void Reset() => _currentQuantity = 0;
 }

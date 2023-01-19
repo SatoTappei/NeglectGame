@@ -4,12 +4,10 @@ using UnityEngine;
 using Direction = DungeonHelper.Direction;
 
 /// <summary>
-/// ダンジョンを構成する部屋と通路1マス単位のデータ
+/// ダンジョンを構成する通路1マス単位のデータ
 /// </summary>
-internal class DungeonComponentData
+internal class DungeonPassMassData
 {
-    // TODO:部屋は形状と接続数のデータがいらないので別のクラスに分ける
-    // TODO:そもそも部屋では使われていない？のでクラス名とか直す
     internal enum ComponentShape
     {
         Pass,
@@ -17,7 +15,6 @@ internal class DungeonComponentData
         TJunction,
         Cross,
         PassEnd,
-        Room, // <= 一時的なデータでリファクタリングしたらいらない
     }
 
     Vector3Int _pos;
@@ -26,7 +23,7 @@ internal class DungeonComponentData
     GameObject _obj;
     int _connect;
 
-    internal DungeonComponentData(Vector3Int pos, Direction dir, ComponentShape shape, GameObject obj, int connect)
+    internal DungeonPassMassData(Vector3Int pos, Direction dir, ComponentShape shape, GameObject obj, int connect)
     {
         _pos = pos;
         _dir = dir;

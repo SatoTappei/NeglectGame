@@ -498,7 +498,6 @@ MonoBehaviour:
   _crossPrefab: {fileID: 13582061540714980, guid: c382ad309a465224cbbf4df4f86db381, type: 3}
   _passEndPrefab: {fileID: 13582061540714980, guid: 9475f240b967ae84b8c337eb124c3dcc, type: 3}
   _parent: {fileID: 1861081676}
-  _test: {fileID: 1914965103155669714, guid: 2c95103b84deab244b4d2dbfdba35ff0, type: 3}
 --- !u!114 &1443101060
 MonoBehaviour:
   m_ObjectHideFlags: 0
