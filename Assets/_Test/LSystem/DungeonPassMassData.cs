@@ -17,24 +17,21 @@ internal class DungeonPassMassData
         PassEnd,
     }
 
-    Vector3Int _pos;
     Direction _dir;
     ComponentShape _shape;
     GameObject _obj;
     int _connect;
 
-    internal DungeonPassMassData(Vector3Int pos, Direction dir, ComponentShape shape, GameObject obj, int connect)
+    internal DungeonPassMassData(Direction dir, ComponentShape shape, GameObject obj, int connect)
     {
-        _pos = pos;
         _dir = dir;
         _shape = shape;
         _obj = obj;
         _connect = connect;
     }
 
-    internal Vector3Int Pos { get => _pos; set => _pos = value; }
-    internal Direction Dir { get => _dir; set => _dir = value; }
-    internal ComponentShape Shape { get => _shape; set => _shape = value; }
+    internal Direction Dir { get => _dir; }
+    internal ComponentShape Shape { get => _shape; }
     internal GameObject Obj { get => _obj; set => _obj = value; }
     internal int Connect 
     { 
@@ -52,29 +49,11 @@ internal class DungeonPassMassData
         } 
     }
 
-    internal static Direction ConvertToDir(Vector3Int dirVec)
+    internal void Replace(Direction dir, ComponentShape shape, GameObject obj, int connect)
     {
-        if      (dirVec == Vector3Int.forward) return Direction.Forward;
-        else if (dirVec == Vector3Int.back)    return Direction.Back;
-        else if (dirVec == Vector3Int.left)    return Direction.Left;
-        else if (dirVec == Vector3Int.right)   return Direction.Right;
-        else
-        {
-            Debug.LogError("方向ベクトルの値が不正です: " + dirVec);
-            return Direction.Forward;
-        }
-    }
-
-    internal static Direction ConvertToDir(float rotY)
-    {
-        if      (rotY == 0) return Direction.Forward;
-        else if (rotY == 180) return Direction.Back;
-        else if (rotY == -90) return Direction.Left;
-        else if (rotY == 90) return Direction.Right;
-        else
-        {
-            Debug.LogError("floatの値が不正です: " + rotY);
-            return Direction.Forward;
-        }
+        _dir = dir;
+        _shape = shape;
+        _obj = obj;
+        _connect = connect;
     }
 }

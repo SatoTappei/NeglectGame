@@ -5,13 +5,20 @@ using Direction = DungeonHelper.Direction;
 using ComponentShape = DungeonPassMassData.ComponentShape;
 
 /// <summary>
-/// 
+/// ダンジョンの通路生成時に行うDirectionの値に応じた処理だけを抜き出したクラス
 /// </summary>
-internal class DungeonPassHelper
+internal class DungeonPassDirectionCalculator
 {
+    DungeonHelper _helper;
+
+    internal DungeonPassDirectionCalculator()
+    {
+        _helper = new();
+    }
+
     internal float GetPassStraightRotY(Vector3Int dirVec)
     {
-        Direction dir = DungeonPassMassData.ConvertToDir(dirVec);
+        Direction dir = _helper.ConvertToDir(dirVec);
         return GetPassStraightRotY(dir);
     }
 
