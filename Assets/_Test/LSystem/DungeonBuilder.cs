@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 /// <summary>
 /// ダンジョン生成を制御するコンポーネント
@@ -11,21 +12,26 @@ public class DungeonBuilder : MonoBehaviour
     [SerializeField] DungeonPassBuilder _dungeonPassBuilder;
     [SerializeField] DungeonRoomBuilder _dungeonRoomBuilder;
 
+    /*
+     ダンジョン生成のルール
+        部屋の幅は3以上の奇数
+        部屋の奥行は3以上の数
+     */
+
     void Start()
     {
-        // ダンジョン生成の基礎となる文字列を生成する
-        string str = _lSystem.Generate();
-        
-        // 文字列からダンジョンの通路を生成する
-        _dungeonPassBuilder.ConvertToGameObject(str);
-        var passColl = _dungeonPassBuilder.GetPassPosAll();
-        
-        // 通路に隣接した箇所に部屋を生成する
-        _dungeonRoomBuilder.GenerateRoom(passColl);
-    }
+        // ダンジョン生成時にアニメーションさせるのでCapacityを増やして警告を消す
+        // 処理負荷が問題になった場合はアニメーションをやめること
+        DOTween.SetTweensCapacity(500, 50);
 
-    void Update()
-    {
-        
+        string result = _lSystem.Generate();
+
+        _dungeonPassBuilder.BuildDungeonPass(result);
+        var massDataAll = _dungeonPassBuilder.GetMassDataAll();
+
+        _dungeonRoomBuilder.BuildDungeonRoom(massDataAll);
+        var roomEntranceDic = _dungeonRoomBuilder.GetRoomEntranceDataAll();
+
+        _dungeonPassBuilder.FixConnectRoomEntrance(roomEntranceDic);
     }
 }

@@ -4,19 +4,19 @@ using UnityEngine;
 using System;
 
 /// <summary>
-/// LSystemで生成する際のルールを記載するSO
+/// LSystemで生成する際のルールを記述するSO
 /// </summary>
 [CreateAssetMenu(fileName = "LSystemRule_")]
 public class LSystemRuleSO : ScriptableObject
 {
     [Serializable]
-    public struct RewriteRule
+    internal struct RewriteRule
     {
         [SerializeField] char _target;
         [SerializeField] string[] _rewrite;
 
-        public string Target => _target.ToString();
-        public string[] Rewrite => _rewrite;
+        internal string Target => _target.ToString();
+        internal string[] Rewrite => _rewrite;
     }
 
     [Header("初期文字列")]
@@ -24,6 +24,6 @@ public class LSystemRuleSO : ScriptableObject
     [Header("書き換えルール")]
     [SerializeField] RewriteRule[] _ruleArr;
 
-    public string InitLetter => _initLetter;
-    public RewriteRule[] RuleArr => _ruleArr;
+    internal string InitLetter => _initLetter;
+    internal RewriteRule[] RuleArr => _ruleArr;
 }
