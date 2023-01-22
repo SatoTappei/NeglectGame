@@ -43,9 +43,9 @@ public class Grid : MonoBehaviour
                 // グリッドの中心 - グリッドの半分の長さ + ノードn個分 + ノードの半径(ノードの中央を基準にしたい)
                 pos.x += -_gridWidth / 2 + x * NodeDiameter() + NodeRadius;
                 pos.z += -_gridDepth / 2 + z * NodeDiameter() + NodeRadius;
-                bool isWalkable = !Physics.CheckSphere(pos, NodeRadius, _obstacleLayer);
+                bool isMovable = !Physics.CheckSphere(pos, NodeRadius, _obstacleLayer);
 
-                _grid[z, x] = new Node(pos, isWalkable, x, z);
+                _grid[z, x] = new Node(pos, isMovable, x, z);
             }
     }
 
@@ -86,7 +86,7 @@ public class Grid : MonoBehaviour
         return _neighbourNodeSet;
     }
 
-    internal List<Node> path;
+    internal HashSet<Node> path;
     void OnDrawGizmos()
     {
         //Gizmos.DrawWireCube(transform.position, _gizmosGridSize);
@@ -104,7 +104,7 @@ public class Grid : MonoBehaviour
                 }
                 else
                 {
-                    Gizmos.color = node.IsWalkable ? Color.white : Color.red;
+                    Gizmos.color = node.IsMovable ? Color.white : Color.red;
                     if (path != null)
                         if (path.Contains(node))
                             Gizmos.color = Color.black;

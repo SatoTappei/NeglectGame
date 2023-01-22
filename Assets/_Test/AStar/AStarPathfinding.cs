@@ -16,7 +16,7 @@ public class AStarPathfinding : MonoBehaviour
 
     void Start()
     {
-        // FindObjectOfTypeメソッドは処理負荷がオブジェクト数と比例するのでこっちを使う
+        // FindObjectOfTypeメソッドは処理負荷がオブジェクト数に比例するのでこっちを使う
         _grid = GameObject.FindGameObjectWithTag(_targetTag).GetComponent<Grid>();
     }
 
@@ -31,82 +31,61 @@ public class AStarPathfinding : MonoBehaviour
         Node targetNode = _grid.GetNode(targetPos);
 
         // TODO:キャパシティの調整、現在はマンハッタン距離分だけ確保している
+        // TODO:余裕があれば軽量化をしてコレクション間の移し替えを無くす
         int defaultCapacity = (int)(Mathf.Abs(targetPos.x - startPos.x) + Mathf.Abs(targetPos.z - startPos.z));
         HashSet<Node> openSet = new HashSet<Node>(defaultCapacity);
         HashSet<Node> closedSet = new HashSet<Node>(defaultCapacity);
 
         openSet.Add(startNode);
 
-        Recursive(openSet, closedSet, startNode, targetNode);
-        //while (openSet.Count > 0)
-        //{
-            
-        //}
+        // TODO:ここで再帰的に求めたパスが返ってくる
+        _grid.path = Recursive(openSet, closedSet, startNode, targetNode);
     }
 
-    void Recursive(HashSet<Node> openSet, HashSet<Node> closedSet, in Node startNode, in Node targetNode)
+    HashSet<Node> Recursive(HashSet<Node> openSet, HashSet<Node> closedSet, in Node startNode, in Node targetNode)
     {
-        // TODO:総コストが一番低いノードを選ぶ、LINQでどうにか出来そう
-        //Node currentNode = openSet[0];
-        //for (int i = 1; i < openSet.Count; i++)
-        //{
-        //    if (openSet[i].TotalCost < currentNode.TotalCost ||
-        //        openSet[i].TotalCost == currentNode.TotalCost &&
-        //        openSet[i].EstimateCost < currentNode.EstimateCost)
-        //    {
-        //        currentNode = openSet[i];
-        //    }
-        //}
-        Node currentNode = openSet.OrderBy(n => n.TotalCost)
-                                  .ThenBy(n => n.EstimateCost)
-                                  .FirstOrDefault();
-        if (currentNode == null)
+        Node current = openSet.OrderBy(n => n.TotalCost)
+                              .ThenBy(n => n.EstimateCost)
+                              .FirstOrDefault();
+
+        if (current == null)
         {
             Debug.LogError("移動先のノードがありません。");
-            return;
+            return null;
+        }
+        else if (current == targetNode)
+        {
+            return RetracePath(startNode, targetNode);
         }
 
-        openSet.Remove(currentNode);
-        closedSet.Add(currentNode);
+        openSet.Remove(current);
+        closedSet.Add(current);
 
-        if (currentNode == targetNode)
+        foreach (Node neighbour in _grid.GetNeighbourNodeSet(current.GridX, current.GridZ))
         {
-            RetracePath(startNode, targetNode);
-            return;
-        }
+            if (!neighbour.IsMovable || closedSet.Contains(neighbour)) continue;
 
-        foreach (Node neighbour in _grid.GetNeighbourNodeSet(currentNode.GridX, currentNode.GridZ))
-        {
-            if (!neighbour.IsWalkable || closedSet.Contains(neighbour))
-            {
-                continue;
-            }
+            int moveToNeighbour = Distance(current.GridX, current.GridZ, neighbour.GridX, neighbour.GridZ);
+            int neighbourActualCost = current.ActualCost + moveToNeighbour;
 
-            // TODO:変数名が長い
-            // 現在のノードの実コスト + 隣のノードまでの距離
-            //int newMovementCostToNeighbour = currentNode.ActualCost + Distance(currentNode, neighbour);
-            int neighbourActualCost = currentNode.ActualCost + Distance(currentNode.Pos, neighbour.Pos);
-            // 隣のマスの実コストより小さい、もしくはまだ開いていないノードなら
             if (neighbourActualCost < neighbour.ActualCost || !openSet.Contains(neighbour))
             {
-                // 隣のマスの実コストにセット
                 neighbour.ActualCost = neighbourActualCost;
-                // 隣のマスの推定コストにこっからターゲットまでの距離を設定
-                neighbour.EstimateCost = Distance(neighbour.Pos, targetNode.Pos);
+                int moveToTarget = Distance(neighbour.GridX, neighbour.GridZ, targetNode.GridX, targetNode.GridZ);
+                neighbour.EstimateCost = moveToTarget;
+                neighbour.ParentNode = current;
 
-                neighbour.ParentNode = currentNode;
-
-                if (!openSet.Contains(neighbour))
-                    openSet.Add(neighbour);
+                openSet.Add(neighbour);
             }
         }
 
-        Recursive(openSet, closedSet, startNode, targetNode);
+        return Recursive(openSet, closedSet, startNode, targetNode);
     }
 
-    void RetracePath(Node start, Node target)
+    // TODO: StackもしくはQueueに出来ないか検討する、そもそも先頭以外いらないのでは？
+    HashSet<Node> RetracePath(Node start, Node target)
     {
-        List<Node> path = new List<Node>();
+        HashSet<Node> path = new HashSet<Node>();
         Node currentNode = target;
 
         while(currentNode != start)
@@ -115,30 +94,20 @@ public class AStarPathfinding : MonoBehaviour
             currentNode = currentNode.ParentNode;
         }
 
-        path.Reverse();
-
-        _grid.path = path;
+        return path.Reverse().ToHashSet();
     }
 
-    // TODO:2点間の距離をint型に直して返しているだけ、ちょっとこれでやってみる
-    int Distance(Vector3 posA, Vector3 posB)
+    int Distance(int gridX1, int gridZ1, int gridX2, int gridZ2)
     {
-        return (int)Vector3.SqrMagnitude(posA - posB);
-        //int distX = Mathf.Abs(posA - gridX2);
-        //int distZ = Mathf.Abs(gridZ1 - gridZ2);
+        int dx = Mathf.Abs(gridX1 - gridX2);
+        int dz = Mathf.Abs(gridZ1 - gridZ2);
 
-        // 斜め移動を考慮した2点間の距離
-        // 斜め移動は約1.4倍になるので長いほうの1.4倍をすれば斜め45°の長さになる
-        // それに短い方の距離(斜め移動した後の残り)を足せばAからBへの距離になる
-        // 返す際は10倍して小数部分を消している
-        // TODO:他の距離の返し方、もしくはこのメソッド自体いらないかもしれないと疑う
-        //if (distX > distZ)
-        //{
-        //    return 14 * distZ + 10 * (distX - distZ);
-        //}
-        //else
-        //{
-        //    return 14 * distX + 10 * (distZ - distX);
-        //}
+        // 直線距離を測る方法(SqrMagnitude)では上手くいかなかった
+        // 短い辺は斜め移動させる。斜め移動の場合の距離は1.4倍
+        // 斜め移動した残りは直線でターゲットまでの距離を計算する
+        if (dx < dz)
+            return 14 * dx + 10 * (dz - dx);
+        else
+            return 14 * dz + 10 * (dx - dz);
     }
 }

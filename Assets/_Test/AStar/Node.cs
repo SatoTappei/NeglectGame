@@ -7,16 +7,16 @@ using UnityEngine;
 /// </summary>
 internal class Node
 {
-    internal Node(Vector3 pos, bool isWalkable, int gridX, int gridZ)
+    internal Node(Vector3 pos, bool isMovable, int gridX, int gridZ)
     {
         Pos = pos;
-        IsWalkable = isWalkable;
+        IsMovable = isMovable;
         GridX = gridX;
         GridZ = gridZ;
     }
 
     internal Vector3 Pos { get; }
-    internal bool IsWalkable { get; }
+    internal bool IsMovable { get; }
     internal int GridX { get; }
     internal int GridZ { get; }
     internal int ActualCost { get; set; }
