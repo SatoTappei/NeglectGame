@@ -86,7 +86,7 @@ public class Grid : MonoBehaviour
         return _neighbourNodeSet;
     }
 
-    internal HashSet<Node> path;
+    //internal HashSet<Node> path;
     void OnDrawGizmos()
     {
         //Gizmos.DrawWireCube(transform.position, _gizmosGridSize);
@@ -105,9 +105,9 @@ public class Grid : MonoBehaviour
                 else
                 {
                     Gizmos.color = node.IsMovable ? Color.white : Color.red;
-                    if (path != null)
-                        if (path.Contains(node))
-                            Gizmos.color = Color.black;
+                    //if (path != null)
+                    //    if (path.Contains(node))
+                    //        Gizmos.color = Color.black;
                 }
                 Gizmos.DrawCube(node.Pos, Vector3.one * NodeDiameter() * .9f);
             }

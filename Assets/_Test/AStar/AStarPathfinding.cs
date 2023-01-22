@@ -4,38 +4,48 @@ using UnityEngine;
 using System.Linq;
 // 時間検証用のSW、後で消す
 using System.Diagnostics;
+using System;
 
 /// <summary>
 /// A*を用いて経路探索を行うコンポーネント
 /// </summary>
 public class AStarPathfinding : MonoBehaviour
 {
+    // TODO:相互参照？になりそうなので依存関係を整理する
+    [SerializeField] PathfindingManager _pathfindingManager;
     [Header("Gridコンポーネントがアタッチされたオブジェクトのタグ")]
     [SerializeField] string _targetTag;
-    [SerializeField] Transform seeker, target;
 
     Grid _grid;
-
+    // TODO: サンプル用、後で消す
+    bool pathSuccess = false;
+    
     void Start()
     {
         // FindObjectOfTypeメソッドは処理負荷がオブジェクト数に比例するのでこっちを使う
         _grid = GameObject.FindGameObjectWithTag(_targetTag).GetComponent<Grid>();
     }
 
-    void Update()
+    /// TODO:このメソッドいる？
+    internal void StartPathfinding(Vector3 startPos, Vector3 endPos)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Pathfinding(seeker.position, target.position);
-        }
+        Pathfinding(startPos, endPos);
     }
 
+    // TODO:本来ならパス検索を非同期処理にするべきだが、UniTaskを使ってリファクタリング必要
     void Pathfinding(Vector3 startPos, Vector3 targetPos)
     {
         Stopwatch sw = new Stopwatch();
         sw.Start();
+
+        // ↓パス検索のリファクタリング後に追加した処理
+        Vector3[] wayPoints = new Vector3[0];
+        pathSuccess = false;
+
         Node startNode = _grid.GetNode(startPos);
         Node targetNode = _grid.GetNode(targetPos);
+
+        if (!startNode.IsMovable || !targetNode.IsMovable) return;
 
         // TODO:キャパシティの調整、現在はマンハッタン距離分だけ確保している
         // TODO:余裕があれば軽量化をしてコレクション間の移し替えを無くす
@@ -46,12 +56,15 @@ public class AStarPathfinding : MonoBehaviour
         openSet.Add(startNode);
 
         // TODO:ここで再帰的に求めたパスが返ってくる
-        _grid.path = Recursive(openSet, closedSet, startNode, targetNode);
+        //_grid.path = Recursive(openSet, closedSet, startNode, targetNode);
+        wayPoints = Recursive(openSet, closedSet, startNode, targetNode);
+        _pathfindingManager.FinishedProcessingPath(wayPoints, pathSuccess);
         sw.Stop();
         Debug.Log(sw.Elapsed);
     }
 
-    HashSet<Node> Recursive(HashSet<Node> openSet, HashSet<Node> closedSet, in Node startNode, in Node targetNode)
+    //HashSet<Node> Recursive(HashSet<Node> openSet, HashSet<Node> closedSet, in Node startNode, in Node targetNode)
+    Vector3[] Recursive(HashSet<Node> openSet, HashSet<Node> closedSet, in Node startNode, in Node targetNode)
     {
         Node current = openSet.OrderBy(n => n.TotalCost)
                               .ThenBy(n => n.EstimateCost)
@@ -64,6 +77,7 @@ public class AStarPathfinding : MonoBehaviour
         }
         else if (current == targetNode)
         {
+            pathSuccess = true;
             return PathToHashSet(startNode, targetNode);
         }
 
@@ -92,9 +106,11 @@ public class AStarPathfinding : MonoBehaviour
     }
 
     // TODO: StackもしくはQueueに出来ないか検討する、そもそも先頭以外いらないのでは？
-    HashSet<Node> PathToHashSet(Node start, Node target)
+    //HashSet<Node> PathToHashSet(Node start, Node target)
+    Vector3[] PathToHashSet(Node start, Node target)
     {
-        HashSet<Node> path = new HashSet<Node>();
+        //HashSet<Node> path = new HashSet<Node>();
+        List<Node> path = new List<Node>();
         Node currentNode = target;
 
         while(currentNode != start)
@@ -103,7 +119,30 @@ public class AStarPathfinding : MonoBehaviour
             currentNode = currentNode.ParentNode;
         }
 
-        return path.Reverse().ToHashSet();
+        //return path.Reverse().ToHashSet();
+        Vector3[] waypoints = SimplifyPath(path);
+        Array.Reverse(waypoints);
+        return waypoints;
+    }
+
+    // TODO:このメソッドいらないのでは？
+    Vector3[] SimplifyPath(List<Node> path)
+    {
+        List<Vector3> waypoints = new List<Vector3>();
+        Vector2 dir = Vector2.zero;
+
+        for(int i = 1; i < path.Count; i++)
+        {
+            Vector2 dir2 = new Vector2(path[i - 1].GridX - path[i].GridX, path[i - 1].GridZ - path[i].GridZ);
+            // 方向が違うならば追加する、直線なら次のパスは飛ばす
+            if(dir2 != dir)
+            {
+                waypoints.Add(path[i].Pos);
+            }
+            dir = dir2;
+        }
+
+        return waypoints.ToArray();
     }
 
     int Distance(int gridX1, int gridZ1, int gridX2, int gridZ2)
