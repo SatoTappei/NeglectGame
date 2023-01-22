@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+// 時間検証用のSW、後で消す
+using System.Diagnostics;
 
 /// <summary>
 /// A*を用いて経路探索を行うコンポーネント
@@ -22,11 +24,16 @@ public class AStarPathfinding : MonoBehaviour
 
     void Update()
     {
-        Pathfinding(seeker.position, target.position);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Pathfinding(seeker.position, target.position);
+        }
     }
 
     void Pathfinding(Vector3 startPos, Vector3 targetPos)
     {
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
         Node startNode = _grid.GetNode(startPos);
         Node targetNode = _grid.GetNode(targetPos);
 
@@ -40,6 +47,8 @@ public class AStarPathfinding : MonoBehaviour
 
         // TODO:ここで再帰的に求めたパスが返ってくる
         _grid.path = Recursive(openSet, closedSet, startNode, targetNode);
+        sw.Stop();
+        Debug.Log(sw.Elapsed);
     }
 
     HashSet<Node> Recursive(HashSet<Node> openSet, HashSet<Node> closedSet, in Node startNode, in Node targetNode)
@@ -55,7 +64,7 @@ public class AStarPathfinding : MonoBehaviour
         }
         else if (current == targetNode)
         {
-            return RetracePath(startNode, targetNode);
+            return PathToHashSet(startNode, targetNode);
         }
 
         openSet.Remove(current);
@@ -83,7 +92,7 @@ public class AStarPathfinding : MonoBehaviour
     }
 
     // TODO: StackもしくはQueueに出来ないか検討する、そもそも先頭以外いらないのでは？
-    HashSet<Node> RetracePath(Node start, Node target)
+    HashSet<Node> PathToHashSet(Node start, Node target)
     {
         HashSet<Node> path = new HashSet<Node>();
         Node currentNode = target;
