@@ -3,46 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// A*で使うノードで構成されたグリッドのクラス
+///経路探索で使うノードで構成されたグリッドのクラス
 /// </summary>
 public class Grid : MonoBehaviour
 {
+    /// <summary>
+    /// 地形によって移動コストを設定するための構造体
+    /// </summary>
+    [System.Serializable]
+    public struct TerrainData
+    {
+        [SerializeField] string _tag;
+        [SerializeField] int _cost;
+
+        public string Tag => _tag;
+        public int Cost => _cost;
+    }
+
     // 変更すると直径が1ではなくなるので、色々な不具合が出るかもしれない
     readonly float NodeRadius = 0.5f;
 
-    // TODO:プレイヤーの参照をここに置くのは良くないので別の場所に移す
-    [SerializeField] Transform _player;
-
+    [Header("移動可能なレイヤー")]
+    [SerializeField] LayerMask _movableLayer;
     [Header("移動不可能なレイヤー")]
     [SerializeField] LayerMask _obstacleLayer;
     [Header("グリッドのサイズ")]
     [SerializeField] int _gridWidth;
     [SerializeField] int _gridDepth;
-    // TODO:以下のフィールドはリファクタリングが必要
-    [SerializeField] TerrainType[] _walkableRegions;
-    [SerializeField] LayerMask _walkableMask;
-    Dictionary<int, int> _walkableRegionsDic = new Dictionary<int, int>();
+    [Header("地形とそのコストのデータ")]
+    [SerializeField] TerrainData[] _terrainDataArr;
 
-    Node[,] _grid;
+    Dictionary<string, int> _terrainDataDic;
     // TODO:マルチスレッドで処理する場合は並列で同じ変数を使うことになってしまう？ので対処する
     HashSet<Node> _neighbourNodeSet;
+    Node[,] _grid;
 
     void Awake()
     {
+        _terrainDataDic = new Dictionary<string, int>(_terrainDataArr.Length);
         // 周囲8マスを格納するので初期容量は8固定
         _neighbourNodeSet = new HashSet<Node>(8);
 
-        // TODO: 移動コストのためにレイヤーの設定を行う、このforeachも要リファクタリング
-        foreach (TerrainType region in _walkableRegions)
-        {
-            _walkableMask.value += region._terrainLayer.value;
-            _walkableRegionsDic.Add((int)Mathf.Log(region._terrainLayer.value,2), region._terrainPenalty);
-        }
+        foreach (TerrainData data in _terrainDataArr)
+            _terrainDataDic.Add(data.Tag, data.Cost);
 
         GenerateGrid();
     }
-
-    float NodeDiameter() => NodeRadius * 2;
 
     void GenerateGrid()
     {
@@ -51,26 +57,41 @@ public class Grid : MonoBehaviour
         for (int z = 0; z < _gridDepth; z++)
             for (int x = 0; x < _gridWidth; x++)
             {
-                Vector3 pos = transform.position;
-                // グリッドの中心 - グリッドの半分の長さ + ノードn個分 + ノードの半径(ノードの中央を基準にしたい)
-                pos.x += -_gridWidth / 2 + x * NodeDiameter() + NodeRadius;
-                pos.z += -_gridDepth / 2 + z * NodeDiameter() + NodeRadius;
-                bool isMovable = !Physics.CheckSphere(pos, NodeRadius, _obstacleLayer);
+                Vector3 centerPos = GetNodeCenterPos(x, z);
+                bool isMovable = IsMovableNode(centerPos);
+                int penaltyCost = GetPenaltyCost(isMovable, centerPos);
 
-                // TODO:Rayを飛ばしてその場のペナリティを取得、こっからリファクタリングする必要あり
-                int penaltyCost = 0;
-                if (isMovable)
-                {
-                    Ray ray = new Ray(pos + Vector3.up * 50, Vector3.down);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit, 100, _walkableMask))
-                    {
-                        _walkableRegionsDic.TryGetValue(hit.collider.gameObject.layer, out penaltyCost);
-                    }
-                }
-
-                _grid[z, x] = new Node(pos, isMovable, x, z, penaltyCost);
+                _grid[z, x] = new Node(centerPos, isMovable, x, z, penaltyCost);
             }
+    }
+
+    Vector3 GetNodeCenterPos(int x, int z)
+    {
+        Vector3 pos = transform.position;
+        // グリッドの中心 - グリッドの半分の長さ + ノードn個分 + ノードの半径(ノードの中央を基準にしたい)
+        pos.x += -_gridWidth / 2 + x * NodeDiameter() + NodeRadius;
+        pos.z += -_gridDepth / 2 + z * NodeDiameter() + NodeRadius;
+
+        return pos;
+    }
+
+    float NodeDiameter() => NodeRadius * 2;
+
+    bool IsMovableNode(Vector3 pos) => !Physics.CheckSphere(pos, NodeRadius, _obstacleLayer);
+
+    int GetPenaltyCost(bool isMovable, Vector3 pos)
+    {
+        if (isMovable) return -1;
+
+        int penaltyCost = 0;
+
+        Ray ray = new Ray(pos + Vector3.up * 50, Vector3.down);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100, _movableLayer))
+            if (!_terrainDataDic.TryGetValue(hit.collider.gameObject.tag, out penaltyCost))
+                Debug.LogWarning("タグが存在しません: " + hit.collider.gameObject.tag);
+
+        return penaltyCost;
     }
 
     internal Node GetNode(Vector3 pos)
@@ -108,41 +129,5 @@ public class Grid : MonoBehaviour
             }
 
         return _neighbourNodeSet;
-    }
-
-    //internal HashSet<Node> path;
-    void OnDrawGizmos()
-    {
-        //Gizmos.DrawWireCube(transform.position, _gizmosGridSize);
-
-        if(_grid != null)
-        {
-            Node playerNode = GetNode(_player.position);
-
-            foreach (Node node in _grid)
-            {
-                // 参照型なので配列に新たに追加せずとも同じ参照ならという分岐が出来る
-                if (playerNode == node)
-                {
-                    Gizmos.color = Color.cyan;
-                }
-                else
-                {
-                    Gizmos.color = node.IsMovable ? Color.white : Color.red;
-                    //if (path != null)
-                    //    if (path.Contains(node))
-                    //        Gizmos.color = Color.black;
-                }
-                Gizmos.DrawCube(node.Pos, Vector3.one * NodeDiameter() * .9f);
-            }
-        }
-    }
-
-    // TODO:要リファクタリングなクラスの位置
-    [System.Serializable]
-    public class TerrainType
-    {
-        public LayerMask _terrainLayer;
-        public int _terrainPenalty;
     }
 }
