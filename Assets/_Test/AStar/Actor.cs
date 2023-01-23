@@ -13,7 +13,7 @@ public class Actor : MonoBehaviour
     // 影響マップに従って行動する
 
     [SerializeField] Transform _target;
-    float _speed = 0.1f;
+    float _speed = 1f;
     Vector3[] _path;
     int _targetIndex;
 
@@ -54,8 +54,29 @@ public class Actor : MonoBehaviour
                 currentWaypoint = _path[_targetIndex];
             }
 
-            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, _speed);
+            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, _speed*Time.deltaTime);
             yield return null;
+        }
+    }
+
+    public void OnDrawGizmos()
+    {
+        if(_path != null)
+        {
+            for(int i = _targetIndex; i < _path.Length; i++)
+            {
+                Gizmos.color = Color.black;
+                Gizmos.DrawCube(_path[i], Vector3.one);
+
+                if(i == _targetIndex)
+                {
+                    Gizmos.DrawLine(transform.position, _path[i]);
+                }
+                else
+                {
+                    Gizmos.DrawLine(_path[i - 1], _path[i]);
+                }
+            }
         }
     }
 }

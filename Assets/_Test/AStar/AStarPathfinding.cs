@@ -89,7 +89,7 @@ public class AStarPathfinding : MonoBehaviour
             if (!neighbour.IsMovable || closedSet.Contains(neighbour)) continue;
 
             int moveToNeighbour = Distance(current.GridX, current.GridZ, neighbour.GridX, neighbour.GridZ);
-            int neighbourActualCost = current.ActualCost + moveToNeighbour;
+            int neighbourActualCost = current.ActualCost + moveToNeighbour + neighbour.PenaltyCost;
 
             if (neighbourActualCost < neighbour.ActualCost || !openSet.Contains(neighbour))
             {

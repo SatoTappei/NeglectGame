@@ -18,6 +18,10 @@ public class Grid : MonoBehaviour
     [Header("グリッドのサイズ")]
     [SerializeField] int _gridWidth;
     [SerializeField] int _gridDepth;
+    // TODO:以下のフィールドはリファクタリングが必要
+    [SerializeField] TerrainType[] _walkableRegions;
+    [SerializeField] LayerMask _walkableMask;
+    Dictionary<int, int> _walkableRegionsDic = new Dictionary<int, int>();
 
     Node[,] _grid;
     // TODO:マルチスレッドで処理する場合は並列で同じ変数を使うことになってしまう？ので対処する
@@ -27,6 +31,14 @@ public class Grid : MonoBehaviour
     {
         // 周囲8マスを格納するので初期容量は8固定
         _neighbourNodeSet = new HashSet<Node>(8);
+
+        // TODO: 移動コストのためにレイヤーの設定を行う、このforeachも要リファクタリング
+        foreach (TerrainType region in _walkableRegions)
+        {
+            _walkableMask.value += region._terrainLayer.value;
+            _walkableRegionsDic.Add((int)Mathf.Log(region._terrainLayer.value,2), region._terrainPenalty);
+        }
+
         GenerateGrid();
     }
 
@@ -45,7 +57,19 @@ public class Grid : MonoBehaviour
                 pos.z += -_gridDepth / 2 + z * NodeDiameter() + NodeRadius;
                 bool isMovable = !Physics.CheckSphere(pos, NodeRadius, _obstacleLayer);
 
-                _grid[z, x] = new Node(pos, isMovable, x, z);
+                // TODO:Rayを飛ばしてその場のペナリティを取得、こっからリファクタリングする必要あり
+                int penaltyCost = 0;
+                if (isMovable)
+                {
+                    Ray ray = new Ray(pos + Vector3.up * 50, Vector3.down);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit, 100, _walkableMask))
+                    {
+                        _walkableRegionsDic.TryGetValue(hit.collider.gameObject.layer, out penaltyCost);
+                    }
+                }
+
+                _grid[z, x] = new Node(pos, isMovable, x, z, penaltyCost);
             }
     }
 
@@ -112,5 +136,13 @@ public class Grid : MonoBehaviour
                 Gizmos.DrawCube(node.Pos, Vector3.one * NodeDiameter() * .9f);
             }
         }
+    }
+
+    // TODO:要リファクタリングなクラスの位置
+    [System.Serializable]
+    public class TerrainType
+    {
+        public LayerMask _terrainLayer;
+        public int _terrainPenalty;
     }
 }
