@@ -7,12 +7,9 @@ using Cysharp.Threading.Tasks;
 /// <summary>
 /// 経路探索をした結果を用いてキャラクターを移動させるコンポーネント
 /// </summary>
-public class PathfindingActorMove : MonoBehaviour
+public class PathfindingMove : MonoBehaviour
 {
-    [SerializeField] Transform _target;
     [SerializeField] float _speed;
-
-    public Transform Target { get => _target; set => _target = value; }
 
     public void Move(Stack<Vector3> stack)
     {

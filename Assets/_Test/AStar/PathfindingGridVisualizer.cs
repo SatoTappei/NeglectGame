@@ -7,31 +7,29 @@ using UnityEngine;
 /// </summary>
 public class PathfindingGridVisualizer : MonoBehaviour
 {
-    // TODO:現在Gridクラスにあるものをこっちに移す
+    [SerializeField] PathfindingGrid _pathfindingGrid;
+    [Header("グリッド位置を表示するキャラクター")]
+    [SerializeField] Transform _character;
+
     void OnDrawGizmos()
     {
-        //Gizmos.DrawWireCube(transform.position, _gizmosGridSize);
+        if (_pathfindingGrid == null || _character == null || _pathfindingGrid.Grid == null)
+        {
+            Debug.LogWarning("グリッド情報を表示するための参照が不足しています。");
+            return;
+        }
 
-        //if (_grid != null)
-        //{
-        //    Node playerNode = GetNode(_player.position);
+        Node characterNode = _pathfindingGrid.GetNode(_character.position);
+        foreach (Node node in _pathfindingGrid.Grid)
+        {
+            if (characterNode == node)
+                Gizmos.color = Color.green;
+            else if (node.IsMovable)
+                Gizmos.color = Color.white;
+            else
+                Gizmos.color = Color.red;
 
-        //    foreach (Node node in _grid)
-        //    {
-        //        // 参照型なので配列に新たに追加せずとも同じ参照ならという分岐が出来る
-        //        if (playerNode == node)
-        //        {
-        //            Gizmos.color = Color.cyan;
-        //        }
-        //        else
-        //        {
-        //            Gizmos.color = node.IsMovable ? Color.white : Color.red;
-        //            //if (path != null)
-        //            //    if (path.Contains(node))
-        //            //        Gizmos.color = Color.black;
-        //        }
-        //        Gizmos.DrawCube(node.Pos, Vector3.one * NodeDiameter() * .9f);
-        //    }
-        //}
+            Gizmos.DrawCube(node.Pos, Vector3.one * _pathfindingGrid.NodeDiameter() * .9f);
+        }
     }
 }

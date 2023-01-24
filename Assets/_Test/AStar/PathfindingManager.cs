@@ -9,18 +9,20 @@ using UnityEngine.Events;
 /// </summary>
 public class PathfindingManager : MonoBehaviour
 {
-    [SerializeField] PathfindingActorMove _actor;
+    //[SerializeField] PathfindingActor _actor;
     [SerializeField] PathfindingSystem _pathfindingSystem;
+
+
 
     void Start()
     {
-        GetPath();
+        //GetPath();
     }
 
     // ‚¿‚å‚Á‚ÆƒeƒXƒg
     void GetPath()
     {
-        var v = _pathfindingSystem.Pathfinding(_actor.gameObject.transform.position, _actor.Target.position);
-        _actor.Move(v);
+        //var v = _pathfindingSystem.Pathfinding(_actor.gameObject.transform.position, _actor.Target.position);
+        //_actor.Move(v);
     }
 }

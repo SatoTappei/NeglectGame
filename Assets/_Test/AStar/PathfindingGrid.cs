@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 ///経路探索で使うノードで構成されたグリッドのクラス
 /// </summary>
-public class Grid : MonoBehaviour
+public class PathfindingGrid : MonoBehaviour
 {
     /// <summary>
     /// 地形によって移動コストを設定するための構造体
@@ -37,6 +37,8 @@ public class Grid : MonoBehaviour
     // TODO:マルチスレッドで処理する場合は並列で同じ変数を使うことになってしまう？ので対処する
     HashSet<Node> _neighbourNodeSet;
     Node[,] _grid;
+
+    internal IReadOnlyCollection<Node>[,] Grid => _grid as IReadOnlyCollection<Node>[,];
 
     void Awake()
     {
@@ -75,7 +77,7 @@ public class Grid : MonoBehaviour
         return pos;
     }
 
-    float NodeDiameter() => NodeRadius * 2;
+    public float NodeDiameter() => NodeRadius * 2;
 
     bool IsMovableNode(Vector3 pos) => !Physics.CheckSphere(pos, NodeRadius, _obstacleLayer);
 
@@ -85,6 +87,7 @@ public class Grid : MonoBehaviour
 
         int penaltyCost = 0;
 
+        // 下方向にRayを飛ばしてヒットしたオブジェクトのタグでコストの判定を行う
         Ray ray = new Ray(pos + Vector3.up * 50, Vector3.down);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 100, _movableLayer))

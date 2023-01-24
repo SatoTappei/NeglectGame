@@ -7,21 +7,17 @@ using System;
 /// <summary>
 /// A*を用いて経路探索を行うコンポーネント
 /// </summary>
-public class PathfindingSystem : MonoBehaviour
+public class PathfindingSystem : MonoBehaviour, IPathGetable
 {
-    [Header("Gridコンポーネントがアタッチされたオブジェクトのタグ")]
-    [SerializeField] string _targetTag;
-
-    Grid _grid;
+    [SerializeField] PathfindingGrid _grid;
     
-    void Start()
+    public Stack<Vector3> GetPathStack(Vector3 startPos, Vector3 targetPos)
     {
-        // FindObjectOfTypeメソッドは処理負荷がオブジェクト数に比例するのでこっちを使う
-        _grid = GameObject.FindGameObjectWithTag(_targetTag).GetComponent<Grid>();
+        return Pathfinding(startPos, targetPos);
     }
 
     // TODO:余裕があればパス検索をUniTaskを使って非同期処理にする
-    internal Stack<Vector3> Pathfinding(Vector3 startPos, Vector3 targetPos)
+    Stack<Vector3> Pathfinding(Vector3 startPos, Vector3 targetPos)
     {
         Node startNode = _grid.GetNode(startPos);
         Node targetNode = _grid.GetNode(targetPos);
@@ -88,9 +84,6 @@ public class PathfindingSystem : MonoBehaviour
         Node currentNode = target;
         while(currentNode != start)
         {
-            // TODO:本当に同じ方向だと追加されていないのか確認するために一度全部挿入してみる
-            //Vector3 dir = currentNode.Pos - currentNode.ParentNode.Pos;
-
             stack.Push(currentNode.Pos);
             currentNode = currentNode.ParentNode;
         }
