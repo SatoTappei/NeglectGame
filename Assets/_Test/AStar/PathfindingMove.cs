@@ -9,9 +9,14 @@ using Cysharp.Threading.Tasks;
 /// </summary>
 public class PathfindingMove : MonoBehaviour
 {
+    readonly float DashMag = 1.5f;
+
+    [Header("移動速度")]
     [SerializeField] float _speed;
 
-    public void Move(Stack<Vector3> stack)
+    bool _isDash = true;
+
+    public void MoveFollowPath(Stack<Vector3> stack)
     {
         MoveAsync(stack).Forget();
     }
@@ -19,13 +24,14 @@ public class PathfindingMove : MonoBehaviour
     // TODO:移動はDOTweenで行う方がシンプルになるかもしれない
     async UniTaskVoid MoveAsync(Stack<Vector3> stack)
     {
-        foreach (var v in stack)
+        foreach (Vector3 pos in stack)
         {
             while (true)
             {
-                if (transform.position == v) break;
+                if (transform.position == pos) break;
 
-                transform.position = Vector3.MoveTowards(transform.position, v, Time.deltaTime * 10);
+                float speed = _speed * (_isDash ? DashMag : 1);
+                transform.position = Vector3.MoveTowards(transform.position, pos, Time.deltaTime * speed);
                 await UniTask.Yield(cancellationToken: this.GetCancellationTokenOnDestroy());
             }
         }

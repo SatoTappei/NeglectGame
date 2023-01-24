@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-///経路探索で使うノードで構成されたグリッドのクラス
+/// 経路探索で使うノードで構成されたグリッドを管理するコンポーネント
 /// </summary>
 public class PathfindingGrid : MonoBehaviour
 {

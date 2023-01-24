@@ -8,8 +8,8 @@ using UnityEngine;
 public class PathfindingPresenter : MonoBehaviour
 {
     [SerializeField] PathfindingMove _pathfindingMove;
-    [Header("ターゲット")]
-    [SerializeField] Transform _target;
+    //[Header("ターゲット")]
+    //[SerializeField] Transform _target;
     [Header("IPathGetableのオブジェクトのタグ")]
     [SerializeField] string _tag;
     IPathGetable _IPathGetable;
@@ -21,12 +21,13 @@ public class PathfindingPresenter : MonoBehaviour
     {
         _startPos = transform.position;
         _IPathGetable = GameObject.FindGameObjectWithTag(_tag).GetComponent<IPathGetable>();
-        Move();
+        //Move();
     }
 
-    void Move()
+
+    internal void MoveToTarget(Vector3 targetPos)
     {
-        Stack<Vector3> pathStack = _IPathGetable.GetPathStack(_startPos, _target.position);
-        _pathfindingMove.Move(pathStack);
+        Stack<Vector3> pathStack = _IPathGetable.GetPathStack(_startPos, targetPos);
+        _pathfindingMove.MoveFollowPath(pathStack);
     }
 }
