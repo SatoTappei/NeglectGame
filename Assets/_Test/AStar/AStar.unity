@@ -545,7 +545,6 @@ GameObject:
   - component: {fileID: 718046992}
   - component: {fileID: 718046991}
   - component: {fileID: 718046993}
-  - component: {fileID: 718046994}
   - component: {fileID: 718046995}
   m_Layer: 0
   m_Name: System
@@ -619,18 +618,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _grid: {fileID: 718046991}
---- !u!114 &718046994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718046989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cb3ad53bf2394b43888832c9fc1ca1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &718046995
 MonoBehaviour:
   m_ObjectHideFlags: 0

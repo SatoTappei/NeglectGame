@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 辿るノードのStackを取得する処理が宣言されたインターフェース
+/// 移動時に辿るノードをStackで取得する処理を実装させるインターフェース
 /// </summary>
 public interface IPathGetable
 {
