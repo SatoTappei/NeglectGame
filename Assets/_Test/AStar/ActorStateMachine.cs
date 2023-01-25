@@ -7,7 +7,11 @@ using UnityEngine;
 /// </summary>
 public class ActorStateMachine : MonoBehaviour
 {
-    [SerializeField] PathfindingPresenter _pathfindingPresenter;
+    [Header("Systemについているタグ")]
+    [SerializeField] string _tag;
+
+    PathfindingTargetDecider _pathfindingTargetDecider;
+    IMovable _movable;
 
     void Start()
     {
@@ -23,7 +27,11 @@ public class ActorStateMachine : MonoBehaviour
         //           到着したら次のランダムな箇所に向かう
         // うろうろ中二目的の部屋を見つけたらその部屋に入っていく
 
+        _movable = GetComponent<IMovable>();
+        _pathfindingTargetDecider = GameObject.FindGameObjectWithTag(_tag).GetComponent<PathfindingTargetDecider>();
 
+        ActorStateMove actorStateMove = new ActorStateMove(_movable, _pathfindingTargetDecider);
+        actorStateMove.Update();
     }
 
     void Update()

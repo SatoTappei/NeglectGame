@@ -6,11 +6,12 @@ using UnityEngine.Events;
 
 /// <summary>
 /// 経路探索を管理するコンポーネント
+/// 未使用
 /// </summary>
 public class PathfindingManager : MonoBehaviour
 {
     //[SerializeField] PathfindingActor _actor;
-    [SerializeField] PathfindingSystem _pathfindingSystem;
+    //[SerializeField] PathfindingSystem _pathfindingSystem;
 
 
 

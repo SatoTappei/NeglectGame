@@ -7,11 +7,20 @@ using UnityEngine;
 /// </summary>
 internal abstract class ActorStateBase
 {
+    protected IMovable _movable;
+    protected PathfindingTargetDecider _pathfindingTargetDecider;
+
     protected enum Event
     {
         Enter,
         Stay,
         Exit,
+    }
+
+    public ActorStateBase(IMovable movable, PathfindingTargetDecider targetDecider)
+    {
+        _movable = movable;
+        _pathfindingTargetDecider = targetDecider;
     }
 
     protected Event _event;
@@ -30,5 +39,15 @@ internal abstract class ActorStateBase
 
 internal class ActorStateMove : ActorStateBase
 {
+    public ActorStateMove(IMovable movable, PathfindingTargetDecider targetDecider)
+        : base(movable, targetDecider)
+    {
+        // èàóùñ≥Çµ
+    }
 
+    protected override void Enter()
+    {
+        _movable.MoveStart(_pathfindingTargetDecider.GetPathfindingTarget());
+        base.Enter();
+    }
 }

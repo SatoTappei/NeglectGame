@@ -5,29 +5,29 @@ using UnityEngine;
 /// <summary>
 /// 移動するキャラクターをMVPで実装する為のPresenter
 /// </summary>
-public class PathfindingPresenter : MonoBehaviour
+public class PathfindingPresenter : MonoBehaviour, IMovable
 {
     [SerializeField] PathfindingMove _pathfindingMove;
-    //[Header("ターゲット")]
-    //[SerializeField] Transform _target;
     [Header("IPathGetableのオブジェクトのタグ")]
     [SerializeField] string _tag;
-    IPathGetable _IPathGetable;
-    
-    Vector3 _startPos;
-    Vector3 _targetPos;
+
+    IPathGetable _pathGetable;
 
     void Start()
     {
-        _startPos = transform.position;
-        _IPathGetable = GameObject.FindGameObjectWithTag(_tag).GetComponent<IPathGetable>();
-        //Move();
+        //_pathGetable = GameObject.FindGameObjectWithTag(_tag).GetComponent<IPathGetable>();
     }
 
-
-    internal void MoveToTarget(Vector3 targetPos)
+    public void MoveStart(Vector3 targetPos)
     {
-        Stack<Vector3> pathStack = _IPathGetable.GetPathStack(_startPos, targetPos);
+        // ↓ここで取得は一時的な処置、直す
+        _pathGetable = GameObject.FindGameObjectWithTag(_tag).GetComponent<IPathGetable>();
+        MoveToTarget(targetPos);
+    }
+
+    void MoveToTarget(Vector3 targetPos)
+    {
+        Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
         _pathfindingMove.MoveFollowPath(pathStack);
     }
 }
