@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// A*で使うグリッド状のマップに敷き詰められる各ノードのクラス
+/// 経路探索に使う、グリッド状に敷き詰められる各ノードのクラス
 /// </summary>
 internal class Node
 {
