@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 経路探索で移動する先を決定するコンポーネント
 /// </summary>
-internal class PathfindingTargetDecider : MonoBehaviour
+internal class PathfindingDestination : MonoBehaviour
 {
     [SerializeField] Transform[] _targetArr;
 

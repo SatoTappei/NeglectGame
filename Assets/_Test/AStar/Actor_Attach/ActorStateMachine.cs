@@ -10,15 +10,15 @@ public class ActorStateMachine : MonoBehaviour
     [Header("System‚É‚Â‚¢‚Ä‚¢‚éƒ^ƒO")]
     [SerializeField] string _tag;
 
-    PathfindingTargetDecider _pathfindingTargetDecider;
-    IMovable _movable;
+    PathfindingDestination _pathfindingTargetDecider;
+    IActorController _movable;
 
     void Start()
     {
 
 
-        _movable = GetComponent<IMovable>();
-        _pathfindingTargetDecider = GameObject.FindGameObjectWithTag(_tag).GetComponent<PathfindingTargetDecider>();
+        _movable = GetComponent<IActorController>();
+        _pathfindingTargetDecider = GameObject.FindGameObjectWithTag(_tag).GetComponent<PathfindingDestination>();
 
         ActorStateMove actorStateMove = new ActorStateMove(_movable, _pathfindingTargetDecider);
         actorStateMove.Update();

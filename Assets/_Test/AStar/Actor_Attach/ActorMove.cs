@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 /// <summary>
 /// 経路探索をした結果を用いてキャラクターを移動させるコンポーネント
 /// </summary>
-public class PathfindingMove : MonoBehaviour
+public class ActorMove : MonoBehaviour
 {
     readonly float DashMag = 1.5f;
 

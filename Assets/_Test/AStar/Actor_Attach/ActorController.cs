@@ -5,11 +5,13 @@ using UnityEngine;
 /// <summary>
 /// 移動するキャラクターをMVPで実装する為のPresenter
 /// </summary>
-public class PathfindingPresenter : MonoBehaviour, IMovable
+public class ActorController : MonoBehaviour, IActorController
 {
-    [SerializeField] PathfindingMove _pathfindingMove;
+    [SerializeField] ActorMove _pathfindingMove;
     [Header("IPathGetableのオブジェクトのタグ")]
     [SerializeField] string _tag;
+
+    PathfindingDestination _pathfindingDestination;
 
     // これはSystem側にくっ付いている
     IPathGetable _pathGetable;
@@ -32,17 +34,18 @@ public class PathfindingPresenter : MonoBehaviour, IMovable
         _pathfindingMove.MoveFollowPath(pathStack);
     }
 
-    // 移動に必要なもの
-    //  移動先のノードが詰まったStack <= おｋ
-    //  実際に移動を行うコンポーネント
-    //  どこに移動するか決定するコンポーネント
-    //  実際の移動はステートマシン内で行う
-    
-    // PathfindingMoveコンポーネントの役割
-    //  処理が呼ばれたら目的の位置に移動し、コールバックを実行する、だけ
-    //      移動先
-    //      ダッシュさせるか
-    //      終了時コールバック
-    //      作る:キャンセル処理
-    //  移動中にキャンセルできるようにする(何らかのインタラクションのため)
+    public void MoveStart()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void MoveCancel()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void PlayAnim()
+    {
+        throw new System.NotImplementedException();
+    }
 }

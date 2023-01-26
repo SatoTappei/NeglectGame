@@ -7,8 +7,8 @@ using UnityEngine;
 /// </summary>
 internal abstract class ActorStateBase
 {
-    protected IMovable _movable;
-    protected PathfindingTargetDecider _pathfindingTargetDecider;
+    protected IActorController _movable;
+    protected PathfindingDestination _pathfindingTargetDecider;
 
     protected enum Event
     {
@@ -17,7 +17,7 @@ internal abstract class ActorStateBase
         Exit,
     }
 
-    public ActorStateBase(IMovable movable, PathfindingTargetDecider targetDecider)
+    public ActorStateBase(IActorController movable, PathfindingDestination targetDecider)
     {
         _movable = movable;
         _pathfindingTargetDecider = targetDecider;
@@ -39,7 +39,7 @@ internal abstract class ActorStateBase
 
 internal class ActorStateMove : ActorStateBase
 {
-    public ActorStateMove(IMovable movable, PathfindingTargetDecider targetDecider)
+    public ActorStateMove(IActorController movable, PathfindingDestination targetDecider)
         : base(movable, targetDecider)
     {
         // èàóùñ≥Çµ
@@ -47,7 +47,7 @@ internal class ActorStateMove : ActorStateBase
 
     protected override void Enter()
     {
-        _movable.MoveStart(_pathfindingTargetDecider.GetPathfindingTarget());
+        //_movable.MoveStart(_pathfindingTargetDecider.GetPathfindingTarget());
         base.Enter();
     }
 }
