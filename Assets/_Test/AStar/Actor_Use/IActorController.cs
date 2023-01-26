@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// キャラクターが行う行動を実装するインターフェース
+/// ステートマシンで操作するために使う、キャラクターの行動を実装するインターフェース
 /// </summary>
 public interface IActorController
 {
-    public void MoveStart();
+    public void MoveToTarget();
     public void MoveCancel();
     public void PlayAnim();
 }

@@ -543,9 +543,9 @@ GameObject:
   m_Component:
   - component: {fileID: 718046990}
   - component: {fileID: 718046992}
-  - component: {fileID: 718046991}
   - component: {fileID: 718046993}
-  - component: {fileID: 718046995}
+  - component: {fileID: 718046991}
+  - component: {fileID: 718046994}
   m_Layer: 0
   m_Name: System
   m_TagString: GameController
@@ -617,8 +617,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc26448d974952d4ca7297229cf34c55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _grid: {fileID: 718046991}
---- !u!114 &718046995
+  _pathfindingGrid: {fileID: 718046991}
+--- !u!114 &718046994
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -627,7 +627,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 718046989}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f251c180567ea4f93be89b00431e93, type: 3}
+  m_Script: {fileID: 11500000, guid: 14c503bb5550e974fa3408d0f0a2222c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _targetArr:
@@ -5564,7 +5564,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50ac4404256820f4f904c7e77fb2aebf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tag: GameController
 --- !u!1 &8963728505715559660
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ステートのベース
+/// キャラクターのステートマシンの各ステートの基底クラス
 /// </summary>
 internal abstract class ActorStateBase
 {
     protected IActorController _movable;
-    protected PathfindingDestination _pathfindingTargetDecider;
 
     protected enum Event
     {
@@ -17,10 +16,9 @@ internal abstract class ActorStateBase
         Exit,
     }
 
-    public ActorStateBase(IActorController movable, PathfindingDestination targetDecider)
+    public ActorStateBase(IActorController movable)
     {
         _movable = movable;
-        _pathfindingTargetDecider = targetDecider;
     }
 
     protected Event _event;
@@ -37,17 +35,16 @@ internal abstract class ActorStateBase
     }
 }
 
+/// <summary>
+/// ターゲットに向かって移動するステートのクラス
+/// </summary>
 internal class ActorStateMove : ActorStateBase
 {
-    public ActorStateMove(IActorController movable, PathfindingDestination targetDecider)
-        : base(movable, targetDecider)
-    {
-        // 処理無し
-    }
+    public ActorStateMove(IActorController movable) : base(movable) { }
 
     protected override void Enter()
     {
-        //_movable.MoveStart(_pathfindingTargetDecider.GetPathfindingTarget());
+        _movable.MoveToTarget();
         base.Enter();
     }
 }

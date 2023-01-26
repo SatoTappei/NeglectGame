@@ -3,40 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 移動するキャラクターをMVPで実装する為のPresenter
+/// キャラクターの各行動を制御するコンポーネント
 /// </summary>
 public class ActorController : MonoBehaviour, IActorController
 {
     [SerializeField] ActorMove _pathfindingMove;
-    [Header("IPathGetableのオブジェクトのタグ")]
+    [Header("Systemオブジェクトのタグ")]
     [SerializeField] string _tag;
 
-    PathfindingDestination _pathfindingDestination;
-
-    // これはSystem側にくっ付いている
+    PathfindingTarget _pathfindingTarget;
     IPathGetable _pathGetable;
 
     void Start()
     {
-        //_pathGetable = GameObject.FindGameObjectWithTag(_tag).GetComponent<IPathGetable>();
+        // TODO:この参照先の取得方法がなんか気になる
+        GameObject system = GameObject.FindGameObjectWithTag(_tag);
+        _pathfindingTarget = system.GetComponent<PathfindingTarget>();
+        _pathGetable = system.GetComponent<IPathGetable>();
     }
 
-    public void MoveStart(Vector3 targetPos)
+    public void MoveToTarget()
     {
-        // ↓ここで取得は一時的な処置、直す
-        _pathGetable = GameObject.FindGameObjectWithTag(_tag).GetComponent<IPathGetable>();
-        MoveToTarget(targetPos);
-    }
-
-    void MoveToTarget(Vector3 targetPos)
-    {
+        Vector3 targetPos = _pathfindingTarget.GetPathfindingTarget();
         Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
         _pathfindingMove.MoveFollowPath(pathStack);
-    }
-
-    public void MoveStart()
-    {
-        throw new System.NotImplementedException();
     }
 
     public void MoveCancel()

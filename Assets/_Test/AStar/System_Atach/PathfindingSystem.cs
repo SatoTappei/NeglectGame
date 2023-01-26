@@ -9,14 +9,14 @@ using System;
 /// </summary>
 public class PathfindingSystem : MonoBehaviour, IPathGetable
 {
-    [SerializeField] PathfindingGrid _grid;
+    [SerializeField] PathfindingGrid _pathfindingGrid;
 
     /// <summary>経路探索で使いまわすのでメンバ変数にしておく</summary>
     Stack<Vector3> _pathStack;
 
     void Awake()
     {
-        _pathStack = new Stack<Vector3>(_grid.GridSize);
+        _pathStack = new Stack<Vector3>(_pathfindingGrid.GridSize);
     }
 
     public Stack<Vector3> GetPathStack(Vector3 startPos, Vector3 targetPos)
@@ -28,16 +28,16 @@ public class PathfindingSystem : MonoBehaviour, IPathGetable
     // TODO:余裕があれば軽量化をしてコレクション間の移し替えを無くす
     Stack<Vector3> Pathfinding(Vector3 startPos, Vector3 targetPos)
     {
-        Node startNode = _grid.GetNode(startPos);
-        Node targetNode = _grid.GetNode(targetPos);
+        Node startNode = _pathfindingGrid.GetNode(startPos);
+        Node targetNode = _pathfindingGrid.GetNode(targetPos);
 
         if (!startNode.IsMovable || !targetNode.IsMovable)
             return null;
 
         // グリッドの幅と奥行きの和の2倍分の初期容量を確保
         // 適度に障害物を配置し、グリッドの端から端まで探索させて決定した
-        HashSet<Node> openSet = new HashSet<Node>(_grid.GridSize * 2);
-        HashSet<Node> closedSet = new HashSet<Node>(_grid.GridSize * 2);
+        HashSet<Node> openSet = new HashSet<Node>(_pathfindingGrid.GridSize * 2);
+        HashSet<Node> closedSet = new HashSet<Node>(_pathfindingGrid.GridSize * 2);
 
         openSet.Add(startNode);
 
@@ -63,7 +63,7 @@ public class PathfindingSystem : MonoBehaviour, IPathGetable
         openSet.Remove(current);
         closedSet.Add(current);
 
-        foreach (Node neighbour in _grid.GetNeighbourNodeSet(current.GridX, current.GridZ))
+        foreach (Node neighbour in _pathfindingGrid.GetNeighbourNodeSet(current.GridX, current.GridZ))
         {
             if (!neighbour.IsMovable || closedSet.Contains(neighbour)) continue;
 
