@@ -7,31 +7,59 @@ using UnityEngine;
 /// </summary>
 internal abstract class ActorStateBase
 {
-    protected IActorController _movable;
-
-    protected enum Event
+    protected enum Stage
     {
         Enter,
         Stay,
         Exit,
     }
 
-    public ActorStateBase(IActorController movable)
+    protected IActorController _actorController;
+    protected Stage _stage;
+    protected ActorStateBase _nextState;
+    protected ActorStateMachine _stateMachine;
+
+    internal ActorStateBase(IActorController actorController, ActorStateMachine stateMachine)
     {
-        _movable = movable;
+        _actorController = actorController;
+        _stateMachine = stateMachine;
+        _stage = Stage.Enter;
     }
 
-    protected Event _event;
+    protected virtual void Enter() => _stage = Stage.Stay;
+    protected virtual void Stay() => _stage = Stage.Stay;
+    protected virtual void Exit() => _stage = Stage.Exit;
 
-    protected virtual void Enter() => _event = Event.Stay;
-    protected virtual void Stay() => _event = Event.Stay;
-    protected virtual void Exit() => _event = Event.Exit;
-
-    public void Update()
+    internal ActorStateBase Update()
     {
-        if      (_event == Event.Enter) Enter();
-        else if (_event == Event.Stay)  Stay();
-        else if (_event == Event.Exit)  Exit();
+        if      (_stage == Stage.Enter) Enter();
+        else if (_stage == Stage.Stay)  Stay();
+        else if (_stage == Stage.Exit)
+        {
+            Exit();
+            return _nextState;
+        }
+
+        return this;
+    }
+}
+
+/// <summary>
+/// その場で待機するステートのクラス
+/// </summary>
+internal class ActorStateIdle : ActorStateBase
+{
+    internal ActorStateIdle(IActorController movable, ActorStateMachine stateMachine)
+        : base(movable, stateMachine) { }
+
+    protected override void Stay()
+    {
+        if (_actorController.IsTransionAnimationState())
+        {
+            // アニメーションに遷移
+        }
+
+        base.Stay();
     }
 }
 
@@ -40,11 +68,63 @@ internal abstract class ActorStateBase
 /// </summary>
 internal class ActorStateMove : ActorStateBase
 {
-    public ActorStateMove(IActorController movable) : base(movable) { }
+    internal ActorStateMove(IActorController movable, ActorStateMachine stateMachine)
+        : base(movable, stateMachine) { }
 
     protected override void Enter()
     {
-        _movable.MoveToTarget();
+        _actorController.MoveToTarget(false);
         base.Enter();
     }
+
+    protected override void Stay()
+    {
+        if(_actorController.IsTransionMoveState())
+        {
+            //_nextState = new ActorStateIdle(_actorController);
+            Debug.Log("状態遷移 to Idle");
+            return;
+        }
+
+        base.Stay();
+    }
+
+    protected override void Exit()
+    {
+        _actorController.MoveCancel();
+        base.Exit();
+    }
+}
+
+/// <summary>
+/// うろうろするステートのクラス
+/// </summary>
+internal class ActorStateWander : ActorStateBase
+{
+    internal ActorStateWander(IActorController movable, ActorStateMachine stateMachine)
+        : base(movable, stateMachine) { }
+}
+
+/// <summary>
+/// アニメーションの再生を行うステートのクラス
+/// </summary>
+internal class ActorStateAnimation : ActorStateBase
+{
+    internal ActorStateAnimation(IActorController movable, ActorStateMachine stateMachine)
+        : base(movable, stateMachine) { }
+
+    protected override void Enter()
+    {
+        _actorController.PlayAnim();
+        base.Enter();
+    }
+}
+
+/// <summary>
+/// もうこれ以上動かさない状態のステートのクラス
+/// </summary>
+internal class ActorStateDead : ActorStateBase
+{
+    internal ActorStateDead(IActorController movable, ActorStateMachine stateMachine)
+        : base(movable, stateMachine) { }
 }

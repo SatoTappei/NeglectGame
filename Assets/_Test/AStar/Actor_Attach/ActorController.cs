@@ -7,12 +7,15 @@ using UnityEngine;
 /// </summary>
 public class ActorController : MonoBehaviour, IActorController
 {
-    [SerializeField] ActorMove _pathfindingMove;
+    [SerializeField] Animator _anim;
+    [SerializeField] ActorMove _actorMove;
     [Header("Systemオブジェクトのタグ")]
     [SerializeField] string _tag;
 
     PathfindingTarget _pathfindingTarget;
     IPathGetable _pathGetable;
+
+    //bool _isInit;
 
     void Start()
     {
@@ -22,20 +25,42 @@ public class ActorController : MonoBehaviour, IActorController
         _pathGetable = system.GetComponent<IPathGetable>();
     }
 
-    public void MoveToTarget()
+    public void MoveToTarget(bool isDash)
     {
         Vector3 targetPos = _pathfindingTarget.GetPathfindingTarget();
         Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
-        _pathfindingMove.MoveFollowPath(pathStack);
+        _actorMove.MoveFollowPath(pathStack, isDash);
+    }
+
+    public bool IsTransionMoveState()
+    {
+        // 毎フレーム呼ばれる
+        return false;
     }
 
     public void MoveCancel()
     {
-        throw new System.NotImplementedException();
+        _actorMove.MoveCancel();
+    }
+
+    public bool IsTransionAnimationState()
+    {
+        return false;
+        //if (_isInit)
+        //{
+        //    return true;
+        //}
+        //else
+        //{
+        //    return false;
+        //}
     }
 
     public void PlayAnim()
     {
-        throw new System.NotImplementedException();
+        // TODO:優先度(高) アニメーション名を文字列で指定しているのでHashに直す
+        _anim.Play("Slash");
+        // アニメーションが終わったらアイドルに遷移したい
+        // 最初に全部のステートを生成しておき、任意のステートに遷移できるようにしておく必要がある
     }
 }
