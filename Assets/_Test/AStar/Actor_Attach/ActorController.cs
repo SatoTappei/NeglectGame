@@ -25,6 +25,11 @@ public class ActorController : MonoBehaviour, IActorController
         _pathGetable = system.GetComponent<IPathGetable>();
     }
 
+    public bool IsTransitionIdleState()
+    {
+        return Input.GetKeyDown(KeyCode.I);
+    }
+
     public void MoveToTarget(bool isDash)
     {
         Vector3 targetPos = _pathfindingTarget.GetPathfindingTarget();
@@ -32,7 +37,7 @@ public class ActorController : MonoBehaviour, IActorController
         _actorMove.MoveFollowPath(pathStack, isDash);
     }
 
-    public bool IsTransionMoveState()
+    public bool IsTransitionMoveState()
     {
         // 毎フレーム呼ばれる
         return false;
@@ -43,7 +48,7 @@ public class ActorController : MonoBehaviour, IActorController
         _actorMove.MoveCancel();
     }
 
-    public bool IsTransionAnimationState()
+    public bool IsTransitionAnimationState()
     {
         return false;
         //if (_isInit)
@@ -60,7 +65,5 @@ public class ActorController : MonoBehaviour, IActorController
     {
         // TODO:優先度(高) アニメーション名を文字列で指定しているのでHashに直す
         _anim.Play("Slash");
-        // アニメーションが終わったらアイドルに遷移したい
-        // 最初に全部のステートを生成しておき、任意のステートに遷移できるようにしておく必要がある
     }
 }

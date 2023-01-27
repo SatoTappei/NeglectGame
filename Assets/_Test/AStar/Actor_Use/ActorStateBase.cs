@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using StateID = ActorStateMachine.StateID;
 
 /// <summary>
 /// キャラクターのステートマシンの各ステートの基底クラス
@@ -26,10 +27,6 @@ internal abstract class ActorStateBase
         _stage = Stage.Enter;
     }
 
-    protected virtual void Enter() => _stage = Stage.Stay;
-    protected virtual void Stay() => _stage = Stage.Stay;
-    protected virtual void Exit() => _stage = Stage.Exit;
-
     internal ActorStateBase Update()
     {
         if      (_stage == Stage.Enter) Enter();
@@ -37,11 +34,17 @@ internal abstract class ActorStateBase
         else if (_stage == Stage.Exit)
         {
             Exit();
+            _stage = Stage.Enter;
             return _nextState;
         }
 
         return this;
     }
+
+    // 各ステートでオーバーライドした際、メソッドの最後で base. を呼ぶこと
+    protected virtual void Enter() => _stage = Stage.Stay;
+    protected virtual void Stay() => _stage = Stage.Stay;
+    protected virtual void Exit() => _stage = Stage.Exit;
 }
 
 /// <summary>
@@ -52,13 +55,19 @@ internal class ActorStateIdle : ActorStateBase
     internal ActorStateIdle(IActorController movable, ActorStateMachine stateMachine)
         : base(movable, stateMachine) { }
 
+    protected override void Enter()
+    {
+        Debug.Log("アイドルEnter");
+        base.Enter();
+    }
+
     protected override void Stay()
     {
-        if (_actorController.IsTransionAnimationState())
+        if (_actorController.IsTransitionAnimationState())
         {
-            // アニメーションに遷移
-        }
 
+        }
+        Debug.Log("アイドルStay");
         base.Stay();
     }
 }
@@ -79,7 +88,7 @@ internal class ActorStateMove : ActorStateBase
 
     protected override void Stay()
     {
-        if(_actorController.IsTransionMoveState())
+        if(_actorController.IsTransitionMoveState())
         {
             //_nextState = new ActorStateIdle(_actorController);
             Debug.Log("状態遷移 to Idle");
@@ -116,7 +125,28 @@ internal class ActorStateAnimation : ActorStateBase
     protected override void Enter()
     {
         _actorController.PlayAnim();
+        Debug.Log("アニメ再生");
         base.Enter();
+    }
+
+    protected override void Stay()
+    {
+        // 条件がtrueなら
+        if (_actorController.IsTransitionIdleState())
+        {
+            Debug.Log("アイドルへ");
+            _nextState = _stateMachine.GetNextState(StateID.Idle);
+            _stage = Stage.Exit;
+            return;
+        }
+        Debug.Log("通常");
+        base.Stay();
+    }
+
+    protected override void Exit()
+    {
+        Debug.Log("Exit処理");
+        base.Exit();
     }
 }
 

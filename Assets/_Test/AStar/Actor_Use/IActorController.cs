@@ -7,10 +7,12 @@ using UnityEngine;
 /// </summary>
 public interface IActorController
 {
+    public bool IsTransitionIdleState();
+
     public void MoveToTarget(bool isDash);
-    public bool IsTransionMoveState();
+    public bool IsTransitionMoveState();
     public void MoveCancel();
 
-    public bool IsTransionAnimationState();
+    public bool IsTransitionAnimationState();
     public void PlayAnim();
 }
