@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
+using DG.Tweening;
 
 /// <summary>
 /// キャラクターの各行動を制御するコンポーネント
@@ -16,6 +19,7 @@ public class ActorController : MonoBehaviour, IActorController
     IPathGetable _pathGetable;
 
     //bool _isInit;
+    bool _isPlayAnim;
 
     void Start()
     {
@@ -23,11 +27,27 @@ public class ActorController : MonoBehaviour, IActorController
         GameObject system = GameObject.FindGameObjectWithTag(_tag);
         _pathfindingTarget = system.GetComponent<PathfindingTarget>();
         _pathGetable = system.GetComponent<IPathGetable>();
+
+        ObservableStateMachineTrigger trigger =
+            _anim.GetBehaviour<ObservableStateMachineTrigger>();
+
+        trigger.OnStateEnterAsObservable().Subscribe(state =>
+        {
+            AnimatorStateInfo info = state.StateInfo;
+            if (info.IsName("Sla!sh"))
+            {
+                // Slashのアニメーションのステートに入った時
+                // これを使うことを躊躇しないでください！
+            }
+
+        }).AddTo(this);
     }
 
     public bool IsTransitionIdleState()
     {
-        return Input.GetKeyDown(KeyCode.I);
+        // テスト
+        // アニメーションの再生終了後、Idleステートに遷移する
+        return !_isPlayAnim; 
     }
 
     public void MoveToTarget(bool isDash)
@@ -65,5 +85,7 @@ public class ActorController : MonoBehaviour, IActorController
     {
         // TODO:優先度(高) アニメーション名を文字列で指定しているのでHashに直す
         _anim.Play("Slash");
+        _isPlayAnim = true;
+        DOVirtual.DelayedCall(2.0f, () => _isPlayAnim = false);
     }
 }

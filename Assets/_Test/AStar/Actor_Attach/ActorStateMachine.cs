@@ -55,20 +55,6 @@ public class ActorStateMachine : MonoBehaviour
         _currentState = _currentState.Update();
     }
 
-    // 遷移したい時はステート側からこのメソッドを呼び出すようにつくる
-    // 各ステートのUpdate関数を見直すべき
-    internal void Transition(StateID stateID)
-    {
-        if (_stateDic.TryGetValue(stateID, out ActorStateBase state))
-        {
-            _currentState = state;
-        }
-        else
-        {
-            Debug.LogError("遷移先のステートが辞書内にありません: " + stateID);
-        }
-    }
-
     internal ActorStateBase GetNextState(StateID stateID)
     {
         if (_stateDic.TryGetValue(stateID, out ActorStateBase state))
