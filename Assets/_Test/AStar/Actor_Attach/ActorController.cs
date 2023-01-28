@@ -59,8 +59,8 @@ public class ActorController : MonoBehaviour, IActorController
 
     public bool IsTransitionMoveState()
     {
-        // –ˆƒtƒŒ[ƒ€ŒÄ‚Î‚ê‚é
-        return false;
+        
+        return !_isPlayAnim;
     }
 
     public void MoveCancel()

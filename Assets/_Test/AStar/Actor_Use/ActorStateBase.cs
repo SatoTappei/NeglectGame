@@ -132,13 +132,20 @@ internal class ActorStateAnimation : ActorStateBase
     protected override void Stay()
     {
         // 条件がtrueなら
-        if (_actorController.IsTransitionIdleState())
+        //if (_actorController.IsTransitionIdleState())
+        //{
+        //    Debug.Log("アイドルへ");
+        //    _nextState = _stateMachine.GetNextState(StateID.Idle);
+        //    _stage = Stage.Exit;
+        //    return;
+        //}
+        if (_actorController.IsTransitionMoveState())
         {
-            Debug.Log("アイドルへ");
-            _nextState = _stateMachine.GetNextState(StateID.Idle);
+            _nextState = _stateMachine.GetNextState(StateID.Move);
             _stage = Stage.Exit;
             return;
         }
+
         Debug.Log("通常");
         base.Stay();
     }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using UnityEngine.Events;
 
 /// <summary>
 /// 経路探索をした結果を用いてキャラクターを移動させるコンポーネント
@@ -17,6 +19,12 @@ public class ActorMove : MonoBehaviour
 
     // 移動開始時にインスタンスのnew、移動のキャンセルには.Cancel()を呼ぶ
     CancellationTokenSource _token;
+
+    async void Start()
+    {
+        // うろうろするテスト
+        LookAround(() => Debug.Log("hoge"));
+    }
 
     public void MoveFollowPath(Stack<Vector3> stack, bool isDash)
     {
@@ -41,5 +49,24 @@ public class ActorMove : MonoBehaviour
         }
     }
 
+    void LookAround(UnityAction callback)
+    {
+        int iteration = UnityEngine.Random.Range(2, 5);
+        int dir = (int)Mathf.Sign(UnityEngine.Random.Range(-100, 100));
+
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(transform.DORotate(new Vector3(0, dir * 90, 0), 2f)
+                                 .SetRelative()
+                                 .SetDelay(0.5f)
+                                 .SetEase(Ease.InOutSine));
+        sequence.SetLoops(iteration, LoopType.Yoyo);
+        sequence.OnComplete(() => callback.Invoke());
+    }
+
     public void MoveCancel() => _token?.Cancel();
+
+    private void OnDestroy()
+    {
+        _token?.Cancel();
+    }
 }

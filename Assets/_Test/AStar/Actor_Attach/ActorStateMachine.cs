@@ -48,6 +48,21 @@ public class ActorStateMachine : MonoBehaviour
 
         // 登場時にアニメーションを再生するため
         _currentState = anim;
+
+        // idle => move
+        // idle => wander
+        // idle => anim
+
+        // move => anim
+        // move => wander
+        // move => idle
+
+        // wander => move
+        // wander => anim
+        // wander => idle
+
+        // anim => idle
+        // anim => dead
     }
 
     void Update()
