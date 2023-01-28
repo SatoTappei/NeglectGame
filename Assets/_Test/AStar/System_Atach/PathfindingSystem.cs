@@ -9,27 +9,35 @@ using System;
 /// </summary>
 public class PathfindingSystem : MonoBehaviour, IPathGetable
 {
-    [SerializeField] PathfindingGrid _grid;
-    
+    [SerializeField] PathfindingGrid _pathfindingGrid;
+
+    /// <summary>経路探索で使いまわすのでメンバ変数にしておく</summary>
+    Stack<Vector3> _pathStack;
+
+    void Awake()
+    {
+        _pathStack = new Stack<Vector3>(_pathfindingGrid.GridSize);
+    }
+
     public Stack<Vector3> GetPathStack(Vector3 startPos, Vector3 targetPos)
     {
         return Pathfinding(startPos, targetPos);
     }
 
     // TODO:余裕があればパス検索をUniTaskを使って非同期処理にする
+    // TODO:余裕があれば軽量化をしてコレクション間の移し替えを無くす
     Stack<Vector3> Pathfinding(Vector3 startPos, Vector3 targetPos)
     {
-        Node startNode = _grid.GetNode(startPos);
-        Node targetNode = _grid.GetNode(targetPos);
+        Node startNode = _pathfindingGrid.GetNode(startPos);
+        Node targetNode = _pathfindingGrid.GetNode(targetPos);
 
         if (!startNode.IsMovable || !targetNode.IsMovable)
             return null;
 
-        // TODO:キャパシティの調整、現在はマンハッタン距離分だけ確保している
-        // TODO:余裕があれば軽量化をしてコレクション間の移し替えを無くす
-        int defaultCapacity = (int)(Mathf.Abs(targetPos.x - startPos.x) + Mathf.Abs(targetPos.z - startPos.z));
-        HashSet<Node> openSet = new HashSet<Node>(defaultCapacity);
-        HashSet<Node> closedSet = new HashSet<Node>(defaultCapacity);
+        // グリッドの幅と奥行きの和の2倍分の初期容量を確保
+        // 適度に障害物を配置し、グリッドの端から端まで探索させて決定した
+        HashSet<Node> openSet = new HashSet<Node>(_pathfindingGrid.GridSize * 2);
+        HashSet<Node> closedSet = new HashSet<Node>(_pathfindingGrid.GridSize * 2);
 
         openSet.Add(startNode);
 
@@ -55,7 +63,7 @@ public class PathfindingSystem : MonoBehaviour, IPathGetable
         openSet.Remove(current);
         closedSet.Add(current);
 
-        foreach (Node neighbour in _grid.GetNeighbourNodeSet(current.GridX, current.GridZ))
+        foreach (Node neighbour in _pathfindingGrid.GetNeighbourNodeSet(current.GridX, current.GridZ))
         {
             if (!neighbour.IsMovable || closedSet.Contains(neighbour)) continue;
 
@@ -76,19 +84,19 @@ public class PathfindingSystem : MonoBehaviour, IPathGetable
         return Recursive(openSet, closedSet, startNode, targetNode);
     }
 
+    /// <summary>目標地点から順に親を詰めていくのでStackを使用する</summary>
     Stack<Vector3> GetPathStack(Node start, Node target)
     {
-        // TODO:頻繁に呼ばれるのならQueueをメンバ変数に昇格させる
-        Stack<Vector3> stack = new Stack<Vector3>();
+        _pathStack.Clear();
         
         Node currentNode = target;
         while(currentNode != start)
         {
-            stack.Push(currentNode.Pos);
+            _pathStack.Push(currentNode.Pos);
             currentNode = currentNode.ParentNode;
         }
 
-        return stack;
+        return _pathStack;
     }
 
     int Distance(int gridX1, int gridZ1, int gridX2, int gridZ2)

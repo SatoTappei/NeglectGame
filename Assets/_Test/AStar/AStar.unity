@@ -543,10 +543,9 @@ GameObject:
   m_Component:
   - component: {fileID: 718046990}
   - component: {fileID: 718046992}
-  - component: {fileID: 718046991}
   - component: {fileID: 718046993}
+  - component: {fileID: 718046991}
   - component: {fileID: 718046994}
-  - component: {fileID: 718046995}
   m_Layer: 0
   m_Name: System
   m_TagString: GameController
@@ -618,7 +617,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc26448d974952d4ca7297229cf34c55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _grid: {fileID: 718046991}
+  _pathfindingGrid: {fileID: 718046991}
 --- !u!114 &718046994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -628,19 +627,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 718046989}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cb3ad53bf2394b43888832c9fc1ca1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &718046995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718046989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f251c180567ea4f93be89b00431e93, type: 3}
+  m_Script: {fileID: 11500000, guid: 14c503bb5550e974fa3408d0f0a2222c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _targetArr:
@@ -2119,7 +2106,7 @@ Animator:
   m_GameObject: {fileID: 5337509657328202541}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 5af8bc9dfdea51945858c443f8084b05, type: 3}
-  m_Controller: {fileID: 9100000, guid: 3f5d6197ea747c942870be4a80363d98, type: 2}
+  m_Controller: {fileID: 9100000, guid: dacb8519f0c33d74784f820078647fd7, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4121,9 +4108,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8955967621742018878}
   - component: {fileID: 1352204518011563076}
-  - component: {fileID: 8955967621742018881}
   - component: {fileID: 8955967621742018880}
   - component: {fileID: 8955967621742018879}
+  - component: {fileID: 8955967621742018881}
   m_Layer: 0
   m_Name: Hero
   m_TagString: Untagged
@@ -5563,7 +5550,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11e69e1e88b1fdb4a9fc1942c5e41f2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pathfindingMove: {fileID: 8955967621742018879}
+  _anim: {fileID: 1352204518011563076}
+  _actorMove: {fileID: 8955967621742018879}
   _tag: GameController
 --- !u!114 &8955967621742018881
 MonoBehaviour:
@@ -5577,7 +5565,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50ac4404256820f4f904c7e77fb2aebf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tag: GameController
 --- !u!1 &8963728505715559660
 GameObject:
   m_ObjectHideFlags: 0

@@ -38,7 +38,7 @@ public class PathfindingGrid : MonoBehaviour
     HashSet<Node> _neighbourNodeSet;
     Node[,] _grid;
 
-    internal IReadOnlyCollection<Node>[,] Grid => _grid as IReadOnlyCollection<Node>[,];
+    internal int GridSize => _gridWidth + _gridDepth;
 
     void Awake()
     {
@@ -77,8 +77,9 @@ public class PathfindingGrid : MonoBehaviour
         return pos;
     }
 
-    public float NodeDiameter() => NodeRadius * 2;
+    float NodeDiameter() => NodeRadius * 2;
 
+    /// <summary>球状の当たり判定を出して障害物のレイヤーにヒットしなかったら移動できるのでtrueを返す</summary>
     bool IsMovableNode(Vector3 pos) => !Physics.CheckSphere(pos, NodeRadius, _obstacleLayer);
 
     int GetPenaltyCost(bool isMovable, Vector3 pos)
