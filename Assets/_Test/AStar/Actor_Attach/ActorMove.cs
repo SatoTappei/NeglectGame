@@ -12,7 +12,7 @@ using UnityEngine.Events;
 /// </summary>
 public class ActorMove : MonoBehaviour
 {
-    readonly float DashMag = 1.5f;
+    readonly float DashMag = 3.5f;
 
     [Header("移動速度")]
     [SerializeField] float _speed;
@@ -20,21 +20,16 @@ public class ActorMove : MonoBehaviour
     // 移動開始時にインスタンスのnew、移動のキャンセルには.Cancel()を呼ぶ
     CancellationTokenSource _token;
 
-    async void Start()
-    {
-        // うろうろするテスト
-        LookAround(() => Debug.Log("hoge"));
-    }
-
-    public void MoveFollowPath(Stack<Vector3> stack, bool isDash)
+    public void MoveFollowPath(Stack<Vector3> stack, bool isDash, UnityAction callBack)
     {
         // TODO:現状は都度トークンをnewしているので他の方法が無いか模索する
         _token = new CancellationTokenSource();
-        MoveAsync(stack, isDash).Forget();
+        MoveAsync(stack, isDash, callBack).Forget();
     }
 
+    // ダッシュのフラグを持たせず、ダッシュと歩きのメソッドを作ってラップする
     // TODO:移動はDOTweenで行う方がシンプルになるかもしれない
-    async UniTaskVoid MoveAsync(Stack<Vector3> stack, bool isDash)
+    async UniTaskVoid MoveAsync(Stack<Vector3> stack, bool isDash, UnityAction callBack)
     {
         foreach (Vector3 pos in stack)
         {
@@ -47,20 +42,23 @@ public class ActorMove : MonoBehaviour
                 await UniTask.Yield(cancellationToken: _token.Token);
             }
         }
+
+        callBack.Invoke();
     }
 
-    void LookAround(UnityAction callback)
+    public void LookAround(UnityAction callback)
     {
-        int iteration = UnityEngine.Random.Range(2, 5);
-        int dir = (int)Mathf.Sign(UnityEngine.Random.Range(-100, 100));
+        int iteration = 1;
+        int dir = UnityEngine.Random.Range(0, 2) == 1 ? 90 : -90;
 
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(transform.DORotate(new Vector3(0, dir * 90, 0), 2f)
+        sequence.Append(transform.DORotate(new Vector3(0, dir, 0), 1f)
                                  .SetRelative()
                                  .SetDelay(0.5f)
-                                 .SetEase(Ease.InOutSine));
+                                 .SetEase(Ease.InOutSine))
+                                 .SetLink(gameObject);
         sequence.SetLoops(iteration, LoopType.Yoyo);
-        sequence.OnComplete(() => callback.Invoke());
+        sequence.OnComplete(() => callback?.Invoke());
     }
 
     public void MoveCancel() => _token?.Cancel();

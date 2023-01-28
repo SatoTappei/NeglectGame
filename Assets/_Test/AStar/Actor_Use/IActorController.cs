@@ -10,9 +10,20 @@ public interface IActorController
     public bool IsTransitionIdleState();
 
     public void MoveToTarget(bool isDash);
-    public bool IsTransitionMoveState();
+    public bool IsTransitionToWanderStateFromMoveState();
+    public bool IsTransitionToAnimationStateFromMoveState();
     public void MoveCancel();
 
     public bool IsTransitionAnimationState();
     public void PlayAnim();
+
+    public void PlayLookAround();
+    public bool IsTransitionToMoveStateFromWanderStateAfterLookAroundDOtweenAnimation();
+
+    public bool IsMovaStateAndWanderStateAndAnimationStateIsCancelToStateDeadState();
+
+    public void PlayDiscoverAnim();
+    public bool IsTransitionToMoveStateFromDiscoverState();
+
+    public void FromAnyStateDead();
 }

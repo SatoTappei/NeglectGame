@@ -41,7 +41,7 @@ internal abstract class ActorStateBase
         return this;
     }
 
-    // 各ステートでオーバーライドした際、メソッドの最後で base. を呼ぶこと
+    // 各ステートでオーバーライドした際、メソッドの"最後"で base. を呼ぶこと
     protected virtual void Enter() => _stage = Stage.Stay;
     protected virtual void Stay() => _stage = Stage.Stay;
     protected virtual void Exit() => _stage = Stage.Exit;
@@ -82,16 +82,33 @@ internal class ActorStateMove : ActorStateBase
 
     protected override void Enter()
     {
-        _actorController.MoveToTarget(false);
+        Debug.Log("移動開始");
+        _actorController.MoveToTarget(true);
         base.Enter();
     }
 
     protected override void Stay()
     {
-        if(_actorController.IsTransitionMoveState())
+        if (_actorController.IsMovaStateAndWanderStateAndAnimationStateIsCancelToStateDeadState())
         {
-            //_nextState = new ActorStateIdle(_actorController);
-            Debug.Log("状態遷移 to Idle");
+            _nextState = _stateMachine.GetNextState(StateID.Dead);
+            _stage = Stage.Exit;
+            return;
+        }
+
+        if (_actorController.IsTransitionToAnimationStateFromMoveState())
+        {
+            // なんか発見したときのアニメーションを再生
+            _nextState = _stateMachine.GetNextState(StateID.Discover);
+            _stage = Stage.Exit;
+            return;
+        }
+
+        if (_actorController.IsTransitionToWanderStateFromMoveState())
+        {
+            // うろうろに遷移処理をかっくところかｒ
+            _nextState = _stateMachine.GetNextState(StateID.Wander);
+            _stage = Stage.Exit;
             return;
         }
 
@@ -112,6 +129,35 @@ internal class ActorStateWander : ActorStateBase
 {
     internal ActorStateWander(IActorController movable, ActorStateMachine stateMachine)
         : base(movable, stateMachine) { }
+
+    protected override void Enter()
+    {
+        _actorController.PlayLookAround();
+        base.Enter();
+    }
+
+    protected override void Stay()
+    {
+        if (_actorController.IsMovaStateAndWanderStateAndAnimationStateIsCancelToStateDeadState())
+        {
+            _nextState = _stateMachine.GetNextState(StateID.Dead);
+            _stage = Stage.Exit;
+            return;
+        }
+
+        if (_actorController.IsTransitionToMoveStateFromWanderStateAfterLookAroundDOtweenAnimation())
+        {
+            _nextState = _stateMachine.GetNextState(StateID.Move);
+            _stage = Stage.Exit;
+            return;
+        }
+        base.Stay();
+    }
+
+    protected override void Exit()
+    {
+        base.Exit();
+    }
 }
 
 /// <summary>
@@ -131,15 +177,14 @@ internal class ActorStateAnimation : ActorStateBase
 
     protected override void Stay()
     {
-        // 条件がtrueなら
-        //if (_actorController.IsTransitionIdleState())
-        //{
-        //    Debug.Log("アイドルへ");
-        //    _nextState = _stateMachine.GetNextState(StateID.Idle);
-        //    _stage = Stage.Exit;
-        //    return;
-        //}
-        if (_actorController.IsTransitionMoveState())
+        if (_actorController.IsMovaStateAndWanderStateAndAnimationStateIsCancelToStateDeadState())
+        {
+            _nextState = _stateMachine.GetNextState(StateID.Dead);
+            _stage = Stage.Exit;
+            return;
+        }
+
+        if (_actorController.IsTransitionIdleState())
         {
             _nextState = _stateMachine.GetNextState(StateID.Move);
             _stage = Stage.Exit;
@@ -158,10 +203,48 @@ internal class ActorStateAnimation : ActorStateBase
 }
 
 /// <summary>
+/// 発見した時のステートのクラス
+/// </summary>
+internal class ActorStateDiscover : ActorStateBase
+{
+    internal ActorStateDiscover(IActorController movable, ActorStateMachine stateMachine)
+        : base(movable, stateMachine) { }
+
+    protected override void Enter()
+    {
+        Debug.Log("八犬伝");
+        _actorController.PlayDiscoverAnim();
+        base.Enter();
+    }
+
+    protected override void Stay()
+    {
+        if (_actorController.IsTransitionToMoveStateFromDiscoverState())
+        {
+            _nextState = _stateMachine.GetNextState(StateID.Move);
+            _stage = Stage.Exit;
+            return;
+        }
+        base.Stay();
+    }
+
+    protected override void Exit()
+    {
+        base.Exit();
+    }
+}
+
+/// <summary>
 /// もうこれ以上動かさない状態のステートのクラス
 /// </summary>
 internal class ActorStateDead : ActorStateBase
 {
     internal ActorStateDead(IActorController movable, ActorStateMachine stateMachine)
         : base(movable, stateMachine) { }
+
+    protected override void Enter()
+    {
+        _actorController.FromAnyStateDead();
+        // これ以上処理をしないので .base は呼ばない
+    }
 }
