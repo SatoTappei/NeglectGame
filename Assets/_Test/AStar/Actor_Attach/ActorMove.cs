@@ -12,6 +12,7 @@ using UnityEngine.Events;
 /// </summary>
 public class ActorMove : MonoBehaviour
 {
+    [SerializeField] Animator _anim;
     [Header("移動速度")]
     [SerializeField] float _speed;
     [Header("ダッシュ時の速度倍率")]
@@ -24,6 +25,7 @@ public class ActorMove : MonoBehaviour
     {
         // TODO:現状は都度トークンをnewしているので他の方法が無いか模索する
         _token = new CancellationTokenSource();
+        _anim.Play("Walk");
         MoveAsync(stack, _speed, callBack).Forget();
     }
 
@@ -31,6 +33,7 @@ public class ActorMove : MonoBehaviour
     {
         // TODO:現状は都度トークンをnewしているので他の方法が無いか模索する
         _token = new CancellationTokenSource();
+        _anim.Play("Sprint");
         MoveAsync(stack, _speed * _dashMag, callBack).Forget();
     }
 
@@ -53,6 +56,9 @@ public class ActorMove : MonoBehaviour
 
     public void LookAround(UnityAction callback)
     {
+
+        _anim.Play("LookAround");
+        // ここで回転させるなら子のModelの方を回転しないといけない
         //int iteration = 1;
         //int dir = UnityEngine.Random.Range(0, 2) == 1 ? 90 : -90;
 
@@ -65,7 +71,7 @@ public class ActorMove : MonoBehaviour
         //sequence.SetLoops(iteration, LoopType.Yoyo);
         //sequence.OnComplete(() => callback?.Invoke());
 
-        DOVirtual.DelayedCall(1.5f, () => callback?.Invoke());
+        DOVirtual.DelayedCall(3.5f, () => callback?.Invoke());
     }
 
     public void MoveCancel() => _token?.Cancel();

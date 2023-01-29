@@ -11,7 +11,7 @@ using DG.Tweening;
 public class ActorController : MonoBehaviour, IActorController
 {
     readonly int AppearAnimState = Animator.StringToHash("Appear");
-    readonly int PanicAnimState = Animator.StringToHash("Slash");
+    readonly int PanicAnimState = Animator.StringToHash("Jump");
 
     [SerializeField] Animator _anim;
     [SerializeField] ActorMove _actorMove;

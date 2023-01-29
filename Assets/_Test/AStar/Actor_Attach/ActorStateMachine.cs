@@ -12,6 +12,7 @@ public class ActorStateMachine : MonoBehaviour
     {
         Idle,
         Move,
+        Run,
         Wander,
         Anim,
         Panic,
@@ -37,6 +38,7 @@ public class ActorStateMachine : MonoBehaviour
         // TOOD:Ç±Ç±ÇÁï”ÇÃê∂ê¨èàóùÇÕVContainerÇ…îCÇπÇÁÇÍÇ»Ç¢Ç©
         ActorStateIdle idle      = new ActorStateIdle(_actorController, this);
         ActorStateMove move      = new ActorStateMove(_actorController, this);
+        ActorStateRun run        = new ActorStateRun(_actorController, this);
         ActorStateWander wander  = new ActorStateWander(_actorController, this);
         ActorStateAnimation anim = new ActorStateAnimation(_actorController, this);
         ActorStatePanic panic    = new ActorStatePanic(_actorController, this);
@@ -44,6 +46,7 @@ public class ActorStateMachine : MonoBehaviour
 
         _stateDic.Add(StateID.Idle, idle);
         _stateDic.Add(StateID.Move, move);
+        _stateDic.Add(StateID.Run, run);
         _stateDic.Add(StateID.Wander, wander);
         _stateDic.Add(StateID.Anim, anim);
         _stateDic.Add(StateID.Panic, panic);
