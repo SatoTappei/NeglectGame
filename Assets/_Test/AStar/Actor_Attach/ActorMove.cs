@@ -12,24 +12,30 @@ using UnityEngine.Events;
 /// </summary>
 public class ActorMove : MonoBehaviour
 {
-    readonly float DashMag = 3.5f;
-
     [Header("移動速度")]
     [SerializeField] float _speed;
+    [Header("ダッシュ時の速度倍率")]
+    [SerializeField] float _dashMag = 1.5f;
 
     // 移動開始時にインスタンスのnew、移動のキャンセルには.Cancel()を呼ぶ
     CancellationTokenSource _token;
 
-    public void MoveFollowPath(Stack<Vector3> stack, bool isDash, UnityAction callBack)
+    internal void MoveFollowPath(Stack<Vector3> stack, UnityAction callBack)
     {
         // TODO:現状は都度トークンをnewしているので他の方法が無いか模索する
         _token = new CancellationTokenSource();
-        MoveAsync(stack, isDash, callBack).Forget();
+        MoveAsync(stack, _speed, callBack).Forget();
     }
 
-    // ダッシュのフラグを持たせず、ダッシュと歩きのメソッドを作ってラップする
+    internal void RunFollowPath(Stack<Vector3> stack, UnityAction callBack)
+    {
+        // TODO:現状は都度トークンをnewしているので他の方法が無いか模索する
+        _token = new CancellationTokenSource();
+        MoveAsync(stack, _speed * _dashMag, callBack).Forget();
+    }
+
     // TODO:移動はDOTweenで行う方がシンプルになるかもしれない
-    async UniTaskVoid MoveAsync(Stack<Vector3> stack, bool isDash, UnityAction callBack)
+    async UniTaskVoid MoveAsync(Stack<Vector3> stack, float speed, UnityAction callBack)
     {
         foreach (Vector3 pos in stack)
         {
@@ -37,7 +43,6 @@ public class ActorMove : MonoBehaviour
             {
                 if (transform.position == pos) break;
 
-                float speed = _speed * (isDash ? DashMag : 1);
                 transform.position = Vector3.MoveTowards(transform.position, pos, Time.deltaTime * speed);
                 await UniTask.Yield(cancellationToken: _token.Token);
             }

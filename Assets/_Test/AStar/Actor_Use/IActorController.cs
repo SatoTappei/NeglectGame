@@ -7,23 +7,20 @@ using UnityEngine;
 /// </summary>
 public interface IActorController
 {
-    public bool IsTransitionIdleState();
+    public void MoveToTarget();
+    public void RunToTarget();
+    public bool IsTransitionable();
 
-    public void MoveToTarget(bool isDash);
-    public bool IsTransitionToWanderStateFromMoveState();
-    public bool IsTransitionToAnimationStateFromMoveState();
-    public void MoveCancel();
+    public bool IsTransitionToPanicState();
+    public void CancelMoveToTarget();
 
-    public bool IsTransitionAnimationState();
-    public void PlayAnim();
+    public void PlayAppearAnim();
 
-    public void PlayLookAround();
-    public bool IsTransitionToMoveStateFromWanderStateAfterLookAroundDOtweenAnimation();
+    public void PlayWanderAnim();
 
-    public bool IsMovaStateAndWanderStateAndAnimationStateIsCancelToStateDeadState();
+    public bool IsTransitionToDeadState();
 
-    public void PlayDiscoverAnim();
-    public bool IsTransitionToMoveStateFromDiscoverState();
+    public void PlayPanicAnim();
 
-    public void FromAnyStateDead();
+    public void PlayDeadAnim();
 }

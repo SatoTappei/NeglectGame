@@ -19,11 +19,8 @@ public class ActorController : MonoBehaviour, IActorController
     PathfindingTarget _pathfindingTarget;
     IPathGetable _pathGetable;
 
-    //bool _isInit;
     bool _isPlayAnim;
-    bool _isPlayDiscoverAnim;
-    bool _isMoving;
-    bool _isLookArounding;
+    bool _isTransitionable;
 
     void Start()
     {
@@ -38,8 +35,7 @@ public class ActorController : MonoBehaviour, IActorController
 
         trigger.OnStateEnterAsObservable().Subscribe(state =>
         {
-            AnimatorStateInfo info = state.StateInfo;
-            if (info.IsName("Sla!sh"))
+            if (state.StateInfo.IsName("Sla!sh"))
             {
                 // Slashのアニメーションのステートに入った時
                 // これを使うことを躊躇しないでください！
@@ -48,93 +44,70 @@ public class ActorController : MonoBehaviour, IActorController
         }).AddTo(this);
     }
 
-    public bool IsTransitionIdleState()
+    public void MoveToTarget()
     {
-        // テスト
-        // アニメーションの再生終了後、Idleステートに遷移する
-        return !_isPlayAnim; 
+        _isTransitionable = false;
+        _actorMove.MoveFollowPath(GetPathStack(), () => _isTransitionable = true);
     }
 
-    public void MoveToTarget(bool isDash)
+    public void RunToTarget()
+    {
+        _isTransitionable = false;
+        _actorMove.RunFollowPath(GetPathStack(), () => _isTransitionable = true);
+    }
+
+    public void CancelMoveToTarget() => _actorMove.MoveCancel();
+
+    Stack<Vector3> GetPathStack()
     {
         Vector3 targetPos = _pathfindingTarget.GetPathfindingTarget();
-        Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
-        _actorMove.MoveFollowPath(pathStack, isDash, () => _isMoving = false);
-        _isMoving = true;
+        return _pathGetable.GetPathStack(transform.position, targetPos);
     }
 
-    public bool IsTransitionToWanderStateFromMoveState()
+    public bool IsTransitionable() => _isTransitionable;
+
+    public void PlayWanderAnim()
     {
-        // 移動が終わったことを検知してうろうろに遷移させる
-        return !_isMoving;
+        _isTransitionable = false;
+        _actorMove.LookAround(() => _isTransitionable = true);
     }
 
-    public void MoveCancel()
-    {
-        _actorMove.MoveCancel();
-    }
-
-    public void PlayLookAround()
-    {
-        _actorMove.LookAround(() => _isLookArounding = false);
-        _isLookArounding = true;
-    }
-
-    public bool IsTransitionToMoveStateFromWanderStateAfterLookAroundDOtweenAnimation()
-    {
-        return !_isLookArounding;
-    }
-
-    public bool IsTransitionAnimationState()
-    {
-        return false;
-        //if (_isInit)
-        //{
-        //    return true;
-        //}
-        //else
-        //{
-        //    return false;
-        //}
-    }
-
-    public void PlayAnim()
+    // ★要リファクタリング
+    public void PlayAppearAnim()
     {
         // TODO:優先度(高) アニメーション名を文字列で指定しているのでHashに直す
         _anim.Play("Slash");
-        _isPlayAnim = true;
+        _isTransitionable = false;
         // 2秒後にフラグを折っているがこれをアニメーションに合わせる処理が必要
-        DOVirtual.DelayedCall(2.0f, () => _isPlayAnim = false);
+        DOVirtual.DelayedCall(2.0f, () => _isTransitionable = true);
     }
 
-    public bool IsMovaStateAndWanderStateAndAnimationStateIsCancelToStateDeadState()
+    public bool IsTransitionToPanicState()
     {
-        return Input.GetKeyDown(KeyCode.Q);
-    }
-
-    public void PlayDiscoverAnim()
-    {
-        // 発見したときのアニメーションを再生
-        _anim.Play("Slash");
-        _isPlayDiscoverAnim = true;
-        // 2秒後にフラグを折っているがこれをアニメーションに合わせる処理が必要
-        DOVirtual.DelayedCall(2.0f, () => _isPlayDiscoverAnim = false);
-        // 対象の部屋に向かう(MoveState)
-    }
-
-    public void FromAnyStateDead()
-    {
-        Destroy(gameObject);
-        Instantiate(_testDestroyedPrefab, transform.position, Quaternion.identity);
-    }
-
-    public bool IsTransitionToAnimationStateFromMoveState()
-    {
+        // ★何か見つけた
         return Input.GetKeyDown(KeyCode.W);
     }
 
-    public bool IsTransitionToMoveStateFromDiscoverState()
+    // ★要リファクタリング
+    public void PlayPanicAnim()
     {
-        return !_isPlayDiscoverAnim;
+        // 発見したときのアニメーションを再生
+        _anim.Play("Slash");
+        _isTransitionable = false;
+        // 2秒後にフラグを折っているがこれをアニメーションに合わせる処理が必要
+        DOVirtual.DelayedCall(2.0f, () => _isTransitionable = true);
+        // 対象の部屋に向かう(MoveState)
+    }
+
+    public bool IsTransitionToDeadState()
+    {
+        // ★死亡を判定する
+        return Input.GetKeyDown(KeyCode.Q);
+    }
+
+    public void PlayDeadAnim()
+    {
+        Destroy(gameObject);
+        Instantiate(_testDestroyedPrefab, transform.position, Quaternion.identity);
     }
 }

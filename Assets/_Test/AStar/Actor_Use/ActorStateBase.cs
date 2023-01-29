@@ -45,6 +45,12 @@ internal abstract class ActorStateBase
     protected virtual void Enter() => _stage = Stage.Stay;
     protected virtual void Stay() => _stage = Stage.Stay;
     protected virtual void Exit() => _stage = Stage.Exit;
+
+    protected void ChangeState(StateID stateID)
+    {
+        _nextState = _stateMachine.GetState(stateID);
+        _stage = Stage.Exit;
+    }
 }
 
 /// <summary>
@@ -54,22 +60,6 @@ internal class ActorStateIdle : ActorStateBase
 {
     internal ActorStateIdle(IActorController movable, ActorStateMachine stateMachine)
         : base(movable, stateMachine) { }
-
-    protected override void Enter()
-    {
-        Debug.Log("アイドルEnter");
-        base.Enter();
-    }
-
-    protected override void Stay()
-    {
-        if (_actorController.IsTransitionAnimationState())
-        {
-
-        }
-        Debug.Log("アイドルStay");
-        base.Stay();
-    }
 }
 
 /// <summary>
@@ -82,33 +72,27 @@ internal class ActorStateMove : ActorStateBase
 
     protected override void Enter()
     {
-        Debug.Log("移動開始");
-        _actorController.MoveToTarget(true);
+        _actorController.MoveToTarget();
         base.Enter();
     }
 
     protected override void Stay()
     {
-        if (_actorController.IsMovaStateAndWanderStateAndAnimationStateIsCancelToStateDeadState())
+        if (_actorController.IsTransitionToDeadState())
         {
-            _nextState = _stateMachine.GetNextState(StateID.Dead);
-            _stage = Stage.Exit;
+            ChangeState(StateID.Dead);
             return;
         }
 
-        if (_actorController.IsTransitionToAnimationStateFromMoveState())
+        if (_actorController.IsTransitionToPanicState())
         {
-            // なんか発見したときのアニメーションを再生
-            _nextState = _stateMachine.GetNextState(StateID.Discover);
-            _stage = Stage.Exit;
+            ChangeState(StateID.Panic);
             return;
         }
 
-        if (_actorController.IsTransitionToWanderStateFromMoveState())
+        if (_actorController.IsTransitionable())
         {
-            // うろうろに遷移処理をかっくところかｒ
-            _nextState = _stateMachine.GetNextState(StateID.Wander);
-            _stage = Stage.Exit;
+            ChangeState(StateID.Wander);
             return;
         }
 
@@ -117,7 +101,7 @@ internal class ActorStateMove : ActorStateBase
 
     protected override void Exit()
     {
-        _actorController.MoveCancel();
+        _actorController.CancelMoveToTarget();
         base.Exit();
     }
 }
@@ -132,23 +116,21 @@ internal class ActorStateWander : ActorStateBase
 
     protected override void Enter()
     {
-        _actorController.PlayLookAround();
+        _actorController.PlayWanderAnim();
         base.Enter();
     }
 
     protected override void Stay()
     {
-        if (_actorController.IsMovaStateAndWanderStateAndAnimationStateIsCancelToStateDeadState())
+        if (_actorController.IsTransitionToDeadState())
         {
-            _nextState = _stateMachine.GetNextState(StateID.Dead);
-            _stage = Stage.Exit;
+            ChangeState(StateID.Dead);
             return;
         }
 
-        if (_actorController.IsTransitionToMoveStateFromWanderStateAfterLookAroundDOtweenAnimation())
+        if (_actorController.IsTransitionable())
         {
-            _nextState = _stateMachine.GetNextState(StateID.Move);
-            _stage = Stage.Exit;
+            ChangeState(StateID.Move);
             return;
         }
         base.Stay();
@@ -170,24 +152,22 @@ internal class ActorStateAnimation : ActorStateBase
 
     protected override void Enter()
     {
-        _actorController.PlayAnim();
+        _actorController.PlayAppearAnim();
         Debug.Log("アニメ再生");
         base.Enter();
     }
 
     protected override void Stay()
     {
-        if (_actorController.IsMovaStateAndWanderStateAndAnimationStateIsCancelToStateDeadState())
+        if (_actorController.IsTransitionToDeadState())
         {
-            _nextState = _stateMachine.GetNextState(StateID.Dead);
-            _stage = Stage.Exit;
+            ChangeState(StateID.Dead);
             return;
         }
 
-        if (_actorController.IsTransitionIdleState())
+        if (_actorController.IsTransitionable())
         {
-            _nextState = _stateMachine.GetNextState(StateID.Move);
-            _stage = Stage.Exit;
+            ChangeState(StateID.Move);
             return;
         }
 
@@ -205,24 +185,23 @@ internal class ActorStateAnimation : ActorStateBase
 /// <summary>
 /// 発見した時のステートのクラス
 /// </summary>
-internal class ActorStateDiscover : ActorStateBase
+internal class ActorStatePanic : ActorStateBase
 {
-    internal ActorStateDiscover(IActorController movable, ActorStateMachine stateMachine)
+    internal ActorStatePanic(IActorController movable, ActorStateMachine stateMachine)
         : base(movable, stateMachine) { }
 
     protected override void Enter()
     {
         Debug.Log("八犬伝");
-        _actorController.PlayDiscoverAnim();
+        _actorController.PlayPanicAnim();
         base.Enter();
     }
 
     protected override void Stay()
     {
-        if (_actorController.IsTransitionToMoveStateFromDiscoverState())
+        if (_actorController.IsTransitionable())
         {
-            _nextState = _stateMachine.GetNextState(StateID.Move);
-            _stage = Stage.Exit;
+            ChangeState(StateID.Move);
             return;
         }
         base.Stay();
@@ -244,7 +223,7 @@ internal class ActorStateDead : ActorStateBase
 
     protected override void Enter()
     {
-        _actorController.FromAnyStateDead();
+        _actorController.PlayDeadAnim();
         // これ以上処理をしないので .base は呼ばない
     }
 }
