@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
-using UniRx.Triggers;
 using DG.Tweening;
 
 /// <summary>
@@ -10,11 +8,7 @@ using DG.Tweening;
 /// </summary>
 public class ActorController : MonoBehaviour, IActorController
 {
-    readonly int AppearAnimState = Animator.StringToHash("Appear");
-    readonly int PanicAnimState = Animator.StringToHash("Jump");
-
-    [SerializeField] Animator _anim;
-    [SerializeField] ActorMove _actorMove;
+    [SerializeField] ActorAction _actorAction;
     [Header("Systemオブジェクトのタグ")]
     [SerializeField] string _tag;
     [SerializeField] GameObject _testDestroyedPrefab;
@@ -22,7 +16,6 @@ public class ActorController : MonoBehaviour, IActorController
     PathfindingTarget _pathfindingTarget;
     IPathGetable _pathGetable;
 
-    bool _isPlayAnim;
     bool _isTransitionable;
 
     void Start()
@@ -31,35 +24,21 @@ public class ActorController : MonoBehaviour, IActorController
         GameObject system = GameObject.FindGameObjectWithTag(_tag);
         _pathfindingTarget = system.GetComponent<PathfindingTarget>();
         _pathGetable = system.GetComponent<IPathGetable>();
-
-        // これつかってない
-        ObservableStateMachineTrigger trigger =
-            _anim.GetBehaviour<ObservableStateMachineTrigger>();
-
-        trigger.OnStateEnterAsObservable().Subscribe(state =>
-        {
-            if (state.StateInfo.IsName("Sla!sh"))
-            {
-                // Slashのアニメーションのステートに入った時
-                // これを使うことを躊躇しないでください！
-            }
-
-        }).AddTo(this);
     }
 
     public void MoveToTarget()
     {
         _isTransitionable = false;
-        _actorMove.MoveFollowPath(GetPathStack(), () => _isTransitionable = true);
+        _actorAction.MoveFollowPath(GetPathStack(), () => _isTransitionable = true);
     }
 
     public void RunToTarget()
     {
         _isTransitionable = false;
-        _actorMove.RunFollowPath(GetPathStack(), () => _isTransitionable = true);
+        _actorAction.RunFollowPath(GetPathStack(), () => _isTransitionable = true);
     }
 
-    public void CancelMoveToTarget() => _actorMove.MoveCancel();
+    public void CancelMoveToTarget() => _actorAction.MoveCancel();
 
     Stack<Vector3> GetPathStack()
     {
@@ -72,17 +51,14 @@ public class ActorController : MonoBehaviour, IActorController
     public void PlayWanderAnim()
     {
         _isTransitionable = false;
-        _actorMove.LookAround(() => _isTransitionable = true);
+        _actorAction.LookAround(() => _isTransitionable = true);
     }
 
     // ★要リファクタリング
     public void PlayAppearAnim()
     {
-        // TODO:優先度(高) アニメーション名を文字列で指定しているのでHashに直す
-        _anim.Play(AppearAnimState);
         _isTransitionable = false;
-        // 2秒後にフラグを折っているがこれをアニメーションに合わせる処理が必要
-        DOVirtual.DelayedCall(2.0f, () => _isTransitionable = true);
+        _actorAction.PlayAppearAnim(() => _isTransitionable = true);
     }
 
     public bool IsTransitionToPanicState()
@@ -94,12 +70,8 @@ public class ActorController : MonoBehaviour, IActorController
     // ★要リファクタリング
     public void PlayPanicAnim()
     {
-        // 発見したときのアニメーションを再生
-        _anim.Play(PanicAnimState);
         _isTransitionable = false;
-        // 2秒後にフラグを折っているがこれをアニメーションに合わせる処理が必要
-        DOVirtual.DelayedCall(2.0f, () => _isTransitionable = true);
-        // 対象の部屋に向かう(MoveState)
+        _actorAction.PlayPanicAnim(() => _isTransitionable = true);
     }
 
     public bool IsTransitionToDeadState()

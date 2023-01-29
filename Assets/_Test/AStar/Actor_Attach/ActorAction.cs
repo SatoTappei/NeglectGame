@@ -1,7 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -10,8 +11,14 @@ using UnityEngine.Events;
 /// <summary>
 /// 経路探索をした結果を用いてキャラクターを移動させるコンポーネント
 /// </summary>
-public class ActorMove : MonoBehaviour
+public class ActorAction : MonoBehaviour
 {
+    readonly int WalkAnimState = Animator.StringToHash("Walk");
+    readonly int SprintAnimState = Animator.StringToHash("Sprint");
+    readonly int LookAroundAnimState = Animator.StringToHash("LookAround");
+    readonly int AppearAnimState = Animator.StringToHash("Appear");
+    readonly int PanicAnimState = Animator.StringToHash("Jump");
+
     [SerializeField] Animator _anim;
     [Header("移動速度")]
     [SerializeField] float _speed;
@@ -21,11 +28,28 @@ public class ActorMove : MonoBehaviour
     // 移動開始時にインスタンスのnew、移動のキャンセルには.Cancel()を呼ぶ
     CancellationTokenSource _token;
 
+    void Start()
+    {
+        // これつかってない
+        ObservableStateMachineTrigger trigger =
+            _anim.GetBehaviour<ObservableStateMachineTrigger>();
+
+        trigger.OnStateEnterAsObservable().Subscribe(state =>
+        {
+            if (state.StateInfo.IsName("Sla!sh"))
+            {
+                // Slashのアニメーションのステートに入った時
+                // これを使うことを躊躇しないでください！
+            }
+
+        }).AddTo(this);
+    }
+
     internal void MoveFollowPath(Stack<Vector3> stack, UnityAction callBack)
     {
         // TODO:現状は都度トークンをnewしているので他の方法が無いか模索する
         _token = new CancellationTokenSource();
-        _anim.Play("Walk");
+        _anim.Play(WalkAnimState);
         MoveAsync(stack, _speed, callBack).Forget();
     }
 
@@ -33,7 +57,7 @@ public class ActorMove : MonoBehaviour
     {
         // TODO:現状は都度トークンをnewしているので他の方法が無いか模索する
         _token = new CancellationTokenSource();
-        _anim.Play("Sprint");
+        _anim.Play(SprintAnimState);
         MoveAsync(stack, _speed * _dashMag, callBack).Forget();
     }
 
@@ -54,10 +78,10 @@ public class ActorMove : MonoBehaviour
         callBack.Invoke();
     }
 
-    public void LookAround(UnityAction callback)
+    internal void LookAround(UnityAction callback)
     {
 
-        _anim.Play("LookAround");
+        _anim.Play(LookAroundAnimState);
         // ここで回転させるなら子のModelの方を回転しないといけない
         //int iteration = 1;
         //int dir = UnityEngine.Random.Range(0, 2) == 1 ? 90 : -90;
@@ -74,9 +98,21 @@ public class ActorMove : MonoBehaviour
         DOVirtual.DelayedCall(3.5f, () => callback?.Invoke());
     }
 
-    public void MoveCancel() => _token?.Cancel();
+    internal void MoveCancel() => _token?.Cancel();
 
-    private void OnDestroy()
+    internal void PlayAppearAnim(UnityAction callback)
+    {
+        _anim.Play(AppearAnimState);
+        DOVirtual.DelayedCall(2.0f, () => callback?.Invoke());
+    }
+
+    internal void PlayPanicAnim(UnityAction callback)
+    {
+        _anim.Play(PanicAnimState);
+        DOVirtual.DelayedCall(2.0f, () => callback?.Invoke());
+    }
+
+    void OnDestroy()
     {
         _token?.Cancel();
     }
