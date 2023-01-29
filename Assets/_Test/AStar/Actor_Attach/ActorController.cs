@@ -10,7 +10,7 @@ using DG.Tweening;
 /// </summary>
 public class ActorController : MonoBehaviour, IActorController
 {
-    readonly int AppearAnimState = Animator.StringToHash("Slash");
+    readonly int AppearAnimState = Animator.StringToHash("Appear");
     readonly int PanicAnimState = Animator.StringToHash("Slash");
 
     [SerializeField] Animator _anim;

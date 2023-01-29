@@ -53,17 +53,19 @@ public class ActorMove : MonoBehaviour
 
     public void LookAround(UnityAction callback)
     {
-        int iteration = 1;
-        int dir = UnityEngine.Random.Range(0, 2) == 1 ? 90 : -90;
+        //int iteration = 1;
+        //int dir = UnityEngine.Random.Range(0, 2) == 1 ? 90 : -90;
 
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(transform.DORotate(new Vector3(0, dir, 0), 1f)
-                                 .SetRelative()
-                                 .SetDelay(0.5f)
-                                 .SetEase(Ease.InOutSine))
-                                 .SetLink(gameObject);
-        sequence.SetLoops(iteration, LoopType.Yoyo);
-        sequence.OnComplete(() => callback?.Invoke());
+        //Sequence sequence = DOTween.Sequence();
+        //sequence.Append(transform.DORotate(new Vector3(0, dir, 0), 1f)
+        //                         .SetRelative()
+        //                         .SetDelay(0.5f)
+        //                         .SetEase(Ease.InOutSine))
+        //                         .SetLink(gameObject);
+        //sequence.SetLoops(iteration, LoopType.Yoyo);
+        //sequence.OnComplete(() => callback?.Invoke());
+
+        DOVirtual.DelayedCall(1.5f, () => callback?.Invoke());
     }
 
     public void MoveCancel() => _token?.Cancel();
