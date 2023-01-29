@@ -7,20 +7,19 @@ using UnityEngine;
 /// </summary>
 public interface IActorController
 {
-    public void MoveToTarget();
-    public void RunToTarget();
     public bool IsTransitionable();
 
-    public bool IsTransitionToPanicState();
+    public void MoveToTarget();
+    public void RunToTarget();
     public void CancelMoveToTarget();
+
+    public bool IsTransitionToPanicState();
+    public void PlayPanicAnim();
 
     public void PlayAppearAnim();
 
     public void PlayWanderAnim();
 
     public bool IsTransitionToDeadState();
-
-    public void PlayPanicAnim();
-
     public void PlayDeadAnim();
 }

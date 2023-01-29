@@ -10,6 +10,9 @@ using DG.Tweening;
 /// </summary>
 public class ActorController : MonoBehaviour, IActorController
 {
+    readonly int AppearAnimState = Animator.StringToHash("Slash");
+    readonly int PanicAnimState = Animator.StringToHash("Slash");
+
     [SerializeField] Animator _anim;
     [SerializeField] ActorMove _actorMove;
     [Header("Systemオブジェクトのタグ")]
@@ -76,7 +79,7 @@ public class ActorController : MonoBehaviour, IActorController
     public void PlayAppearAnim()
     {
         // TODO:優先度(高) アニメーション名を文字列で指定しているのでHashに直す
-        _anim.Play("Slash");
+        _anim.Play(AppearAnimState);
         _isTransitionable = false;
         // 2秒後にフラグを折っているがこれをアニメーションに合わせる処理が必要
         DOVirtual.DelayedCall(2.0f, () => _isTransitionable = true);
@@ -92,7 +95,7 @@ public class ActorController : MonoBehaviour, IActorController
     public void PlayPanicAnim()
     {
         // 発見したときのアニメーションを再生
-        _anim.Play("Slash");
+        _anim.Play(PanicAnimState);
         _isTransitionable = false;
         // 2秒後にフラグを折っているがこれをアニメーションに合わせる処理が必要
         DOVirtual.DelayedCall(2.0f, () => _isTransitionable = true);
