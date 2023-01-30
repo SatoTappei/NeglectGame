@@ -14,6 +14,5 @@ internal class ActorStateDead : ActorStateBase
     protected override void Enter()
     {
         _actorController.PlayDeadAnim();
-        // ‚±‚êˆÈãˆ—‚ğ‚µ‚È‚¢‚Ì‚Å .base ‚ÍŒÄ‚Î‚È‚¢
     }
 }

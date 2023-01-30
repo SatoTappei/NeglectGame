@@ -14,7 +14,6 @@ internal class ActorStateMove : ActorStateBase
     protected override void Enter()
     {
         _actorController.MoveToTarget();
-        base.Enter();
     }
 
     protected override void Stay()
@@ -22,27 +21,19 @@ internal class ActorStateMove : ActorStateBase
         if (_actorController.IsTransitionToDeadState())
         {
             ChangeState(StateID.Dead);
-            return;
         }
-
-        if (_actorController.IsTransitionToPanicState())
+        else if (_actorController.IsTransitionToPanicState())
         {
             ChangeState(StateID.Panic);
-            return;
         }
-
-        if (_actorController.IsTransitionable())
+        else if (_actorController.IsTransitionable())
         {
             ChangeState(StateID.Wander);
-            return;
         }
-
-        base.Stay();
     }
 
     protected override void Exit()
     {
         _actorController.CancelMoveToTarget();
-        base.Exit();
     }
 }

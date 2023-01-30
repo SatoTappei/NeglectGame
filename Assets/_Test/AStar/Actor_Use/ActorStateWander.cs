@@ -14,7 +14,6 @@ internal class ActorStateWander : ActorStateBase
     protected override void Enter()
     {
         _actorController.PlayWanderAnim();
-        base.Enter();
     }
 
     protected override void Stay()
@@ -22,19 +21,10 @@ internal class ActorStateWander : ActorStateBase
         if (_actorController.IsTransitionToDeadState())
         {
             ChangeState(StateID.Dead);
-            return;
         }
-
-        if (_actorController.IsTransitionable())
+        else if (_actorController.IsTransitionable())
         {
             ChangeState(StateID.Move);
-            return;
         }
-        base.Stay();
-    }
-
-    protected override void Exit()
-    {
-        base.Exit();
     }
 }

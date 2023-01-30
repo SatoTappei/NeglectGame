@@ -29,8 +29,15 @@ internal abstract class ActorStateBase
 
     internal ActorStateBase Update()
     {
-        if      (_stage == Stage.Enter) Enter();
-        else if (_stage == Stage.Stay)  Stay();
+        if (_stage == Stage.Enter)
+        {
+            Enter();
+            _stage = Stage.Stay;
+        }
+        else if (_stage == Stage.Stay)
+        {
+            Stay();
+        }
         else if (_stage == Stage.Exit)
         {
             Exit();
@@ -41,10 +48,9 @@ internal abstract class ActorStateBase
         return this;
     }
 
-    // 各ステートでオーバーライドした際、メソッドの"最後"で base. を呼ぶこと
-    protected virtual void Enter() => _stage = Stage.Stay;
-    protected virtual void Stay() => _stage = Stage.Stay;
-    protected virtual void Exit() => _stage = Stage.Exit;
+    protected virtual void Enter() { }
+    protected virtual void Stay() { }
+    protected virtual void Exit() { }
 
     protected void ChangeState(StateID stateID)
     {

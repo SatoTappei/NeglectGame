@@ -13,9 +13,7 @@ internal class ActorStatePanic : ActorStateBase
 
     protected override void Enter()
     {
-        Debug.Log("”ªŒ¢“`");
         _actorController.PlayPanicAnim();
-        base.Enter();
     }
 
     protected override void Stay()
@@ -23,13 +21,6 @@ internal class ActorStatePanic : ActorStateBase
         if (_actorController.IsTransitionable())
         {
             ChangeState(StateID.Run);
-            return;
         }
-        base.Stay();
-    }
-
-    protected override void Exit()
-    {
-        base.Exit();
     }
 }

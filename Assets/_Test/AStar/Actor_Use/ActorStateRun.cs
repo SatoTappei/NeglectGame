@@ -13,7 +13,5 @@ internal class ActorStateRun : ActorStateMove
     protected override void Enter()
     {
         _actorController.RunToTarget();
-        // .baseを呼ぶとMoveToTarget()が実行されてしまうので応急処置的にここでStageを変更する
-        _stage = Stage.Stay;
     }
 }
