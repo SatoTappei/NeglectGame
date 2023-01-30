@@ -4118,6 +4118,9 @@ MonoBehaviour:
   _anim: {fileID: 1114520764}
   _speed: 2
   _dashMag: 2
+  _look: {fileID: -203655887218126122, guid: 35beac8babec1d04a859c34428d7537c, type: 3}
+  _appear: {fileID: -203655887218126122, guid: 6d493d54abde1b841a7540eb3ba39c97, type: 3}
+  _panic: {fileID: -203655887218126122, guid: bf05e14a547da1f4c9581f77ce887430, type: 3}
 --- !u!114 &8955967621742018880
 MonoBehaviour:
   m_ObjectHideFlags: 0

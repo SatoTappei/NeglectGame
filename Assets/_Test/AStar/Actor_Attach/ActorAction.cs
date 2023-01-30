@@ -24,6 +24,11 @@ public class ActorAction : MonoBehaviour
     [SerializeField] float _speed;
     [Header("ダッシュ時の速度倍率")]
     [SerializeField] float _dashMag = 1.5f;
+    // テスト
+    [SerializeField] AnimationClip _look;
+    [SerializeField] AnimationClip _appear;
+    [SerializeField] AnimationClip _panic;
+
 
     // 移動開始時にインスタンスのnew、移動のキャンセルには.Cancel()を呼ぶ
     CancellationTokenSource _token;
@@ -31,18 +36,18 @@ public class ActorAction : MonoBehaviour
     void Start()
     {
         // これつかってない
-        ObservableStateMachineTrigger trigger =
-            _anim.GetBehaviour<ObservableStateMachineTrigger>();
+        //ObservableStateMachineTrigger trigger =
+        //    _anim.GetBehaviour<ObservableStateMachineTrigger>();
 
-        trigger.OnStateEnterAsObservable().Subscribe(state =>
-        {
-            if (state.StateInfo.IsName("Sla!sh"))
-            {
-                // Slashのアニメーションのステートに入った時
-                // これを使うことを躊躇しないでください！
-            }
+        //trigger.OnStateEnterAsObservable().Subscribe(state =>
+        //{
+        //    if (state.StateInfo.IsName("Sla!sh"))
+        //    {
+        //        // Slashのアニメーションのステートに入った時
+        //        // これを使うことを躊躇しないでください！
+        //    }
 
-        }).AddTo(this);
+        //}).AddTo(this);
     }
 
     internal void MoveFollowPath(Stack<Vector3> stack, UnityAction callBack)
@@ -78,38 +83,52 @@ public class ActorAction : MonoBehaviour
         callBack.Invoke();
     }
 
+    internal void MoveCancel() => _token?.Cancel();
+
     internal void LookAround(UnityAction callback)
     {
-
-        _anim.Play(LookAroundAnimState);
-        // ここで回転させるなら子のModelの方を回転しないといけない
-        //int iteration = 1;
-        //int dir = UnityEngine.Random.Range(0, 2) == 1 ? 90 : -90;
-
-        //Sequence sequence = DOTween.Sequence();
-        //sequence.Append(transform.DORotate(new Vector3(0, dir, 0), 1f)
-        //                         .SetRelative()
-        //                         .SetDelay(0.5f)
-        //                         .SetEase(Ease.InOutSine))
-        //                         .SetLink(gameObject);
-        //sequence.SetLoops(iteration, LoopType.Yoyo);
-        //sequence.OnComplete(() => callback?.Invoke());
-
-        DOVirtual.DelayedCall(3.5f, () => callback?.Invoke());
+        //Debug.Log(_anim.GetCurrentAnimatorClipInfo(0).Length);
+        //Debug.Log(_anim.GetCurrentAnimatorStateInfo(0).length);
+        //Debug.Log(_anim.GetNextAnimatorStateInfo(0));
+        //_anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        //_anim.Play(LookAroundAnimState);
+        //DOVirtual.DelayedCall(3.5f, () => callback?.Invoke());
+        //Hoge(LookAroundAnimState, callback).Forget();
+        PlayAnim(LookAroundAnimState, callback, _look);
     }
-
-    internal void MoveCancel() => _token?.Cancel();
 
     internal void PlayAppearAnim(UnityAction callback)
     {
-        _anim.Play(AppearAnimState);
-        DOVirtual.DelayedCall(2.0f, () => callback?.Invoke());
+        //Debug.Log(_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+        //Debug.Log(_anim.GetNextAnimatorStateInfo(0));
+        //_anim.Play(AppearAnimState);
+        //DOVirtual.DelayedCall(2.0f, () => callback?.Invoke());
+        //Hoge(AppearAnimState, callback).Forget();
+        PlayAnim(AppearAnimState, callback, _appear);
     }
 
     internal void PlayPanicAnim(UnityAction callback)
     {
-        _anim.Play(PanicAnimState);
-        DOVirtual.DelayedCall(2.0f, () => callback?.Invoke());
+        //Debug.Log(_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+        //Debug.Log(_anim.GetNextAnimatorStateInfo(0));
+        //_anim.Play(PanicAnimState);
+        //DOVirtual.DelayedCall(2.0f, () => callback?.Invoke());
+        //Hoge(PanicAnimState, callback).Forget();
+        PlayAnim(PanicAnimState, callback, _panic);
+    }
+
+    void PlayAnim(int hash, UnityAction callback, AnimationClip clip)
+    {
+        _anim.Play(hash);
+        DOVirtual.DelayedCall(clip.length, () => callback?.Invoke());
+    }
+
+    async UniTaskVoid Hoge(int hash, UnityAction callback)
+    {
+        _anim.Play(hash);
+        //await UniTask.Yield();
+        await UniTask.WaitUntil(() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1);
+        callback.Invoke();
     }
 
     void OnDestroy()
@@ -117,3 +136,16 @@ public class ActorAction : MonoBehaviour
         _token?.Cancel();
     }
 }
+
+// ここで回転させるなら子のModelの方を回転しないといけない
+//int iteration = 1;
+//int dir = UnityEngine.Random.Range(0, 2) == 1 ? 90 : -90;
+
+//Sequence sequence = DOTween.Sequence();
+//sequence.Append(transform.DORotate(new Vector3(0, dir, 0), 1f)
+//                         .SetRelative()
+//                         .SetDelay(0.5f)
+//                         .SetEase(Ease.InOutSine))
+//                         .SetLink(gameObject);
+//sequence.SetLoops(iteration, LoopType.Yoyo);
+//sequence.OnComplete(() => callback?.Invoke());

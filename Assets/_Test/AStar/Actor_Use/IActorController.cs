@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ステートマシンで操作するために使う、キャラクターの行動を実装するインターフェース
+/// ステートマシンで使用する、各ステートの行動＆遷移条件を実装するインターフェース
 /// </summary>
 public interface IActorController
 {
