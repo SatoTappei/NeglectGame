@@ -14,8 +14,6 @@ internal class ActorStateAnimation : ActorStateBase
     protected override void Enter()
     {
         _actorController.PlayAppearAnim();
-        Debug.Log("ÉAÉjÉÅçƒê∂");
-        base.Enter();
     }
 
     protected override void Stay()
@@ -23,22 +21,10 @@ internal class ActorStateAnimation : ActorStateBase
         if (_actorController.IsTransitionToDeadState())
         {
             ChangeState(StateID.Dead);
-            return;
         }
-
-        if (_actorController.IsTransitionable())
+        else if (_actorController.IsTransitionable())
         {
             ChangeState(StateID.Move);
-            return;
         }
-
-        Debug.Log("í èÌ");
-        base.Stay();
-    }
-
-    protected override void Exit()
-    {
-        Debug.Log("Exitèàóù");
-        base.Exit();
     }
 }
