@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
-using UniRx.Triggers;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -22,55 +20,38 @@ public class ActorAction : MonoBehaviour
     [SerializeField] Animator _anim;
     [Header("移動速度")]
     [SerializeField] float _speed;
-    [Header("ダッシュ時の速度倍率")]
-    [SerializeField] float _dashMag = 1.5f;
-    // テスト
-    [SerializeField] AnimationClip _look;
-    [SerializeField] AnimationClip _appear;
-    [SerializeField] AnimationClip _panic;
+    [Header("走って移動する時の速度倍率")]
+    [SerializeField] float _runSpeedMag = 1.5f;
+    [Header("アニメーションの長さ取得用")]
+    [SerializeField] AnimationClip _lookAroundAnimClip;
+    [SerializeField] AnimationClip _appearAnimClip;
+    [SerializeField] AnimationClip _panicAnimClip;
 
-
-    // 移動開始時にインスタンスのnew、移動のキャンセルには.Cancel()を呼ぶ
+    /// <summary>移動開始時にインスタンスのnew、移動のキャンセルには.Cancel()を呼ぶ</summary>
     CancellationTokenSource _token;
-
-    void Start()
-    {
-        // これつかってない
-        //ObservableStateMachineTrigger trigger =
-        //    _anim.GetBehaviour<ObservableStateMachineTrigger>();
-
-        //trigger.OnStateEnterAsObservable().Subscribe(state =>
-        //{
-        //    if (state.StateInfo.IsName("Sla!sh"))
-        //    {
-        //        // Slashのアニメーションのステートに入った時
-        //        // これを使うことを躊躇しないでください！
-        //    }
-
-        //}).AddTo(this);
-    }
 
     internal void MoveFollowPath(Stack<Vector3> stack, UnityAction callBack)
     {
-        // TODO:現状は都度トークンをnewしているので他の方法が無いか模索する
-        _token = new CancellationTokenSource();
         _anim.Play(WalkAnimState);
         MoveAsync(stack, _speed, callBack).Forget();
     }
 
     internal void RunFollowPath(Stack<Vector3> stack, UnityAction callBack)
     {
-        // TODO:現状は都度トークンをnewしているので他の方法が無いか模索する
-        _token = new CancellationTokenSource();
-        _anim.Play(SprintAnimState);
-        MoveAsync(stack, _speed * _dashMag, callBack).Forget();
+        _anim.Play(SprintAnimState);   
+        MoveAsync(stack, _speed * _runSpeedMag, callBack).Forget();
     }
 
-    // TODO:移動はDOTweenで行う方がシンプルになるかもしれない
+    internal void MoveCancel() => _token?.Cancel();
+
     async UniTaskVoid MoveAsync(Stack<Vector3> stack, float speed, UnityAction callBack)
     {
+        _token = new CancellationTokenSource();
+
         foreach (Vector3 pos in stack)
         {
+            transform.DOLookAt(pos, 0.5f).SetLink(gameObject);
+
             while (true)
             {
                 if (transform.position == pos) break;
@@ -83,52 +64,35 @@ public class ActorAction : MonoBehaviour
         callBack.Invoke();
     }
 
-    internal void MoveCancel() => _token?.Cancel();
-
     internal void LookAround(UnityAction callback)
     {
-        //Debug.Log(_anim.GetCurrentAnimatorClipInfo(0).Length);
-        //Debug.Log(_anim.GetCurrentAnimatorStateInfo(0).length);
-        //Debug.Log(_anim.GetNextAnimatorStateInfo(0));
-        //_anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        //_anim.Play(LookAroundAnimState);
-        //DOVirtual.DelayedCall(3.5f, () => callback?.Invoke());
-        //Hoge(LookAroundAnimState, callback).Forget();
-        PlayAnim(LookAroundAnimState, callback, _look);
+        PlayAnim(LookAroundAnimState, callback, _lookAroundAnimClip);
     }
 
     internal void PlayAppearAnim(UnityAction callback)
     {
-        //Debug.Log(_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name);
-        //Debug.Log(_anim.GetNextAnimatorStateInfo(0));
-        //_anim.Play(AppearAnimState);
-        //DOVirtual.DelayedCall(2.0f, () => callback?.Invoke());
-        //Hoge(AppearAnimState, callback).Forget();
-        PlayAnim(AppearAnimState, callback, _appear);
+        PlayAnim(AppearAnimState, callback, _appearAnimClip);
     }
 
     internal void PlayPanicAnim(UnityAction callback)
     {
-        //Debug.Log(_anim.GetCurrentAnimatorClipInfo(0)[0].clip.name);
-        //Debug.Log(_anim.GetNextAnimatorStateInfo(0));
-        //_anim.Play(PanicAnimState);
-        //DOVirtual.DelayedCall(2.0f, () => callback?.Invoke());
-        //Hoge(PanicAnimState, callback).Forget();
-        PlayAnim(PanicAnimState, callback, _panic);
+        PlayAnim(PanicAnimState, callback, _panicAnimClip);
     }
 
     void PlayAnim(int hash, UnityAction callback, AnimationClip clip)
     {
-        _anim.Play(hash);
-        DOVirtual.DelayedCall(clip.length, () => callback?.Invoke());
-    }
+        // TODO: アニメーションの長さの取得をもっと綺麗にまとめたい
+        //       現在は再生するアニメーションをインスペクターから割り当ててその長さ分だけ遅延させている
 
-    async UniTaskVoid Hoge(int hash, UnityAction callback)
-    {
-        _anim.Play(hash);
-        //await UniTask.Yield();
-        await UniTask.WaitUntil(() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1);
-        callback.Invoke();
+        // アニメーションする度にモデルの位置が少しずつズレていくので再生するたびに0に戻す処理を挟んでいる
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(_anim.gameObject.transform.DOLocalMove(Vector3.zero, 0.15f))
+                .AppendCallback(() => 
+                {
+                    _anim.Play(hash);
+                    DOVirtual.DelayedCall(clip.length, () => callback?.Invoke());
+                })
+                .SetLink(gameObject);
     }
 
     void OnDestroy()
@@ -136,16 +100,3 @@ public class ActorAction : MonoBehaviour
         _token?.Cancel();
     }
 }
-
-// ここで回転させるなら子のModelの方を回転しないといけない
-//int iteration = 1;
-//int dir = UnityEngine.Random.Range(0, 2) == 1 ? 90 : -90;
-
-//Sequence sequence = DOTween.Sequence();
-//sequence.Append(transform.DORotate(new Vector3(0, dir, 0), 1f)
-//                         .SetRelative()
-//                         .SetDelay(0.5f)
-//                         .SetEase(Ease.InOutSine))
-//                         .SetLink(gameObject);
-//sequence.SetLoops(iteration, LoopType.Yoyo);
-//sequence.OnComplete(() => callback?.Invoke());

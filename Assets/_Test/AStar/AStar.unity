@@ -194,7 +194,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\u30D0\u30B0:\u30A2\u30CB\u30E1\u30FC\u30B7\u30E7\u30F3\u3059\u308B\u5EA6\u306BModel\u306E\u4F4D\u7F6E\u304C\u30BA\u30EC\u3066\u3044\u304F"
+  m_Text: 
 --- !u!222 &36994003
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1245,7 +1245,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1112861488
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1786,7 +1786,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1639726212}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.79, y: -0.088, z: 4.51}
+  m_LocalPosition: {x: 3.94, y: -0.088, z: 2.18}
   m_LocalScale: {x: 5, y: 0.1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4117,10 +4117,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _anim: {fileID: 1114520764}
   _speed: 2
-  _dashMag: 2
-  _look: {fileID: -203655887218126122, guid: 35beac8babec1d04a859c34428d7537c, type: 3}
-  _appear: {fileID: -203655887218126122, guid: 6d493d54abde1b841a7540eb3ba39c97, type: 3}
-  _panic: {fileID: -203655887218126122, guid: bf05e14a547da1f4c9581f77ce887430, type: 3}
+  _runSpeedMag: 2
+  _lookAroundAnimClip: {fileID: -203655887218126122, guid: 35beac8babec1d04a859c34428d7537c, type: 3}
+  _appearAnimClip: {fileID: -203655887218126122, guid: 6d493d54abde1b841a7540eb3ba39c97, type: 3}
+  _panicAnimClip: {fileID: -203655887218126122, guid: bf05e14a547da1f4c9581f77ce887430, type: 3}
 --- !u!114 &8955967621742018880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4134,8 +4134,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actorAction: {fileID: 8955967621742018879}
-  _tag: GameController
-  _testDestroyedPrefab: {fileID: 7796282941501293767, guid: 68fcbb95aa150634faf0f5ff3ec7bffb, type: 3}
 --- !u!114 &8955967621742018881
 MonoBehaviour:
   m_ObjectHideFlags: 0

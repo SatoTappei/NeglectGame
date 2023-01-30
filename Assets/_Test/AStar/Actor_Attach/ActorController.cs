@@ -1,27 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
 /// <summary>
 /// キャラクターの各行動を制御するコンポーネント
 /// </summary>
 public class ActorController : MonoBehaviour, IActorController
 {
+    readonly string SystemObjectTag = "GameController";
+
     [SerializeField] ActorAction _actorAction;
-    [Header("Systemオブジェクトのタグ")]
-    [SerializeField] string _tag;
-    [SerializeField] GameObject _testDestroyedPrefab;
 
     PathfindingTarget _pathfindingTarget;
     IPathGetable _pathGetable;
 
+    /// <summary>
+    /// 各ステートに遷移した時にfalseになり
+    /// そのステートの行動が終わったらtrueになってステートからの遷移可能になる
+    /// </summary>
     bool _isTransitionable;
 
     void Start()
     {
-        // TODO:この参照先の取得方法がなんか気になる
-        GameObject system = GameObject.FindGameObjectWithTag(_tag);
+        GameObject system = GameObject.FindGameObjectWithTag(SystemObjectTag);
         _pathfindingTarget = system.GetComponent<PathfindingTarget>();
         _pathGetable = system.GetComponent<IPathGetable>();
     }
@@ -54,7 +55,6 @@ public class ActorController : MonoBehaviour, IActorController
         _actorAction.LookAround(() => _isTransitionable = true);
     }
 
-    // ★要リファクタリング
     public void PlayAppearAnim()
     {
         _isTransitionable = false;
@@ -67,7 +67,6 @@ public class ActorController : MonoBehaviour, IActorController
         return Input.GetKeyDown(KeyCode.W);
     }
 
-    // ★要リファクタリング
     public void PlayPanicAnim()
     {
         _isTransitionable = false;
@@ -83,6 +82,6 @@ public class ActorController : MonoBehaviour, IActorController
     public void PlayDeadAnim()
     {
         Destroy(gameObject);
-        Instantiate(_testDestroyedPrefab, transform.position, Quaternion.identity);
+        Debug.Log("死んだときになんか演出をする");
     }
 }
