@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// キャラクターの各行動を制御するコンポーネント
@@ -27,19 +28,17 @@ public class ActorController : MonoBehaviour, IActorController
         _pathGetable = system.GetComponent<IPathGetable>();
     }
 
-    public void MoveToTarget()
-    {
-        _isTransitionable = false;
-        _actorAction.MoveFollowPath(GetPathStack(), () => _isTransitionable = true);
-    }
+    public bool IsTransitionable() => _isTransitionable;
 
-    public void RunToTarget()
-    {
-        _isTransitionable = false;
-        _actorAction.RunFollowPath(GetPathStack(), () => _isTransitionable = true);
-    }
-
+    public void MoveToTarget() => WaitUntilArrival(_actorAction.MoveFollowPath);
+    public void RunToTarget() => WaitUntilArrival(_actorAction.RunFollowPath);
     public void CancelMoveToTarget() => _actorAction.MoveCancel();
+
+    void WaitUntilArrival(UnityAction<Stack<Vector3>, UnityAction> unityAction)
+    {
+        _isTransitionable = false;
+        unityAction(GetPathStack(), () => _isTransitionable = true);
+    }
 
     Stack<Vector3> GetPathStack()
     {
@@ -47,30 +46,20 @@ public class ActorController : MonoBehaviour, IActorController
         return _pathGetable.GetPathStack(transform.position, targetPos);
     }
 
-    public bool IsTransitionable() => _isTransitionable;
+    public void PlayWanderAnim() => WaitAnimFinish(_actorAction.PlayLookAroundAnim);
+    public void PlayAppearAnim() => WaitAnimFinish(_actorAction.PlayAppearAnim);
+    public void PlayPanicAnim() => WaitAnimFinish(_actorAction.PlayPanicAnim);
 
-    public void PlayWanderAnim()
+    void WaitAnimFinish(UnityAction<UnityAction> unityAction)
     {
         _isTransitionable = false;
-        _actorAction.LookAround(() => _isTransitionable = true);
-    }
-
-    public void PlayAppearAnim()
-    {
-        _isTransitionable = false;
-        _actorAction.PlayAppearAnim(() => _isTransitionable = true);
+        unityAction(() => _isTransitionable = true);
     }
 
     public bool IsTransitionToPanicState()
     {
         // ★何か見つけた
         return Input.GetKeyDown(KeyCode.W);
-    }
-
-    public void PlayPanicAnim()
-    {
-        _isTransitionable = false;
-        _actorAction.PlayPanicAnim(() => _isTransitionable = true);
     }
 
     public bool IsTransitionToDeadState()

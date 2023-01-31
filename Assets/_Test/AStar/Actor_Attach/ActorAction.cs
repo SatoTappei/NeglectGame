@@ -11,6 +11,10 @@ using UnityEngine.Events;
 /// </summary>
 public class ActorAction : MonoBehaviour
 {
+    // TODO: アニメーションの列挙型を作るとActorController側のリファクタリングが出来そう？
+    //       そうするとステート名をreadonlyにすることが出来ない
+    //       AnimationClip、ステート名(ハッシュ用)、呼び出しの列挙型を作ってひとまとめにするべき？  
+
     readonly int WalkAnimState = Animator.StringToHash("Walk");
     readonly int SprintAnimState = Animator.StringToHash("Sprint");
     readonly int LookAroundAnimState = Animator.StringToHash("LookAround");
@@ -64,20 +68,12 @@ public class ActorAction : MonoBehaviour
         callBack.Invoke();
     }
 
-    internal void LookAround(UnityAction callback)
-    {
-        PlayAnim(LookAroundAnimState, callback, _lookAroundAnimClip);
-    }
-
-    internal void PlayAppearAnim(UnityAction callback)
-    {
-        PlayAnim(AppearAnimState, callback, _appearAnimClip);
-    }
-
+    internal void PlayLookAroundAnim(UnityAction callback)
+        => PlayAnim(LookAroundAnimState, callback, _lookAroundAnimClip);
+    internal void PlayAppearAnim(UnityAction callback) 
+        => PlayAnim(AppearAnimState, callback, _appearAnimClip);
     internal void PlayPanicAnim(UnityAction callback)
-    {
-        PlayAnim(PanicAnimState, callback, _panicAnimClip);
-    }
+        => PlayAnim(PanicAnimState, callback, _panicAnimClip);
 
     void PlayAnim(int hash, UnityAction callback, AnimationClip clip)
     {
