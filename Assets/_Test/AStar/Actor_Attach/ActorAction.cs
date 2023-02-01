@@ -12,6 +12,7 @@ using UnityEngine.Events;
 public class ActorAction : MonoBehaviour
 {
     // TODO: アニメーションの列挙型を作るとActorController側のリファクタリングが出来そう？
+    //       適切に行えばActorController側ももう少しスッキリしそう
     //       そうするとステート名をreadonlyにすることが出来ない
     //       AnimationClip、ステート名(ハッシュ用)、呼び出しの列挙型を作ってひとまとめにするべき？  
 
@@ -54,7 +55,7 @@ public class ActorAction : MonoBehaviour
 
         foreach (Vector3 pos in stack)
         {
-            transform.DOLookAt(pos, 0.5f).SetLink(gameObject);
+            _anim.transform.DOLookAt(pos, 0.5f).SetLink(gameObject);
 
             while (true)
             {

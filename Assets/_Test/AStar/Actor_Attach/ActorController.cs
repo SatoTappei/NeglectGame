@@ -8,9 +8,13 @@ using UnityEngine.Events;
 /// </summary>
 public class ActorController : MonoBehaviour, IActorController
 {
+    // TODO: 渡された値でキャラクターを動かすことは出来たのでキャラクターの状態を作っていく
+    //       意欲が無くなると云々だとか、目的を達成したら云々だとか作る
+
     readonly string SystemObjectTag = "GameController";
 
     [SerializeField] ActorAction _actorAction;
+    [SerializeField] ActorStatus _actorStatus;
 
     PathfindingTarget _pathfindingTarget;
     IPathGetable _pathGetable;
@@ -65,7 +69,7 @@ public class ActorController : MonoBehaviour, IActorController
     public bool IsTransitionToDeadState()
     {
         // ★死亡を判定する
-        return Input.GetKeyDown(KeyCode.Q);
+        return _actorStatus.IsBelowMotivationThreshold();/*Input.GetKeyDown(KeyCode.Q);*/
     }
 
     public void PlayDeadAnim()

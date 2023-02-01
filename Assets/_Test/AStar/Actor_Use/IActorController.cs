@@ -5,40 +5,22 @@ using UnityEngine;
 /// <summary>
 /// ステートマシンで使用する、各ステートの行動＆遷移条件を実装するインターフェース
 /// </summary>
-public interface IActorController : IMoveState, 
-                                    IPlayAppearAnimState, 
-                                    IPlayWanderAnimState, 
-                                    IPanicState, 
-                                    IDeadState
+public interface IActorController
 {
+    // 全てのステートは基本この遷移条件に従う
     public bool IsTransitionable();
-}
 
-public interface IMoveState
-{
     public void MoveToTarget();
     public void RunToTarget();
     public void CancelMoveToTarget();
-}
 
-public interface IPlayAppearAnimState
-{
-    public void PlayAppearAnim();
-}
-
-public interface IPlayWanderAnimState
-{
     public void PlayWanderAnim();
-}
-
-public interface IPanicState
-{
-    public bool IsTransitionToPanicState();
+    public void PlayAppearAnim();
     public void PlayPanicAnim();
-}
 
-public interface IDeadState
-{
+    // 複数のステートから遷移する
+    public bool IsTransitionToPanicState();
     public bool IsTransitionToDeadState();
+
     public void PlayDeadAnim();
 }
