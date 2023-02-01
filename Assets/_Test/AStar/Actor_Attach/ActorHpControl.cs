@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// キャラクターの内部ステータスを表すコンポーネント
+/// キャラクターのHPを制御するコンポーネント
 /// </summary>
-public class ActorStatus : MonoBehaviour
+public class ActorHpControl : MonoBehaviour
 {
     [Header("体力の最大値")]
     [SerializeField] int _maxHp;
@@ -26,6 +26,7 @@ public class ActorStatus : MonoBehaviour
 
     void Start()
     {
+        // TODO:繰り返しInvokeを止める処理を書いていない
         InvokeRepeating(nameof(DecreaseHp), 0, 0.1f);
     }
 

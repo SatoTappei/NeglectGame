@@ -8,12 +8,10 @@ using UnityEngine.Events;
 /// </summary>
 public class ActorController : MonoBehaviour, IActorController
 {
-
-
     readonly string SystemObjectTag = "GameController";
 
     [SerializeField] ActorAction _actorAction;
-    [SerializeField] ActorStatus _actorStatus;
+    [SerializeField] ActorHpControl _actorStatus;
     [SerializeField] ActorSight _actorSight;
 
     PathfindingTarget _pathfindingTarget;
@@ -30,12 +28,18 @@ public class ActorController : MonoBehaviour, IActorController
         GameObject system = GameObject.FindGameObjectWithTag(SystemObjectTag);
         _pathfindingTarget = system.GetComponent<PathfindingTarget>();
         _pathGetable = system.GetComponent<IPathGetable>();
+
+        ActorStatus actorStatus = new ActorStatus();
     }
 
     public bool IsTransitionable() => _isTransitionable;
 
     public void MoveToTarget() => WaitUntilArrival(_actorAction.MoveFollowPath);
-    public void RunToTarget() => WaitUntilArrival(_actorAction.RunFollowPath);
+    //public void RunToTarget() => WaitUntilArrival(_actorAction.RunFollowPath);
+    public void RunToTarget()
+    {
+
+    }
     public void CancelMoveToTarget() => _actorAction.MoveCancel();
 
     void WaitUntilArrival(UnityAction<Stack<Vector3>, UnityAction> unityAction)
@@ -60,6 +64,21 @@ public class ActorController : MonoBehaviour, IActorController
         unityAction(() => _isTransitionable = true);
     }
 
+    /* 
+     *  TODO:一度お宝を見つけた後にもう一度お宝を見つけるとループしてしまう不具合
+     *       一度お宝を見つけると対象のお宝を手に入れるまで発見しないようにする
+     *       フラグのオンオフとか？
+     */
+
+    /*  発見したかどうかのboolが返る
+     *  PanicステートとRunステートが完全に分離している
+     *  Panicステートの次のRunステートでは見つけたお宝に向けて走っていくようにしたい
+     *  お宝の座標を渡せばその座標まで経路探索して歩いてくれる
+     *  1.お宝発見
+     *  2.Panicステートに遷移
+     *  3.ランダムな箇所を選択 <= ここを変えたい
+     *  4.Runステートでその座標に向かって走る
+     */
     public bool IsTransitionToPanicState() => _actorSight.IsFindTreasure();
     public bool IsTransitionToDeadState() => _actorStatus.IsHpIsZero();
 

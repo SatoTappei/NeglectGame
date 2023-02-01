@@ -31,7 +31,7 @@ public class ActorSight : MonoBehaviour
     internal bool IsFindTreasure()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _sightableArr, _sightableLayer);
-        Debug.Log("Ç®ïÛíTçı");
+
         foreach (Collider col in _sightableArr)
         {
             if (!col) break;
@@ -48,7 +48,9 @@ public class ActorSight : MonoBehaviour
             rayOrigin.y += ActorModelHeight;
             bool isUnobstructed = !Physics.Raycast(rayOrigin, treasureDir, distance, _sightBlockableLayer);
 
-            return distance <= _sightRange && angle <= _sightAngle && isUnobstructed;
+            bool isFind = distance <= _sightRange && angle <= _sightAngle && isUnobstructed;
+
+            return isFind;
         }
 
         return false;
