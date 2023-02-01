@@ -8,13 +8,13 @@ using UnityEngine.Events;
 /// </summary>
 public class ActorController : MonoBehaviour, IActorController
 {
-    // 渡された値でキャラクターを動かすことは出来たのでキャラクターの状態を作っていく
-    // 意欲が無くなると云々だとか、目的を達成したら云々だとか作る
+
 
     readonly string SystemObjectTag = "GameController";
 
     [SerializeField] ActorAction _actorAction;
     [SerializeField] ActorStatus _actorStatus;
+    [SerializeField] ActorSight _actorSight;
 
     PathfindingTarget _pathfindingTarget;
     IPathGetable _pathGetable;
@@ -60,17 +60,8 @@ public class ActorController : MonoBehaviour, IActorController
         unityAction(() => _isTransitionable = true);
     }
 
-    public bool IsTransitionToPanicState()
-    {
-        // ★何か見つけた
-        return Input.GetKeyDown(KeyCode.W);
-    }
-
-    public bool IsTransitionToDeadState()
-    {
-        // ★現在は体力が一定以下で死亡になっているのでメソッドが出来たら直す
-        return _actorStatus.IsBelowMotivationThreshold();
-    }
+    public bool IsTransitionToPanicState() => _actorSight.IsFindTreasure();
+    public bool IsTransitionToDeadState() => _actorStatus.IsHpIsZero();
 
     public void PlayDeadAnim()
     {

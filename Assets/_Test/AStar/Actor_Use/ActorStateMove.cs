@@ -8,23 +8,34 @@ using StateID = ActorStateMachine.StateID;
 /// </summary>
 internal class ActorStateMove : ActorStateBase
 {
+    readonly float Interval = 0.3f;
+    float _timer;
+
     internal ActorStateMove(IActorController movable, ActorStateMachine stateMachine)
         : base(movable, stateMachine) { }
 
     protected override void Enter()
     {
+        _timer = 0;
         _actorController.MoveToTarget();
     }
 
     protected override void Stay()
     {
+        _timer += Time.deltaTime;
+
         if (_actorController.IsTransitionToDeadState())
         {
             ChangeState(StateID.Dead);
         }
-        else if (_actorController.IsTransitionToPanicState())
+        // ActorController‚ÅŽÀ‘•‚µ‚Ä‚¢‚éˆ—‚ªd‚¢‚Ì‚Å–ˆƒtƒŒ[ƒ€ŒÄ‚Î‚È‚¢‚æ‚¤‚É‚µ‚Ä‚¢‚é
+        else if (_timer > Interval)
         {
-            ChangeState(StateID.Panic);
+            _timer = 0;
+            if (_actorController.IsTransitionToPanicState())
+            {
+                ChangeState(StateID.Panic);
+            }
         }
         else if (_actorController.IsTransitionable())
         {

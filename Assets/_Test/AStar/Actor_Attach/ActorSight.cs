@@ -28,22 +28,10 @@ public class ActorSight : MonoBehaviour
         _sightableArr = new Collider[SightableArrLength];
     }
 
-    void Update()
-    {
-        if (IsFindTreasure())
-        {
-            Debug.Log("ÇøÇÁÇË");
-        }
-        else
-        {
-            Debug.Log("ÇÃÇÒÇøÇÁÇË");
-        }
-    }
-
     internal bool IsFindTreasure()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _sightableArr, _sightableLayer);
-
+        Debug.Log("Ç®ïÛíTçı");
         foreach (Collider col in _sightableArr)
         {
             if (!col) break;

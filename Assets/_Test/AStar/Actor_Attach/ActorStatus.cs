@@ -26,14 +26,14 @@ public class ActorStatus : MonoBehaviour
 
     void Start()
     {
-        InvokeRepeating(nameof(DecreaseMotivation), 0, 0.1f);
+        InvokeRepeating(nameof(DecreaseHp), 0, 0.1f);
     }
 
-    internal bool IsBelowMotivationThreshold() => _currentHp < _HpThreshold;
+    internal bool IsBelowHpThreshold() => _currentHp < _HpThreshold;
+    internal bool IsHpIsZero() => _currentHp <= 0;
 
-    void DecreaseMotivation()
+    void DecreaseHp()
     {
-        // TODO:0以下になってしまうので修正
         _currentHp = Mathf.Clamp(_currentHp -= _decreaseQuantity, 0, _maxHp);
 
         // テスト用にUIに表示
