@@ -23,10 +23,9 @@ public class PathfindingGrid : MonoBehaviour
     // 変更すると直径が1ではなくなるので、色々な不具合が出るかもしれない
     readonly float NodeRadius = 0.5f;
 
-    [Header("移動可能なレイヤー")]
+    [Header("そのマスに侵入可能か判定するレイヤー")]
     [SerializeField] LayerMask _movableLayer;
-    [Header("移動不可能なレイヤー")]
-    [SerializeField] LayerMask _obstacleLayer;
+    [SerializeField] LayerMask _unmovableLayer;
     [Header("グリッドのサイズ")]
     [SerializeField] int _gridWidth;
     [SerializeField] int _gridDepth;
@@ -80,7 +79,7 @@ public class PathfindingGrid : MonoBehaviour
     float NodeDiameter() => NodeRadius * 2;
 
     /// <summary>球状の当たり判定を出して障害物のレイヤーにヒットしなかったら移動できるのでtrueを返す</summary>
-    bool IsMovableNode(Vector3 pos) => !Physics.CheckSphere(pos, NodeRadius, _obstacleLayer);
+    bool IsMovableNode(Vector3 pos) => !Physics.CheckSphere(pos, NodeRadius, _unmovableLayer);
 
     int GetPenaltyCost(bool isMovable, Vector3 pos)
     {
