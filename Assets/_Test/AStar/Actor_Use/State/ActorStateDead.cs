@@ -8,11 +8,11 @@ using StateID = ActorStateMachine.StateID;
 /// </summary>
 internal class ActorStateDead : ActorStateBase
 {
-    internal ActorStateDead(IActorController movable, ActorStateMachine stateMachine)
+    internal ActorStateDead(IStateControl movable, ActorStateMachine stateMachine)
         : base(movable, stateMachine) { }
 
     protected override void Enter()
     {
-        _actorController.PlayDeadAnim();
+        _stateControl.PlayDeadAnim();
     }
 }

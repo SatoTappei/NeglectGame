@@ -4,25 +4,25 @@ using UnityEngine;
 using StateID = ActorStateMachine.StateID;
 
 /// <summary>
-/// アニメーションの再生を行うステートのクラス
+/// うろうろするステートのクラス
 /// </summary>
-internal class ActorStateAnimation : ActorStateBase
+internal class ActorStateLookAround : ActorStateBase
 {
-    internal ActorStateAnimation(IActorController movable, ActorStateMachine stateMachine)
+    internal ActorStateLookAround(IStateControl movable, ActorStateMachine stateMachine)
         : base(movable, stateMachine) { }
 
     protected override void Enter()
     {
-        _actorController.PlayAppearAnim();
+        _stateControl.PlayLookAroundAnim();
     }
 
     protected override void Stay()
     {
-        if (_actorController.IsTransitionToDeadState())
+        if (_stateControl.IsTransitionToDeadState())
         {
             ChangeState(StateID.Dead);
         }
-        else if (_actorController.IsTransitionable())
+        else if (_stateControl.IsTransitionable())
         {
             ChangeState(StateID.Move);
         }

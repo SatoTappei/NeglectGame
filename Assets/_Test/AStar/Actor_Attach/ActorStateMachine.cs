@@ -10,19 +10,20 @@ public class ActorStateMachine : MonoBehaviour
 {
     internal enum StateID
     {
-        Idle,
+        Appear,
         Move,
         Run,
-        Wander,
-        Anim,
+        Attack,
+        Joy,
+        LookAround,
         Panic,
         Dead
     }
 
-    // 各ステートはこのインターフェースで実装されているメソッドを適切なタイミングで呼び出す
-    IActorController _actorController;
     ActorStateBase _currentState;
     Dictionary<StateID, ActorStateBase> _stateDic;
+    // 各ステートはこのインターフェースで実装されているメソッドを適切なタイミングで呼び出す
+    IStateControl _stateControl;
 
     void Awake()
     {
@@ -33,27 +34,29 @@ public class ActorStateMachine : MonoBehaviour
 
     void Start()
     {
-        _actorController = GetComponent<IActorController>();
+        _stateControl = GetComponent<IStateControl>();
 
         // TOOD:ここら辺の生成処理はVContainerに任せられないか
-        ActorStateIdle idle      = new ActorStateIdle(_actorController, this);
-        ActorStateMove move      = new ActorStateMove(_actorController, this);
-        ActorStateRun run        = new ActorStateRun(_actorController, this);
-        ActorStateWander wander  = new ActorStateWander(_actorController, this);
-        ActorStateAnimation anim = new ActorStateAnimation(_actorController, this);
-        ActorStatePanic panic    = new ActorStatePanic(_actorController, this);
-        ActorStateDead dead      = new ActorStateDead(_actorController, this);
+        ActorStateAppear appear      = new ActorStateAppear(_stateControl, this);
+        ActorStateMove move          = new ActorStateMove(_stateControl, this);
+        ActorStateRun run            = new ActorStateRun(_stateControl, this);
+        ActorStateAttack attack      = new ActorStateAttack(_stateControl, this);
+        ActorStateJoy joy            = new ActorStateJoy(_stateControl, this);
+        ActorStateLookAround wander  = new ActorStateLookAround(_stateControl, this);
+        ActorStatePanic panic        = new ActorStatePanic(_stateControl, this);
+        ActorStateDead dead          = new ActorStateDead(_stateControl, this);
 
-        _stateDic.Add(StateID.Idle, idle);
+        // 遷移先には選ばれないのでStateID.Appearの追加処理はしないで良い
         _stateDic.Add(StateID.Move, move);
         _stateDic.Add(StateID.Run, run);
-        _stateDic.Add(StateID.Wander, wander);
-        _stateDic.Add(StateID.Anim, anim);
+        _stateDic.Add(StateID.Attack, attack);
+        _stateDic.Add(StateID.Joy, joy);
+        _stateDic.Add(StateID.LookAround, wander);
         _stateDic.Add(StateID.Panic, panic);
         _stateDic.Add(StateID.Dead, dead);
 
         // 登場時にアニメーションを再生するため
-        _currentState = anim;
+        _currentState = appear;
     }
 
     void Update()

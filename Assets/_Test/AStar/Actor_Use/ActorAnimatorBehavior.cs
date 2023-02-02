@@ -22,27 +22,27 @@ public class ActorAnimatorBehavior : StateMachineBehaviour
     [Header("ëJà⁄ÇµÇΩÇ∆Ç´Ç…ï\é¶Ç≥ÇÍÇÈÉAÉCÉRÉì")]
     [SerializeField] StateIcon _iconType;
     
-    [SerializeField] Sprite _questionIcon;
-    [SerializeField] Sprite _exclamationIcon;
+    //[SerializeField] Sprite _questionIcon;
+    //[SerializeField] Sprite _exclamationIcon;
 
-    Image _icon;
+    Text _text;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (!_icon) _icon = GameObject.Find("PlayerStateTestIcon").GetComponent<Image>();
+        if (!_text) _text = GameObject.Find("StateText").GetComponent<Text>();
 
         if(_iconType == StateIcon.Question)
         {
-            _icon.sprite = _questionIcon;
+            _text.text = "ã^òf";
         }
         else if(_iconType == StateIcon.Exclamation)
         {
-            _icon.sprite = _exclamationIcon;
+            _text.text = "ã¡ú±";
         }
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        _icon.sprite = null;
+        _text.text = "í èÌ";
     }
 }

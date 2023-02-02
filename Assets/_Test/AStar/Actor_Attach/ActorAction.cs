@@ -16,11 +16,13 @@ public class ActorAction : MonoBehaviour
     //       そうするとステート名をreadonlyにすることが出来ない
     //       AnimationClip、ステート名(ハッシュ用)、呼び出しの列挙型を作ってひとまとめにするべき？  
 
-    readonly int WalkAnimState = Animator.StringToHash("Walk");
-    readonly int SprintAnimState = Animator.StringToHash("Sprint");
+    readonly int MoveAnimState = Animator.StringToHash("Move");
+    readonly int RunAnimState = Animator.StringToHash("Run");
     readonly int LookAroundAnimState = Animator.StringToHash("LookAround");
     readonly int AppearAnimState = Animator.StringToHash("Appear");
-    readonly int PanicAnimState = Animator.StringToHash("Jump");
+    readonly int PanicAnimState = Animator.StringToHash("Panic");
+    readonly int AttackAnimState = Animator.StringToHash("Attack");
+    readonly int JoyAnimState = Animator.StringToHash("Joy");
 
     [SerializeField] Animator _anim;
     [Header("移動速度")]
@@ -31,19 +33,21 @@ public class ActorAction : MonoBehaviour
     [SerializeField] AnimationClip _lookAroundAnimClip;
     [SerializeField] AnimationClip _appearAnimClip;
     [SerializeField] AnimationClip _panicAnimClip;
+    [SerializeField] AnimationClip _attackAnimClip;
+    [SerializeField] AnimationClip _joyAnimClip;
 
     /// <summary>移動開始時にインスタンスのnew、移動のキャンセルには.Cancel()を呼ぶ</summary>
     CancellationTokenSource _token;
 
     internal void MoveFollowPath(Stack<Vector3> stack, UnityAction callBack)
     {
-        _anim.Play(WalkAnimState);
+        _anim.Play(MoveAnimState);
         MoveAsync(stack, _speed, callBack).Forget();
     }
 
     internal void RunFollowPath(Stack<Vector3> stack, UnityAction callBack)
     {
-        _anim.Play(SprintAnimState);   
+        _anim.Play(RunAnimState);   
         MoveAsync(stack, _speed * _runSpeedMag, callBack).Forget();
     }
 
@@ -75,6 +79,10 @@ public class ActorAction : MonoBehaviour
         => PlayAnim(AppearAnimState, callback, _appearAnimClip);
     internal void PlayPanicAnim(UnityAction callback)
         => PlayAnim(PanicAnimState, callback, _panicAnimClip);
+    internal void PlayJoyAnim(UnityAction callback)
+    => PlayAnim(JoyAnimState, callback, _joyAnimClip);
+    internal void PlayAttackAnim(UnityAction callback)
+    => PlayAnim(AttackAnimState, callback, _attackAnimClip);
 
     void PlayAnim(int hash, UnityAction callback, AnimationClip clip)
     {

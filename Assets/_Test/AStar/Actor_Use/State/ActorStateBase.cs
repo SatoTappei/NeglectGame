@@ -15,14 +15,14 @@ internal abstract class ActorStateBase
         Exit,
     }
 
-    protected IActorController _actorController;
+    protected IStateControl _stateControl;
     protected Stage _stage;
     protected ActorStateBase _nextState;
     protected ActorStateMachine _stateMachine;
 
-    internal ActorStateBase(IActorController actorController, ActorStateMachine stateMachine)
+    internal ActorStateBase(IStateControl _stateControl, ActorStateMachine stateMachine)
     {
-        _actorController = actorController;
+        this._stateControl = _stateControl;
         _stateMachine = stateMachine;
         _stage = Stage.Enter;
     }

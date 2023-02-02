@@ -7,11 +7,16 @@ using UnityEngine;
 /// </summary>
 internal class ActorStateRun : ActorStateMove
 {
-    internal ActorStateRun(IActorController movable, ActorStateMachine stateMachine)
+    internal ActorStateRun(IStateControl movable, ActorStateMachine stateMachine)
     : base(movable, stateMachine) { }
 
     protected override void Enter()
     {
-        _actorController.RunToTarget();
+        _stateControl.RunToTarget();
+    }
+
+    protected override void Exit()
+    {
+        _stateControl.RunEndable();
     }
 }

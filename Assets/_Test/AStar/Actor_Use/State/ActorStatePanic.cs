@@ -8,17 +8,17 @@ using StateID = ActorStateMachine.StateID;
 /// </summary>
 internal class ActorStatePanic : ActorStateBase
 {
-    internal ActorStatePanic(IActorController movable, ActorStateMachine stateMachine)
+    internal ActorStatePanic(IStateControl movable, ActorStateMachine stateMachine)
         : base(movable, stateMachine) { }
 
     protected override void Enter()
     {
-        _actorController.PlayPanicAnim();
+        _stateControl.PlayPanicAnim();
     }
 
     protected override void Stay()
     {
-        if (_actorController.IsTransitionable())
+        if (_stateControl.IsTransitionable())
         {
             ChangeState(StateID.Run);
         }

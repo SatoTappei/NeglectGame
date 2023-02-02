@@ -17,27 +17,27 @@ public class ActorHpControl : MonoBehaviour
     // ★意欲の表示のテスト用
     [SerializeField] Text _testText;
 
-    int _currentHp;
+    //int _currentHp;
+    ActorStatus _actorStatus;
+    // 扱っている値がActorStatusの値に依存しないことを明確にするためにプロパティでラップしておく
+    int CurrentHp { get => _actorStatus.Hp; set => _actorStatus.Hp = value; }
 
-    void Awake()
+    internal void Init(ActorStatus actorStatus)
     {
-        _currentHp = _maxHp;
+        _actorStatus = actorStatus;
+        CurrentHp = _maxHp;
     }
 
-    void Start()
-    {
-        // TODO:繰り返しInvokeを止める処理を書いていない
-        InvokeRepeating(nameof(DecreaseHp), 0, 0.1f);
-    }
-
-    internal bool IsBelowHpThreshold() => _currentHp < _HpThreshold;
-    internal bool IsHpIsZero() => _currentHp <= 0;
+    internal void StartDecreaseHpPerSecond() => InvokeRepeating(nameof(DecreaseHp), 0, 0.1f);
+    internal void StopDecreaseHpPerSecond() { /* TODO:毎秒のHP減少を止める処理 */ }
+    internal bool IsBelowHpThreshold() => CurrentHp < _HpThreshold;
+    internal bool IsHpIsZero() => CurrentHp <= 0;
 
     void DecreaseHp()
     {
-        _currentHp = Mathf.Clamp(_currentHp -= _decreaseQuantity, 0, _maxHp);
+        CurrentHp = Mathf.Clamp(CurrentHp -= _decreaseQuantity, 0, _maxHp);
 
         // テスト用にUIに表示
-        _testText.text = _currentHp.ToString();
+        _testText.text = CurrentHp.ToString();
     }   
 }

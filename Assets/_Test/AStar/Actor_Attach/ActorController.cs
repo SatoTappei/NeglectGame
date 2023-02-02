@@ -6,14 +6,15 @@ using UnityEngine.Events;
 /// <summary>
 /// キャラクターの各行動を制御するコンポーネント
 /// </summary>
-public class ActorController : MonoBehaviour, IActorController
+public class ActorController : MonoBehaviour, IStateControl
 {
     readonly string SystemObjectTag = "GameController";
 
     [SerializeField] ActorAction _actorAction;
-    [SerializeField] ActorHpControl _actorStatus;
+    [SerializeField] ActorHpControl _actorHpControl;
     [SerializeField] ActorSight _actorSight;
 
+    ActorStatus _actorStatus;
     PathfindingTarget _pathfindingTarget;
     IPathGetable _pathGetable;
 
@@ -22,6 +23,8 @@ public class ActorController : MonoBehaviour, IActorController
     /// そのステートの行動が終わったらtrueになってステートからの遷移可能になる
     /// </summary>
     bool _isTransitionable;
+    // お宝を見つけたらそれを手に入れるまで次の目標に向かわない
+    bool _isTreasureable;
 
     void Start()
     {
@@ -29,7 +32,9 @@ public class ActorController : MonoBehaviour, IActorController
         _pathfindingTarget = system.GetComponent<PathfindingTarget>();
         _pathGetable = system.GetComponent<IPathGetable>();
 
-        ActorStatus actorStatus = new ActorStatus();
+        _actorStatus = new ActorStatus();
+        _actorHpControl.Init(_actorStatus);
+        _actorSight.Init(_actorStatus);
     }
 
     public bool IsTransitionable() => _isTransitionable;
@@ -38,7 +43,10 @@ public class ActorController : MonoBehaviour, IActorController
     //public void RunToTarget() => WaitUntilArrival(_actorAction.RunFollowPath);
     public void RunToTarget()
     {
-
+        GameObject target = _actorStatus.Treasure;
+        Stack<Vector3> stack = _pathGetable.GetPathStack(transform.position, target.transform.position);
+        _isTransitionable = false;
+        _actorAction.RunFollowPath(stack, () => _isTransitionable = true);
     }
     public void CancelMoveToTarget() => _actorAction.MoveCancel();
 
@@ -54,7 +62,11 @@ public class ActorController : MonoBehaviour, IActorController
         return _pathGetable.GetPathStack(transform.position, targetPos);
     }
 
-    public void PlayWanderAnim() => WaitAnimFinish(_actorAction.PlayLookAroundAnim);
+    public void PlayJoyAnim() => WaitAnimFinish(_actorAction.PlayJoyAnim);
+
+    public void PlayAttackAnim() => WaitAnimFinish(_actorAction.PlayAttackAnim);
+
+    public void PlayLookAroundAnim() => WaitAnimFinish(_actorAction.PlayLookAroundAnim);
     public void PlayAppearAnim() => WaitAnimFinish(_actorAction.PlayAppearAnim);
     public void PlayPanicAnim() => WaitAnimFinish(_actorAction.PlayPanicAnim);
 
@@ -78,13 +90,30 @@ public class ActorController : MonoBehaviour, IActorController
      *  2.Panicステートに遷移
      *  3.ランダムな箇所を選択 <= ここを変えたい
      *  4.Runステートでその座標に向かって走る
+     *  
      */
-    public bool IsTransitionToPanicState() => _actorSight.IsFindTreasure();
-    public bool IsTransitionToDeadState() => _actorStatus.IsHpIsZero();
+    public bool IsTransitionToPanicState()
+    {
+        if (_isTreasureable) return false;
+
+        bool b = _actorSight.IsFindTreasure();
+        if (b)
+        {
+            _isTreasureable = true;
+        }
+
+        return b;
+    }
+    public bool IsTransitionToDeadState() => _actorHpControl.IsHpIsZero();
 
     public void PlayDeadAnim()
     {
         Destroy(gameObject);
         Debug.Log("死んだときになんか演出をする");
+    }
+
+    public void RunEndable()
+    {
+        _isTreasureable = false;
     }
 }

@@ -11,20 +11,20 @@ internal class ActorStateMove : ActorStateBase
     readonly float Interval = 0.3f;
     float _timer;
 
-    internal ActorStateMove(IActorController movable, ActorStateMachine stateMachine)
+    internal ActorStateMove(IStateControl movable, ActorStateMachine stateMachine)
         : base(movable, stateMachine) { }
 
     protected override void Enter()
     {
         _timer = 0;
-        _actorController.MoveToTarget();
+        _stateControl.MoveToTarget();
     }
 
     protected override void Stay()
     {
         _timer += Time.deltaTime;
 
-        if (_actorController.IsTransitionToDeadState())
+        if (_stateControl.IsTransitionToDeadState())
         {
             ChangeState(StateID.Dead);
         }
@@ -32,19 +32,19 @@ internal class ActorStateMove : ActorStateBase
         else if (_timer > Interval)
         {
             _timer = 0;
-            if (_actorController.IsTransitionToPanicState())
+            if (_stateControl.IsTransitionToPanicState())
             {
                 ChangeState(StateID.Panic);
             }
         }
-        else if (_actorController.IsTransitionable())
+        else if (_stateControl.IsTransitionable())
         {
-            ChangeState(StateID.Wander);
+            ChangeState(StateID.LookAround);
         }
     }
 
     protected override void Exit()
     {
-        _actorController.CancelMoveToTarget();
+        _stateControl.CancelMoveToTarget();
     }
 }

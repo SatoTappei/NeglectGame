@@ -20,15 +20,32 @@ public class ActorSight : MonoBehaviour
     [SerializeField] float _sightRange;
     [SerializeField] float _sightAngle;
 
+    ActorStatus _actorStatus;
     // OverlapSphereNonAlloc()を使用するので予め格納用の配列を確保しておく
     Collider[] _sightableArr;
 
-    void Awake()
+    internal void Init(ActorStatus actorStatus)
     {
+        _actorStatus = actorStatus;
         _sightableArr = new Collider[SightableArrLength];
     }
 
+    // TODO:このメソッドは単一責任になっているかよく考える
     internal bool IsFindTreasure()
+    {
+        GameObject go = GetInSightObject();
+        if (go)
+        {
+            _actorStatus.Treasure = go;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    GameObject GetInSightObject()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _sightableArr, _sightableLayer);
 
@@ -48,11 +65,12 @@ public class ActorSight : MonoBehaviour
             rayOrigin.y += ActorModelHeight;
             bool isUnobstructed = !Physics.Raycast(rayOrigin, treasureDir, distance, _sightBlockableLayer);
 
-            bool isFind = distance <= _sightRange && angle <= _sightAngle && isUnobstructed;
-
-            return isFind;
+            if(distance <= _sightRange && angle <= _sightAngle && isUnobstructed)
+            {
+                return col.gameObject;
+            }
         }
 
-        return false;
+        return null;
     }
 }
