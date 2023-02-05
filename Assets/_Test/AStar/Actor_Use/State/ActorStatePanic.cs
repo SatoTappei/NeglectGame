@@ -1,24 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using StateID = ActorStateMachine.StateID;
-
 /// <summary>
-/// 発見した時のステートのクラス
+/// 目標を発見した時のアニメーションを行うステートのクラス
 /// </summary>
 internal class ActorStatePanic : ActorStateBase
 {
-    internal ActorStatePanic(IStateControl movable, ActorStateMachine stateMachine)
-        : base(movable, stateMachine) { }
+    internal ActorStatePanic(IStateControl stateControl, ActorStateMachine stateMachine)
+        : base(stateControl, stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.PlayPanicAnim();
+        _stateControl.PlayAnim("Panic");
     }
 
     protected override void Stay()
     {
-        if (_stateControl.IsTransitionable())
+        if ( _stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Run))
         {
             ChangeState(StateID.Run);
         }

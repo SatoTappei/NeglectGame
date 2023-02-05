@@ -1,18 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using StateID = ActorStateMachine.StateID;
-
 /// <summary>
-/// 目標を達成した際の喜びのステートのクラス
+/// 目標を達成した際に喜ぶアニメーションを行うステートのクラス
 /// </summary>
 internal class ActorStateJoy : ActorStateBase
 {
-    internal ActorStateJoy(IStateControl movable, ActorStateMachine stateMachine)
-        : base(movable, stateMachine) { }
+    internal ActorStateJoy(IStateControl stateControl, ActorStateMachine stateMachine)
+        : base(stateControl, stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.PlayAppearAnim();
+        _stateControl.PlayAnim("Joy");
+    }
+
+    protected override void Stay()
+    {
+        // 目標を達成したら帰還ステートに遷移するように作る
+        if (_stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Escape))
+        {
+            ChangeState(StateID.Escape);
+        }
     }
 }

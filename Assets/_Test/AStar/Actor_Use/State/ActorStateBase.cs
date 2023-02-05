@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using StateID = ActorStateMachine.StateID;
-
 /// <summary>
 /// キャラクターのステートマシンの各ステートの基底クラス
 /// </summary>
@@ -20,9 +15,9 @@ internal abstract class ActorStateBase
     protected ActorStateBase _nextState;
     protected ActorStateMachine _stateMachine;
 
-    internal ActorStateBase(IStateControl _stateControl, ActorStateMachine stateMachine)
+    internal ActorStateBase(IStateControl stateControl, ActorStateMachine stateMachine)
     {
-        this._stateControl = _stateControl;
+        _stateControl = stateControl;
         _stateMachine = stateMachine;
         _stage = Stage.Enter;
     }

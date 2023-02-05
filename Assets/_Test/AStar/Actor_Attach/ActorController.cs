@@ -1,15 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// キャラクターの各行動を制御するコンポーネント
 /// </summary>
 public class ActorController : MonoBehaviour, IStateControl
 {
-    readonly string SystemObjectTag = "GameController";
+    /* 
+     *  オリジナルの規約に乗っ取り、LSystemのほうももう一度リファクタリングする 
+     */
 
+    // 各ステートの遷移条件の設定完了、遷移条件に使う各メソッドのリファクタリングをする
+
+    readonly string SystemObjectTag = "GameController";
     [SerializeField] ActorAction _actorAction;
     [SerializeField] ActorHpControl _actorHpControl;
     [SerializeField] ActorSight _actorSight;
@@ -23,8 +26,11 @@ public class ActorController : MonoBehaviour, IStateControl
     /// そのステートの行動が終わったらtrueになってステートからの遷移可能になる
     /// </summary>
     bool _isTransitionable;
-    // お宝を見つけたらそれを手に入れるまで次の目標に向かわない
-    bool _isTreasureable;
+    // 仮の見つけたお宝(敵含む)、別のスクリプトに映す
+    GameObject _findedTreasure;
+
+    // 次のステートを決める(次のステートに移る際にStateIDをNonにするように直すべき)
+    StateID _nextState;
 
     void Start()
     {
@@ -32,29 +38,83 @@ public class ActorController : MonoBehaviour, IStateControl
         _pathfindingTarget = system.GetComponent<PathfindingTarget>();
         _pathGetable = system.GetComponent<IPathGetable>();
 
+        _nextState = StateID.Non;
         _actorStatus = new ActorStatus();
         _actorHpControl.Init(_actorStatus);
         _actorSight.Init(_actorStatus);
     }
 
-    public bool IsTransitionable() => _isTransitionable;
-
-    public void MoveToTarget() => WaitUntilArrival(_actorAction.MoveFollowPath);
-    //public void RunToTarget() => WaitUntilArrival(_actorAction.RunFollowPath);
-    public void RunToTarget()
+    void Update()
     {
-        GameObject target = _actorStatus.Treasure;
-        Stack<Vector3> stack = _pathGetable.GetPathStack(transform.position, target.transform.position);
-        _isTransitionable = false;
-        _actorAction.RunFollowPath(stack, () => _isTransitionable = true);
+        // テスト用
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _nextState = StateID.Dead;
+        }
+        else if (Input.GetKeyDown(KeyCode.P))
+        {
+            _nextState = StateID.Panic;
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            _nextState = StateID.Attack;
+        }
+        else if (Input.GetKeyDown(KeyCode.J))
+        {
+            _nextState = StateID.Joy;
+        }
     }
-    public void CancelMoveToTarget() => _actorAction.MoveCancel();
 
-    void WaitUntilArrival(UnityAction<Stack<Vector3>, UnityAction> unityAction)
+    void IStateControl.PlayAnim(string name)
     {
         _isTransitionable = false;
-        unityAction(GetPathStack(), () => _isTransitionable = true);
+
+        switch (name)
+        {
+            case "Appear":
+                _actorAction.PlayAppearAnim(() =>
+                {
+                    _isTransitionable = true;
+                    _nextState = StateID.Move;
+                });
+                break;
+            case "LookAround":
+                _actorAction.PlayLookAroundAnim(() =>
+                {
+                    _isTransitionable = true;
+                    _nextState = StateID.Move;
+                });
+                break;
+            case "Panic":
+                _actorAction.PlayPanicAnim(() =>
+                {
+                    _isTransitionable = true;
+                    _nextState = StateID.Run;
+                });
+                break;
+            case "Attack":
+                _actorAction.PlayAttackAnim(() =>
+                {
+                    _isTransitionable = true;
+                    _nextState = StateID.Non;
+                });
+                break;
+            case "Joy":
+                _actorAction.PlayJoyAnim(() =>
+                {
+                    _isTransitionable = true;
+                    _nextState = StateID.Non;
+                });
+                break;
+        }
     }
+
+    bool IStateControl.IsEqualNextState(StateID state) => _nextState == state;
+
+    // 現状移動にもこのフラグが使用されているので、PlayAnimメソッドをよんでいないMoveステートも
+    // 移動完了したタイミングでこのメソッドもtrueを返すようになる
+    bool IStateControl.IsTransitionable() => _isTransitionable;
+
 
     Stack<Vector3> GetPathStack()
     {
@@ -62,58 +122,86 @@ public class ActorController : MonoBehaviour, IStateControl
         return _pathGetable.GetPathStack(transform.position, targetPos);
     }
 
-    public void PlayJoyAnim() => WaitAnimFinish(_actorAction.PlayJoyAnim);
+    void IStateControl.CancelAnim(string name)
+    {
+        // アニメーションキャンセル処理
+    }
 
-    public void PlayAttackAnim() => WaitAnimFinish(_actorAction.PlayAttackAnim);
+    bool IStateControl.IsDead()
+    {
+        // 死亡したらtrueになる
+        return false;
+    }
 
-    public void PlayLookAroundAnim() => WaitAnimFinish(_actorAction.PlayLookAroundAnim);
-    public void PlayAppearAnim() => WaitAnimFinish(_actorAction.PlayAppearAnim);
-    public void PlayPanicAnim() => WaitAnimFinish(_actorAction.PlayPanicAnim);
+    bool IStateControl.IsTargetLost()
+    {
+        // ターゲットロスト
+        return false;
+    }
 
-    void WaitAnimFinish(UnityAction<UnityAction> unityAction)
+    void IStateControl.MoveToTarget()
     {
         _isTransitionable = false;
-        unityAction(() => _isTransitionable = true);
+        _actorAction.MoveFollowPath(GetPathStack(), () => 
+        {
+            _isTransitionable = true;
+            _nextState = StateID.LookAround;
+        });
     }
 
-    /* 
-     *  TODO:一度お宝を見つけた後にもう一度お宝を見つけるとループしてしまう不具合
-     *       一度お宝を見つけると対象のお宝を手に入れるまで発見しないようにする
-     *       フラグのオンオフとか？
-     */
-
-    /*  発見したかどうかのboolが返る
-     *  PanicステートとRunステートが完全に分離している
-     *  Panicステートの次のRunステートでは見つけたお宝に向けて走っていくようにしたい
-     *  お宝の座標を渡せばその座標まで経路探索して歩いてくれる
-     *  1.お宝発見
-     *  2.Panicステートに遷移
-     *  3.ランダムな箇所を選択 <= ここを変えたい
-     *  4.Runステートでその座標に向かって走る
-     *  
-     */
-    public bool IsTransitionToPanicState()
+    void IStateControl.RunToTarget()
     {
-        if (_isTreasureable) return false;
+        _isTransitionable = false;
 
-        bool b = _actorSight.IsFindTreasure();
-        if (b)
+        // 仮の分岐処理、見つけたもので分岐する
+        // 見つけたものに向かって走るようになっている
+
+        if (_findedTreasure != null)
         {
-            _isTreasureable = true;
+            if (_findedTreasure.name == "Enemy")
+            {
+                _nextState = StateID.Attack;
+            }
+            else
+            {
+                _nextState = StateID.Joy;
+            }
         }
 
-        return b;
-    }
-    public bool IsTransitionToDeadState() => _actorHpControl.IsHpIsZero();
+        var pos = _findedTreasure.transform.position;
 
-    public void PlayDeadAnim()
-    {
-        Destroy(gameObject);
-        Debug.Log("死んだときになんか演出をする");
+        _actorAction.RunFollowPath(_pathGetable.GetPathStack(transform.position, pos), () =>
+        {
+            _isTransitionable = true;
+        });
     }
 
-    public void RunEndable()
+    void IStateControl.CancelMoveToTarget()
     {
-        _isTreasureable = false;
+        _actorAction.MoveCancel();
+    }
+
+    bool IStateControl.IsSightTarget()
+    {
+        GameObject go = _actorSight.GetInSightObject();
+        if (go != null)
+        {
+            _findedTreasure = go;
+        }
+        // 毎フレーム呼ばれているので0.3秒おきとかに呼ばれるようにする
+
+        if (_actorSight.IsFindTreasure())
+        {
+            _nextState = StateID.Panic;
+            return true;
+        }
+
+        return false;
+    }
+
+    void IStateControl.MoveToExit()
+    {
+        Debug.Log("出口へ");
+        // 出口に向かって移動する処理
     }
 }
