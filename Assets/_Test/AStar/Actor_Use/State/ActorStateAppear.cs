@@ -1,24 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using StateID = ActorStateMachine.StateID;
-
 /// <summary>
-/// 登場時のステートのクラス
+/// 登場時のアニメーションを行うステートのクラス
 /// </summary>
 internal class ActorStateAppear : ActorStateBase
 {
-    internal ActorStateAppear(IStateControl movable, ActorStateMachine stateMachine)
-            : base(movable, stateMachine) { }
+    internal ActorStateAppear(IStateControl stateControl, ActorStateMachine stateMachine)
+            : base(stateControl, stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.PlayAppearAnim();
+        _stateControl.PlayAnim("Appear");
     }
 
     protected override void Stay()
     {
-        if (_stateControl.IsTransitionable())
+        if (_stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Move))
         {
             ChangeState(StateID.Move);
         }

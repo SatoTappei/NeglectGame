@@ -1,28 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using StateID = ActorStateMachine.StateID;
-
 /// <summary>
-/// うろうろするステートのクラス
+/// 周囲を見渡すアニメーションをするステートのクラス
 /// </summary>
 internal class ActorStateLookAround : ActorStateBase
 {
-    internal ActorStateLookAround(IStateControl movable, ActorStateMachine stateMachine)
-        : base(movable, stateMachine) { }
+    internal ActorStateLookAround(IStateControl stateControl, ActorStateMachine stateMachine)
+        : base(stateControl, stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.PlayLookAroundAnim();
+        _stateControl.PlayAnim("LookAround");
     }
 
     protected override void Stay()
     {
-        if (_stateControl.IsTransitionToDeadState())
+        if (_stateControl.IsDead() && _stateControl.IsEqualNextState(StateID.Dead))
         {
             ChangeState(StateID.Dead);
         }
-        else if (_stateControl.IsTransitionable())
+        else if (_stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Move))
         {
             ChangeState(StateID.Move);
         }

@@ -1,31 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 /// <summary>
 /// ステートマシンで使用する、各ステートの行動＆遷移条件を実装するインターフェース
 /// </summary>
-public interface IStateControl
+internal interface IStateControl
 {
-    // 全てのステートは基本この遷移条件に従う
-    public bool IsTransitionable();
+    // Controller側にインターフェースが実装されているので
+    // このメソッド群はControllerの機能を使わせてあげるという実装になる
 
-    public void MoveToTarget();
-    public void RunToTarget();
-    public void CancelMoveToTarget();
+    void PlayAnim(string name);
+    void CancelAnim(string name);
 
-    public void PlayLookAroundAnim();
-    public void PlayAppearAnim();
-    public void PlayPanicAnim();
-    public void PlayJoyAnim();
-    public void PlayAttackAnim();
+    void MoveToTarget();
+    void RunToTarget();
+    void MoveToExit();
+    void CancelMoveToTarget();
 
-    // 複数のステートから遷移する
-    public bool IsTransitionToPanicState();
-    public bool IsTransitionToDeadState();
+    // アニメーションが終わったタイミングで次のステートがせっとされるからいらないかもしれない
+    bool IsTransitionable();
+    bool IsEqualNextState(StateID state);
+    bool IsDead();
 
-    // ダッシュが終わったら呼ばれる、なんかフラグのオンオフとかする
-    public void RunEndable();
+    // 攻撃ステートでしか使われていない、戦っている敵が死んだか判定する処理
+    bool IsTargetLost();
 
-    public void PlayDeadAnim();
+    //// 全てのステートは基本この遷移条件に従う
+    //public bool IsTransitionable();
+
+    bool IsSightTarget();
+
+    //public void PlayLookAroundAnim();
+    //public void PlayAppearAnim();
+    //public void PlayPanicAnim();
+    //public void PlayJoyAnim();
+    //public void PlayAttackAnim();
+
+    //// 複数のステートから遷移する
+    //public bool IsTransitionToPanicState();
+    //public bool IsTransitionToDeadState();
+
+    //// ダッシュが終わったら呼ばれる、なんかフラグのオンオフとかする
+    //public void RunEndable();
+
+    //public void PlayDeadAnim();
+
+    //// こっちでステートを渡してやればいいのではないか？のテスト
+    //internal StateID GetStateTest();
 }

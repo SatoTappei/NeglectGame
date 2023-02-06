@@ -45,7 +45,7 @@ public class ActorSight : MonoBehaviour
         }
     }
 
-    GameObject GetInSightObject()
+    internal GameObject GetInSightObject()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _sightableArr, _sightableLayer);
 
