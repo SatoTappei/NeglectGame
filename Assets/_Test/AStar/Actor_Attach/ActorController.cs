@@ -14,7 +14,8 @@ public class ActorController : MonoBehaviour, IStateControl
     // まずはアニメーションの再生周りのメソッドを整理したい
 
     readonly string SystemObjectTag = "GameController";
-    [SerializeField] ActorAction _actorAction;
+    [SerializeField] ActorMove _actorAction;
+    [SerializeField] ActorAnimation _actorAnimation;
     [SerializeField] ActorHpControl _actorHpControl;
     [SerializeField] ActorSight _actorSight;
 
@@ -52,35 +53,35 @@ public class ActorController : MonoBehaviour, IStateControl
         switch (name)
         {
             case "Appear":
-                _actorAction.PlayAnim("Appear", () =>
+                _actorAnimation.PlayAnim("Appear", () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Move;
                 });
                 break;
             case "LookAround":
-                _actorAction.PlayAnim("LookAround", () =>
+                _actorAnimation.PlayAnim("LookAround", () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Move;
                 });
                 break;
             case "Panic":
-                _actorAction.PlayAnim("Panic", () =>
+                _actorAnimation.PlayAnim("Panic", () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Run;
                 });
                 break;
             case "Attack":
-                _actorAction.PlayAnim("Attack", () =>
+                _actorAnimation.PlayAnim("Attack", () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Non;
                 });
                 break;
             case "Joy":
-                _actorAction.PlayAnim("Joy", () =>
+                _actorAnimation.PlayAnim("Joy", () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Non;
