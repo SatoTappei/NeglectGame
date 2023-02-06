@@ -11,6 +11,7 @@ public class ActorController : MonoBehaviour, IStateControl
      */
 
     // 各ステートの遷移条件の設定完了、遷移条件に使う各メソッドのリファクタリングをする
+    // まずはアニメーションの再生周りのメソッドを整理したい
 
     readonly string SystemObjectTag = "GameController";
     [SerializeField] ActorAction _actorAction;
@@ -44,27 +45,6 @@ public class ActorController : MonoBehaviour, IStateControl
         _actorSight.Init(_actorStatus);
     }
 
-    void Update()
-    {
-        // テスト用
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _nextState = StateID.Dead;
-        }
-        else if (Input.GetKeyDown(KeyCode.P))
-        {
-            _nextState = StateID.Panic;
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            _nextState = StateID.Attack;
-        }
-        else if (Input.GetKeyDown(KeyCode.J))
-        {
-            _nextState = StateID.Joy;
-        }
-    }
-
     void IStateControl.PlayAnim(string name)
     {
         _isTransitionable = false;
@@ -72,35 +52,35 @@ public class ActorController : MonoBehaviour, IStateControl
         switch (name)
         {
             case "Appear":
-                _actorAction.PlayAppearAnim(() =>
+                _actorAction.PlayAnim(AnimType.Appear, () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Move;
                 });
                 break;
             case "LookAround":
-                _actorAction.PlayLookAroundAnim(() =>
+                _actorAction.PlayAnim(AnimType.LookAround, () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Move;
                 });
                 break;
             case "Panic":
-                _actorAction.PlayPanicAnim(() =>
+                _actorAction.PlayAnim(AnimType.Panic, () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Run;
                 });
                 break;
             case "Attack":
-                _actorAction.PlayAttackAnim(() =>
+                _actorAction.PlayAnim(AnimType.Attack, () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Non;
                 });
                 break;
             case "Joy":
-                _actorAction.PlayJoyAnim(() =>
+                _actorAction.PlayAnim(AnimType.Joy, () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Non;
