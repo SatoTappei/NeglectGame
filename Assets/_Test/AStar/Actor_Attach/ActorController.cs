@@ -52,35 +52,35 @@ public class ActorController : MonoBehaviour, IStateControl
         switch (name)
         {
             case "Appear":
-                _actorAction.PlayAnim(AnimType.Appear, () =>
+                _actorAction.PlayAnim("Appear", () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Move;
                 });
                 break;
             case "LookAround":
-                _actorAction.PlayAnim(AnimType.LookAround, () =>
+                _actorAction.PlayAnim("LookAround", () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Move;
                 });
                 break;
             case "Panic":
-                _actorAction.PlayAnim(AnimType.Panic, () =>
+                _actorAction.PlayAnim("Panic", () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Run;
                 });
                 break;
             case "Attack":
-                _actorAction.PlayAnim(AnimType.Attack, () =>
+                _actorAction.PlayAnim("Attack", () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Non;
                 });
                 break;
             case "Joy":
-                _actorAction.PlayAnim(AnimType.Joy, () =>
+                _actorAction.PlayAnim("Joy", () =>
                 {
                     _isTransitionable = true;
                     _nextState = StateID.Non;

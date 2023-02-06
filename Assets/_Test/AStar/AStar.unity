@@ -6421,21 +6421,6 @@ MonoBehaviour:
   _anim: {fileID: 1114520764}
   _speed: 2
   _runSpeedMag: 2
-  _lookAroundAnimData:
-    _clip: {fileID: -203655887218126122, guid: 35beac8babec1d04a859c34428d7537c, type: 3}
-    _stateName: LookAround
-  _appearAnimData:
-    _clip: {fileID: -203655887218126122, guid: 6d493d54abde1b841a7540eb3ba39c97, type: 3}
-    _stateName: Appear
-  _panicAnimData:
-    _clip: {fileID: -203655887218126122, guid: 45e5cf7e66e913b4dae01e9cb5ccd14d, type: 3}
-    _stateName: Panic
-  _attackAnimData:
-    _clip: {fileID: 7400000, guid: 957420b6008a50a49862caa4bca98feb, type: 2}
-    _stateName: Attack
-  _joyAnimData:
-    _clip: {fileID: -203655887218126122, guid: 06047ec0444129347ae6e2e9b7bb1424, type: 3}
-    _stateName: Joy
 --- !u!114 &8955967621742018880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6499,7 +6484,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _sightRange: 5
-  _sightAngle: 100
+  _sightAngle: 45
 --- !u!4 &8988273362194966486
 Transform:
   m_ObjectHideFlags: 0
