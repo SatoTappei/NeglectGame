@@ -20,11 +20,6 @@ enum AnimType
 /// </summary>
 public class ActorAction : MonoBehaviour
 {
-    // TODO: アニメーションの列挙型を作るとActorController側のリファクタリングが出来そう？
-    //       適切に行えばActorController側ももう少しスッキリしそう
-    //       そうするとステート名をreadonlyにすることが出来ない
-    //       AnimationClip、ステート名(ハッシュ用)、呼び出しの列挙型を作ってひとまとめにするべき？  
-
     [System.Serializable]
     public class AnimData
     {
@@ -37,11 +32,6 @@ public class ActorAction : MonoBehaviour
 
     readonly int MoveAnimState = Animator.StringToHash("Move");
     readonly int RunAnimState = Animator.StringToHash("Run");
-    //readonly int LookAroundAnimState = Animator.StringToHash("LookAround");
-    //readonly int AppearAnimState = Animator.StringToHash("Appear");
-    //readonly int PanicAnimState = Animator.StringToHash("Panic");
-    //readonly int AttackAnimState = Animator.StringToHash("Attack");
-    //readonly int JoyAnimState = Animator.StringToHash("Joy");
 
     [SerializeField] Animator _anim;
     [Header("移動速度")]
@@ -49,11 +39,6 @@ public class ActorAction : MonoBehaviour
     [Header("走って移動する時の速度倍率")]
     [SerializeField] float _runSpeedMag = 1.5f;
     [Header("アニメーションの長さ取得用")]
-    //[SerializeField] AnimationClip _lookAroundAnimClip;
-    //[SerializeField] AnimationClip _appearAnimClip;
-    //[SerializeField] AnimationClip _panicAnimClip;
-    //[SerializeField] AnimationClip _attackAnimClip;
-    //[SerializeField] AnimationClip _joyAnimClip;
     [SerializeField] AnimData _lookAroundAnimData;
     [SerializeField] AnimData _appearAnimData;
     [SerializeField] AnimData _panicAnimData;
@@ -126,33 +111,6 @@ public class ActorAction : MonoBehaviour
         {
             Debug.LogError("対応するAnimationClipが登録されていません:" + type);
         }
-    }
-
-    //internal void PlayLookAroundAnim(UnityAction callback)
-    //    => PlayAnim(LookAroundAnimState, callback, _lookAroundAnimClip);
-    //internal void PlayAppearAnim(UnityAction callback) 
-    //    => PlayAnim(AppearAnimState, callback, _appearAnimClip);
-    //internal void PlayPanicAnim(UnityAction callback)
-    //    => PlayAnim(PanicAnimState, callback, _panicAnimClip);
-    //internal void PlayJoyAnim(UnityAction callback)
-    //=> PlayAnim(JoyAnimState, callback, _joyAnimClip);
-    //internal void PlayAttackAnim(UnityAction callback)
-    //=> PlayAnim(AttackAnimState, callback, _attackAnimClip);
-
-    void PlayAnim(int hash, UnityAction callback, AnimationClip clip)
-    {
-        // TODO: アニメーションの長さの取得をもっと綺麗にまとめたい
-        //       現在は再生するアニメーションをインスペクターから割り当ててその長さ分だけ遅延させている
-
-        // アニメーションする度にモデルの位置が少しずつズレていくので再生するたびに0に戻す処理を挟んでいる
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(_anim.gameObject.transform.DOLocalMove(Vector3.zero, 0.15f))
-                .AppendCallback(() => 
-                {
-                    _anim.Play(hash);
-                    DOVirtual.DelayedCall(clip.length, () => callback?.Invoke());
-                })
-                .SetLink(gameObject);
     }
 
     void OnDestroy()
