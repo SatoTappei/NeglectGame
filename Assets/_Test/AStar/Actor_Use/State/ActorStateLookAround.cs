@@ -8,7 +8,7 @@ internal class ActorStateLookAround : ActorStateBase
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim("LookAround");
+        _stateControl.PlayAnim(StateID.LookAround, StateID.Move);
     }
 
     protected override void Stay()

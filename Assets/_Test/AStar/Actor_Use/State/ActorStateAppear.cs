@@ -8,7 +8,7 @@ internal class ActorStateAppear : ActorStateBase
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim("Appear");
+        _stateControl.PlayAnim(StateID.Appear, StateID.Move);
     }
 
     protected override void Stay()

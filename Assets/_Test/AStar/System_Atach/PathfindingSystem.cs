@@ -11,14 +11,6 @@ public class PathfindingSystem : MonoBehaviour, IPathGetable
 {
     [SerializeField] PathfindingGrid _pathfindingGrid;
 
-    /// <summary>経路探索で使いまわすのでメンバ変数にしておく</summary>
-    Stack<Vector3> _pathStack;
-
-    void Awake()
-    {
-        _pathStack = new Stack<Vector3>(_pathfindingGrid.GridSize);
-    }
-
     public Stack<Vector3> GetPathStack(Vector3 startPos, Vector3 targetPos)
     {
         return Pathfinding(startPos, targetPos);
@@ -87,16 +79,17 @@ public class PathfindingSystem : MonoBehaviour, IPathGetable
     /// <summary>目標地点から順に親を詰めていくのでStackを使用する</summary>
     Stack<Vector3> GetPathStack(Node start, Node target)
     {
-        _pathStack.Clear();
-        
+        // 複数のオブジェクトが非同期処理で参照するので使いまわせない
+        Stack<Vector3> pathStack = new Stack<Vector3>();
+
         Node currentNode = target;
         while(currentNode != start)
         {
-            _pathStack.Push(currentNode.Pos);
+            pathStack.Push(currentNode.Pos);
             currentNode = currentNode.ParentNode;
         }
 
-        return _pathStack;
+        return pathStack;
     }
 
     int Distance(int gridX1, int gridZ1, int gridX2, int gridZ2)

@@ -8,7 +8,7 @@ internal class ActorStatePanic : ActorStateBase
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim("Panic");
+        _stateControl.PlayAnim(StateID.Panic, StateID.Run);
     }
 
     protected override void Stay()

@@ -6,7 +6,8 @@ internal interface IStateControl
     // Controller側にインターフェースが実装されているので
     // このメソッド群はControllerの機能を使わせてあげるという実装になる
 
-    void PlayAnim(string name);
+    // TODO:メソッド名がよくない
+    void PlayAnim(StateID current, StateID next);
     void CancelAnim(string name);
 
     void MoveToTarget();

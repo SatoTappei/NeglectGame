@@ -46,48 +46,34 @@ public class ActorController : MonoBehaviour, IStateControl
         _actorSight.Init(_actorStatus);
     }
 
-    void IStateControl.PlayAnim(string name)
+    void IStateControl.PlayAnim(StateID current, StateID next)
     {
-        _isTransitionable = false;
+        string stateName = StateIDToString(current);
 
-        switch (name)
+        // stateNameが空だと再生するアニメーションがない
+        if (stateName == string.Empty) return;
+
+        _isTransitionable = false;
+        _actorAnimation.PlayAnim(stateName, () => 
         {
-            case "Appear":
-                _actorAnimation.PlayAnim("Appear", () =>
-                {
-                    _isTransitionable = true;
-                    _nextState = StateID.Move;
-                });
-                break;
-            case "LookAround":
-                _actorAnimation.PlayAnim("LookAround", () =>
-                {
-                    _isTransitionable = true;
-                    _nextState = StateID.Move;
-                });
-                break;
-            case "Panic":
-                _actorAnimation.PlayAnim("Panic", () =>
-                {
-                    _isTransitionable = true;
-                    _nextState = StateID.Run;
-                });
-                break;
-            case "Attack":
-                _actorAnimation.PlayAnim("Attack", () =>
-                {
-                    _isTransitionable = true;
-                    _nextState = StateID.Non;
-                });
-                break;
-            case "Joy":
-                _actorAnimation.PlayAnim("Joy", () =>
-                {
-                    _isTransitionable = true;
-                    _nextState = StateID.Non;
-                });
-                break;
+            _isTransitionable = true;
+            _nextState = next;
+        });
+    }
+
+    string StateIDToString(StateID id)
+    {
+        switch (id)
+        {
+            case StateID.Appear:     return "Appear";
+            case StateID.Attack:     return "Attack";
+            case StateID.Joy:        return "Joy";
+            case StateID.LookAround: return "LookAround";
+            case StateID.Panic:      return "Panic";
         }
+
+        Debug.LogError("ステートIDが登録されていません:" + id);
+        return string.Empty;
     }
 
     bool IStateControl.IsEqualNextState(StateID state) => _nextState == state;

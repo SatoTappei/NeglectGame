@@ -8,7 +8,7 @@ internal class ActorStateAttack : ActorStateBase
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim("Attack");
+        _stateControl.PlayAnim(StateID.Attack, StateID.Non);
     }
 
     protected override void Stay()

@@ -8,6 +8,6 @@ internal class ActorStateDead : ActorStateBase
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim("Dead");
+        _stateControl.PlayAnim(StateID.Dead, StateID.Non);
     }
 }
