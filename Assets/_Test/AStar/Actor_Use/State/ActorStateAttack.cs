@@ -8,7 +8,7 @@ internal class ActorStateAttack : ActorStateBase
 
     protected override void Enter()
     {
-        _stateMachine.StateControl.PlayAnim(StateID.Attack, StateID.Non);
+        _stateMachine.StateControl.PlayAnim(StateID.Attack, StateID.Attack);
     }
 
     protected override void Stay()
@@ -18,10 +18,15 @@ internal class ActorStateAttack : ActorStateBase
         {
             ChangeState(StateID.Dead);
         }
-        else if (_stateMachine.StateControl.IsTransitionable() &&
-                 _stateMachine.StateControl.IsEqualNextState(StateID.Escape))
+        else if(_stateMachine.StateControl.IsTargetLost() &&
+                _stateMachine.StateControl.IsEqualNextState(StateID.Escape))
         {
             ChangeState(StateID.Escape);
+        }
+        else if (_stateMachine.StateControl.IsTransitionable() &&
+                 _stateMachine.StateControl.IsEqualNextState(StateID.Attack))
+        {
+            ChangeState(StateID.Attack);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 /// <summary>
 /// キャラクターの各行動を制御するコンポーネント
@@ -10,7 +11,19 @@ public class ActorController : MonoBehaviour, IStateControl
      *  オリジナルの規約に乗っ取り、LSystemのほうももう一度リファクタリングする 
      */
 
-    // 
+    // 攻撃ステートの挙動
+    // キャラクターと敵がアタックモーションを繰り返す
+    // ターン制ではない
+    // 敵の攻撃モーションがヒットするたびにHPが削られていく
+    // 敵が倒れたという判定をどうするか
+    //  死亡した際にメッセージングしたい
+    //  メッセージングしない場合、コライダーに当たったキャラクターの攻撃キャンセル処理を呼ぶ必要がある
+    //  別のキャラに手柄を横取りされた場合はMoveステートに戻ってまたうろうろするしかない？
+    //  そもそも一人しか発見できないようにするべき
+    //  お宝も同様にする必要がある
+    //  これらの判定はSightableObjectコンポーネントでどうにかできそう
+    //  敵側にダメージを与える処理を書く必要はない(アニメーションのタイミングでキャラのHPを減らせばそう見える)
+    //  ↑でも良いかもしれない
 
     // 現在の状態の欠点:どのステートにどれが使われているかがはっきりしない
     //                  ただそれはインターフェースがどっちに依存しているかの問題
@@ -36,6 +49,9 @@ public class ActorController : MonoBehaviour, IStateControl
     // 次のステートを決める(次のステートに移る際にStateIDをNonにするように直すべき)
     StateID _nextState;
 
+    // ダンジョン脱出目的である敵を倒した時にtrueになる
+    bool isTargetDestroyed;
+
     void Start()
     {
         GameObject system = GameObject.FindGameObjectWithTag(SystemObjectTag);
@@ -46,6 +62,9 @@ public class ActorController : MonoBehaviour, IStateControl
         _actorStatus = new ActorStatus();
         _actorHpControl.Init(_actorStatus);
         _actorSight.Init(_actorStatus);
+
+        // MessageBrokerで敵を倒したメッセージを受け取るテスト用
+        MessageBroker.Default.Receive<AttackDamageData>().Subscribe(_ => isTargetDestroyed = true);
     }
 
     void IStateControl.PlayAnim(StateID current, StateID next)
@@ -93,7 +112,13 @@ public class ActorController : MonoBehaviour, IStateControl
 
     bool IStateControl.IsTargetLost()
     {
-        // ターゲットロスト
+        // 攻撃している対象が倒れたらtrue
+        if (isTargetDestroyed)
+        {
+            _nextState = StateID.Escape;
+            return true;
+        }
+
         return false;
     }
 
