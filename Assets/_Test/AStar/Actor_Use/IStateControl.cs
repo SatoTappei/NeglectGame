@@ -10,7 +10,7 @@ internal interface IStateControl
     void PlayAnim(StateID current, StateID next);
     void CancelAnim(string name);
 
-    void MoveToTarget();
+    void ExploreRandom();
     void RunToTarget();
     void MoveToExit();
     void CancelMoveToTarget();

@@ -12,7 +12,6 @@ public class ActorController : MonoBehaviour, IStateControl
 
     // 
 
-    // 視界に映った場合に判定するためのタグ代わりの列挙型とそのコンポーネントを作った
     // 現在の状態の欠点:どのステートにどれが使われているかがはっきりしない
     //                  ただそれはインターフェースがどっちに依存しているかの問題
 
@@ -85,23 +84,12 @@ public class ActorController : MonoBehaviour, IStateControl
     // 移動完了したタイミングでこのメソッドもtrueを返すようになる
     bool IStateControl.IsTransitionable() => _isTransitionable;
 
-
-    Stack<Vector3> GetPathStack()
-    {
-        Vector3 targetPos = _pathfindingTarget.GetPathfindingTarget();
-        return _pathGetable.GetPathStack(transform.position, targetPos);
-    }
-
     void IStateControl.CancelAnim(string name)
     {
         // アニメーションキャンセル処理
     }
 
-    bool IStateControl.IsDead()
-    {
-        // 死亡したらtrueになる
-        return false;
-    }
+    bool IStateControl.IsDead() => _actorHpControl.IsHpIsZero();
 
     bool IStateControl.IsTargetLost()
     {
@@ -109,10 +97,11 @@ public class ActorController : MonoBehaviour, IStateControl
         return false;
     }
 
-    void IStateControl.MoveToTarget()
+    void IStateControl.ExploreRandom()
     {
+        Stack<Vector3> pathStack = GetPathStack(_pathfindingTarget.GetPathfindingTarget());
         _isTransitionable = false;
-        _actorAction.MoveFollowPath(GetPathStack(), () => 
+        _actorAction.MoveFollowPath(pathStack, () => 
         {
             _isTransitionable = true;
             _nextState = StateID.LookAround;
@@ -121,29 +110,31 @@ public class ActorController : MonoBehaviour, IStateControl
 
     void IStateControl.RunToTarget()
     {
+        SightableType target = _findedTreasure.GetComponent<SightableObject>().SightableType;
+        _nextState = target == SightableType.Enemy ? StateID.Attack : StateID.Joy;
+
+        Stack<Vector3> pathStack = GetPathStack(_findedTreasure.transform.position);
         _isTransitionable = false;
-
-        // 仮の分岐処理、見つけたもので分岐する
-        // 見つけたものに向かって走るようになっている
-
-        if (_findedTreasure != null)
-        {
-            if (_findedTreasure.name == "Enemy")
-            {
-                _nextState = StateID.Attack;
-            }
-            else
-            {
-                _nextState = StateID.Joy;
-            }
-        }
-
-        var pos = _findedTreasure.transform.position;
-
-        _actorAction.RunFollowPath(_pathGetable.GetPathStack(transform.position, pos), () =>
+        _actorAction.RunFollowPath(pathStack, () =>
         {
             _isTransitionable = true;
         });
+    }
+
+    void IStateControl.MoveToExit()
+    {
+        Stack<Vector3> pathStack = GetPathStack(_pathfindingTarget.GetExitPos());
+        _isTransitionable = false;
+        _actorAction.MoveFollowPath(pathStack, () =>
+        {
+            _isTransitionable = true;
+            _nextState = StateID.LookAround;
+        });
+    }
+
+    Stack<Vector3> GetPathStack(Vector3 targetPos)
+    {
+        return _pathGetable.GetPathStack(transform.position, targetPos);
     }
 
     void IStateControl.CancelMoveToTarget()
@@ -153,21 +144,14 @@ public class ActorController : MonoBehaviour, IStateControl
 
     bool IStateControl.IsSightTarget()
     {
-        GameObject go = _actorSight.GetInSightObject();
-        if (go != null)
+        GameObject InsightObject = _actorSight.GetInSightObject();
+        if (InsightObject != null)
         {
-            _findedTreasure = go;
-
+            _findedTreasure = InsightObject;
             _nextState = StateID.Panic;
             return true;
         }
 
         return false;
-    }
-
-    void IStateControl.MoveToExit()
-    {
-        Debug.Log("出口へ");
-        // 出口に向かって移動する処理
     }
 }

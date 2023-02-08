@@ -8,7 +8,7 @@ internal class ActorStateJoy : ActorStateBase
 
     protected override void Enter()
     {
-        _stateMachine.StateControl.PlayAnim(StateID.Joy, StateID.Non);
+        _stateMachine.StateControl.PlayAnim(StateID.Joy, StateID.Escape);
     }
 
     protected override void Stay()

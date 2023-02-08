@@ -8,7 +8,7 @@ internal class ActorStateMove : ActorStateBase
 
     protected override void Enter()
     {
-        _stateMachine.StateControl.MoveToTarget();
+        _stateMachine.StateControl.ExploreRandom();
     }
 
     protected override void Stay()
