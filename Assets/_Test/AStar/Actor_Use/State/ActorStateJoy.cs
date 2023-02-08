@@ -3,18 +3,19 @@
 /// </summary>
 internal class ActorStateJoy : ActorStateBase
 {
-    internal ActorStateJoy(IStateControl stateControl, ActorStateMachine stateMachine)
-        : base(stateControl, stateMachine) { }
+    internal ActorStateJoy(ActorStateMachine stateMachine)
+        : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim(StateID.Joy, StateID.Non);
+        _stateMachine.StateControl.PlayAnim(StateID.Joy, StateID.Non);
     }
 
     protected override void Stay()
     {
         // 目標を達成したら帰還ステートに遷移するように作る
-        if (_stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Escape))
+        if (_stateMachine.StateControl.IsTransitionable() && 
+            _stateMachine.StateControl.IsEqualNextState(StateID.Escape))
         {
             ChangeState(StateID.Escape);
         }

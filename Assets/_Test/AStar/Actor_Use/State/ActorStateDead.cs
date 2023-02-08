@@ -3,11 +3,11 @@
 /// </summary>
 internal class ActorStateDead : ActorStateBase
 {
-    internal ActorStateDead(IStateControl stateControl, ActorStateMachine stateMachine)
-        : base(stateControl, stateMachine) { }
+    internal ActorStateDead(ActorStateMachine stateMachine)
+        : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim(StateID.Dead, StateID.Non);
+        _stateMachine.StateControl.PlayAnim(StateID.Dead, StateID.Non);
     }
 }

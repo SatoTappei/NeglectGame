@@ -3,21 +3,23 @@
 /// </summary>
 internal class ActorStateAttack : ActorStateBase
 {
-    internal ActorStateAttack(IStateControl stateControl, ActorStateMachine stateMachine)
-        : base(stateControl, stateMachine) { }
+    internal ActorStateAttack(ActorStateMachine stateMachine)
+        : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim(StateID.Attack, StateID.Non);
+        _stateMachine.StateControl.PlayAnim(StateID.Attack, StateID.Non);
     }
 
     protected override void Stay()
     {
-        if (_stateControl.IsDead() && _stateControl.IsEqualNextState(StateID.Dead))
+        if (_stateMachine.StateControl.IsDead() &&
+            _stateMachine.StateControl.IsEqualNextState(StateID.Dead))
         {
             ChangeState(StateID.Dead);
         }
-        else if (_stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Escape))
+        else if (_stateMachine.StateControl.IsTransitionable() &&
+                 _stateMachine.StateControl.IsEqualNextState(StateID.Escape))
         {
             ChangeState(StateID.Escape);
         }

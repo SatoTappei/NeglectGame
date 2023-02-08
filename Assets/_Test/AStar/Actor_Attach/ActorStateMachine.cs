@@ -24,8 +24,10 @@ public class ActorStateMachine : MonoBehaviour
 {
     ActorStateBase _currentState;
     Dictionary<StateID, ActorStateBase> _stateDic;
-    // 各ステートはこのインターフェースで実装されているメソッドを適切なタイミングで呼び出す
     IStateControl _stateControl;
+
+    // 各ステートはインターフェースで実装されているメソッドを適切なタイミングで呼び出す
+    internal IStateControl StateControl { get => _stateControl; }
 
     void Awake()
     {
@@ -38,16 +40,21 @@ public class ActorStateMachine : MonoBehaviour
     {
         _stateControl = GetComponent<IStateControl>();
 
+        /* 
+         *  そもそも各ステートはIStateControlを知っている必要はない
+         *  このコンポーネントが仲介役として各ステートのメソッドを管理する
+         */
+
         // TOOD:ここら辺の生成処理はVContainerに任せられないか
-        ActorStateAppear appear          = new ActorStateAppear(_stateControl, this);
-        ActorStateMove move              = new ActorStateMove(_stateControl, this);
-        ActorStateRun run                = new ActorStateRun(_stateControl, this);
-        ActorStateAttack attack          = new ActorStateAttack(_stateControl, this);
-        ActorStateJoy joy                = new ActorStateJoy(_stateControl, this);
-        ActorStateLookAround lookAround  = new ActorStateLookAround(_stateControl, this);
-        ActorStatePanic panic            = new ActorStatePanic(_stateControl, this);
-        ActorStateEscape escape          = new ActorStateEscape(_stateControl, this);
-        ActorStateDead dead              = new ActorStateDead(_stateControl, this);
+        ActorStateAppear appear          = new ActorStateAppear(this);
+        ActorStateMove move              = new ActorStateMove(this);
+        ActorStateRun run                = new ActorStateRun(this);
+        ActorStateAttack attack          = new ActorStateAttack(this);
+        ActorStateJoy joy                = new ActorStateJoy(this);
+        ActorStateLookAround lookAround  = new ActorStateLookAround(this);
+        ActorStatePanic panic            = new ActorStatePanic(this);
+        ActorStateEscape escape          = new ActorStateEscape(this);
+        ActorStateDead dead              = new ActorStateDead(this);
 
         // 遷移先には選ばれないのでStateID.Appearの追加処理はしないで良い
         _stateDic.Add(StateID.Move, move);

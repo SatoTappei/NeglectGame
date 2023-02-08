@@ -3,17 +3,18 @@
 /// </summary>
 internal class ActorStatePanic : ActorStateBase
 {
-    internal ActorStatePanic(IStateControl stateControl, ActorStateMachine stateMachine)
-        : base(stateControl, stateMachine) { }
+    internal ActorStatePanic(ActorStateMachine stateMachine)
+        : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim(StateID.Panic, StateID.Run);
+        _stateMachine.StateControl.PlayAnim(StateID.Panic, StateID.Run);
     }
 
     protected override void Stay()
     {
-        if ( _stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Run))
+        if (_stateMachine.StateControl.IsTransitionable() &&
+            _stateMachine.StateControl.IsEqualNextState(StateID.Run))
         {
             ChangeState(StateID.Run);
         }

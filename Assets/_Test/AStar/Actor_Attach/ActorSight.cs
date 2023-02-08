@@ -11,6 +11,7 @@ public class ActorSight : MonoBehaviour
     // キャラクターモデルの頭上からRayを飛ばせるように設定する
     readonly float ActorModelHeight = 1.5f;
 
+    [Header("視線のRayを飛ばすキャラクターモデル")]
     [SerializeField] Transform _actorModel;
     [Header("キャラクターの視界に映るレイヤー")]
     [SerializeField] LayerMask _sightableLayer;
@@ -30,21 +31,7 @@ public class ActorSight : MonoBehaviour
         _sightableArr = new Collider[SightableArrLength];
     }
 
-    // TODO:このメソッドは単一責任になっているかよく考える
-    internal bool IsFindTreasure()
-    {
-        GameObject go = GetInSightObject();
-        if (go)
-        {
-            _actorStatus.Treasure = go;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
+    /// <summary>複数のオブジェクトを見つけた場合は最初の1つが返る</summary>
     internal GameObject GetInSightObject()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _sightableArr, _sightableLayer);

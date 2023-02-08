@@ -3,17 +3,18 @@
 /// </summary>
 internal class ActorStateAppear : ActorStateBase
 {
-    internal ActorStateAppear(IStateControl stateControl, ActorStateMachine stateMachine)
-            : base(stateControl, stateMachine) { }
+    internal ActorStateAppear(ActorStateMachine stateMachine)
+            : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim(StateID.Appear, StateID.Move);
+        _stateMachine.StateControl.PlayAnim(StateID.Appear, StateID.Move);
     }
 
     protected override void Stay()
     {
-        if (_stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Move))
+        if (_stateMachine.StateControl.IsTransitionable() &&
+            _stateMachine.StateControl.IsEqualNextState(StateID.Move))
         {
             ChangeState(StateID.Move);
         }

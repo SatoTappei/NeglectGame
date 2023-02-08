@@ -27,22 +27,4 @@ internal interface IStateControl
     //public bool IsTransitionable();
 
     bool IsSightTarget();
-
-    //public void PlayLookAroundAnim();
-    //public void PlayAppearAnim();
-    //public void PlayPanicAnim();
-    //public void PlayJoyAnim();
-    //public void PlayAttackAnim();
-
-    //// 複数のステートから遷移する
-    //public bool IsTransitionToPanicState();
-    //public bool IsTransitionToDeadState();
-
-    //// ダッシュが終わったら呼ばれる、なんかフラグのオンオフとかする
-    //public void RunEndable();
-
-    //public void PlayDeadAnim();
-
-    //// こっちでステートを渡してやればいいのではないか？のテスト
-    //internal StateID GetStateTest();
 }

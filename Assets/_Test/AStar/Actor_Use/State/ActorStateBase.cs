@@ -10,14 +10,12 @@ internal abstract class ActorStateBase
         Exit,
     }
 
-    protected IStateControl _stateControl;
     protected Stage _stage;
     protected ActorStateBase _nextState;
     protected ActorStateMachine _stateMachine;
 
-    internal ActorStateBase(IStateControl stateControl, ActorStateMachine stateMachine)
+    internal ActorStateBase(ActorStateMachine stateMachine)
     {
-        _stateControl = stateControl;
         _stateMachine = stateMachine;
         _stage = Stage.Enter;
     }

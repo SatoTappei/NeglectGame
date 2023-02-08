@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 
 /// <summary>
@@ -15,10 +16,16 @@ public class TestInGameStream : MonoBehaviour
 
     [SerializeField] ActorGenerator _actorGenerator;
 
-    async void Start()
+    void Start()
     {
-        // 事前に演出を挟みたいのでSpaceが押されるまでawait
-        await UniTask.WaitUntil(()=>Input.GetKeyDown(KeyCode.Space));
-        await _actorGenerator.GenerateRegularly(this.GetCancellationTokenOnDestroy());
+        //await UniTask.WaitUntil(()=>Input.GetKeyDown(KeyCode.Space));
+        // 演出を待つために1フレームawaitする
+        Hoge(this.GetCancellationTokenOnDestroy()).Forget();
+    }
+
+    async UniTaskVoid Hoge(CancellationToken token)
+    {
+        await UniTask.Yield();
+        await _actorGenerator.GenerateRegularly(token);
     }
 }

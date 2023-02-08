@@ -3,25 +3,28 @@
 /// </summary>
 internal class ActorStateRun : ActorStateBase
 {
-    internal ActorStateRun(IStateControl stateControl, ActorStateMachine stateMachine)
-    : base(stateControl, stateMachine) { }
+    internal ActorStateRun(ActorStateMachine stateMachine)
+    : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.RunToTarget();
+        _stateMachine.StateControl.RunToTarget();
     }
 
     protected override void Stay()
     {
-        if (_stateControl.IsDead() && _stateControl.IsEqualNextState(StateID.Dead))
+        if (_stateMachine.StateControl.IsDead() &&
+            _stateMachine.StateControl.IsEqualNextState(StateID.Dead))
         {
             ChangeState(StateID.Dead);
         }
-        else if (_stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Attack))
+        else if (_stateMachine.StateControl.IsTransitionable() &&
+                 _stateMachine.StateControl.IsEqualNextState(StateID.Attack))
         {
             ChangeState(StateID.Attack);
         }
-        else if (_stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Joy))
+        else if (_stateMachine.StateControl.IsTransitionable() &&
+                 _stateMachine.StateControl.IsEqualNextState(StateID.Joy))
         {
             ChangeState(StateID.Joy);
         }
@@ -29,6 +32,6 @@ internal class ActorStateRun : ActorStateBase
 
     protected override void Exit()
     {
-        _stateControl.CancelMoveToTarget();
+        _stateMachine.StateControl.CancelMoveToTarget();
     }
 }

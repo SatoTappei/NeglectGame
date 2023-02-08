@@ -3,21 +3,23 @@
 /// </summary>
 internal class ActorStateLookAround : ActorStateBase
 {
-    internal ActorStateLookAround(IStateControl stateControl, ActorStateMachine stateMachine)
-        : base(stateControl, stateMachine) { }
+    internal ActorStateLookAround(ActorStateMachine stateMachine)
+        : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.PlayAnim(StateID.LookAround, StateID.Move);
+        _stateMachine.StateControl.PlayAnim(StateID.LookAround, StateID.Move);
     }
 
     protected override void Stay()
     {
-        if (_stateControl.IsDead() && _stateControl.IsEqualNextState(StateID.Dead))
+        if (_stateMachine.StateControl.IsDead() && 
+            _stateMachine.StateControl.IsEqualNextState(StateID.Dead))
         {
             ChangeState(StateID.Dead);
         }
-        else if (_stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.Move))
+        else if (_stateMachine.StateControl.IsTransitionable() &&
+                 _stateMachine.StateControl.IsEqualNextState(StateID.Move))
         {
             ChangeState(StateID.Move);
         }

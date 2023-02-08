@@ -3,17 +3,18 @@
 /// </summary>
 internal class ActorStateEscape : ActorStateBase
 {
-    internal ActorStateEscape(IStateControl stateControl, ActorStateMachine stateMachine)
-        : base(stateControl, stateMachine) { }
+    internal ActorStateEscape(ActorStateMachine stateMachine)
+        : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.MoveToExit();
+        _stateMachine.StateControl.MoveToExit();
     }
 
     protected override void Stay()
     {
-        if (_stateControl.IsDead() && _stateControl.IsEqualNextState(StateID.Dead))
+        if (_stateMachine.StateControl.IsDead() && 
+            _stateMachine.StateControl.IsEqualNextState(StateID.Dead))
         {
             ChangeState(StateID.Dead);
         }
@@ -23,6 +24,6 @@ internal class ActorStateEscape : ActorStateBase
 
     protected override void Exit()
     {
-        _stateControl.CancelMoveToTarget();
+        _stateMachine.StateControl.CancelMoveToTarget();
     }
 }

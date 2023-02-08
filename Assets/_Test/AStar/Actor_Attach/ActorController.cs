@@ -10,8 +10,11 @@ public class ActorController : MonoBehaviour, IStateControl
      *  オリジナルの規約に乗っ取り、LSystemのほうももう一度リファクタリングする 
      */
 
-    // 各ステートの遷移条件の設定完了、遷移条件に使う各メソッドのリファクタリングをする
-    // まずはアニメーションの再生周りのメソッドを整理したい
+    // 
+
+    // 視界に映った場合に判定するためのタグ代わりの列挙型とそのコンポーネントを作った
+    // 現在の状態の欠点:どのステートにどれが使われているかがはっきりしない
+    //                  ただそれはインターフェースがどっちに依存しているかの問題
 
     readonly string SystemObjectTag = "GameController";
     [SerializeField] ActorMove _actorAction;
@@ -154,11 +157,7 @@ public class ActorController : MonoBehaviour, IStateControl
         if (go != null)
         {
             _findedTreasure = go;
-        }
-        // 毎フレーム呼ばれているので0.3秒おきとかに呼ばれるようにする
 
-        if (_actorSight.IsFindTreasure())
-        {
             _nextState = StateID.Panic;
             return true;
         }

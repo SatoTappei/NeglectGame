@@ -3,25 +3,28 @@
 /// </summary>
 internal class ActorStateMove : ActorStateBase
 {
-    internal ActorStateMove(IStateControl stateControl, ActorStateMachine stateMachine)
-        : base(stateControl, stateMachine) { }
+    internal ActorStateMove(ActorStateMachine stateMachine)
+        : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateControl.MoveToTarget();
+        _stateMachine.StateControl.MoveToTarget();
     }
 
     protected override void Stay()
     {
-        if (_stateControl.IsDead() && _stateControl.IsEqualNextState(StateID.Dead))
+        if (_stateMachine.StateControl.IsDead() && 
+            _stateMachine.StateControl.IsEqualNextState(StateID.Dead))
         {
             ChangeState(StateID.Dead);
         }
-        else if (_stateControl.IsSightTarget() && _stateControl.IsEqualNextState(StateID.Panic))
+        else if (_stateMachine.StateControl.IsSightTarget() && 
+                 _stateMachine.StateControl.IsEqualNextState(StateID.Panic))
         {
             ChangeState(StateID.Panic);
         }
-        else if (_stateControl.IsTransitionable() && _stateControl.IsEqualNextState(StateID.LookAround))
+        else if (_stateMachine.StateControl.IsTransitionable() &&
+                 _stateMachine.StateControl.IsEqualNextState(StateID.LookAround))
         {
             ChangeState(StateID.LookAround);
         }
@@ -29,6 +32,6 @@ internal class ActorStateMove : ActorStateBase
 
     protected override void Exit()
     {
-        _stateControl.CancelMoveToTarget();
+        _stateMachine.StateControl.CancelMoveToTarget();
     }
 }

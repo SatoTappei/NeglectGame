@@ -19,12 +19,13 @@ public class ActorGenerator : MonoBehaviour
 
     internal async UniTask GenerateRegularly(CancellationToken token)
     {
+        token.ThrowIfCancellationRequested();
+
         while (true)
         {
             GenerateActor();
-            Debug.Log("生成");
-            await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.G));
-            //await UniTask.Delay(3000, cancellationToken: token);
+            // テスト用にGキーを押したら生成するようにしている
+            await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.G), cancellationToken: token);
         }
     }
 
