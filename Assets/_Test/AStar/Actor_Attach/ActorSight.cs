@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,7 +5,8 @@ using UnityEngine;
 /// </summary>
 public class ActorSight : MonoBehaviour
 {
-    readonly int SightableArrLength = 4;
+    // 周囲の視界に映るオブジェクトの数に応じて増やす
+    readonly int ResultsLength = 4;
     // キャラクターモデルの頭上からRayを飛ばせるように設定する
     readonly float ActorModelHeight = 1.5f;
 
@@ -17,26 +16,37 @@ public class ActorSight : MonoBehaviour
     [SerializeField] LayerMask _sightableLayer;
     [Header("キャラクターの視界を遮蔽するレイヤー")]
     [SerializeField] LayerMask _sightBlockableLayer;
+    [Header("視界の更新間隔")]
+    [SerializeField] float _updateDuration = 0.25f;
     [Header("視界のパラメータを設定")]
-    [SerializeField] float _sightRange;
-    [SerializeField] float _sightAngle;
+    [SerializeField] float _sightRange = 5.0f;
+    [SerializeField] float _sightAngle = 60.0f;
 
-    ActorStatus _actorStatus;
-    // OverlapSphereNonAlloc()を使用するので予め格納用の配列を確保しておく
-    Collider[] _sightableArr;
+    Collider[] _results;
+    GameObject _currentInSightObject;
 
-    internal void Init(ActorStatus actorStatus)
+    public GameObject CurrentInSightObject => _currentInSightObject;
+
+    void Awake()
     {
-        _actorStatus = actorStatus;
-        _sightableArr = new Collider[SightableArrLength];
+        _results = new Collider[ResultsLength];
     }
 
-    /// <summary>複数のオブジェクトを見つけた場合は最初の1つが返る</summary>
-    internal GameObject GetInSightObject()
+    void Start()
     {
-        Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _sightableArr, _sightableLayer);
+        StartInSight();
+    }
 
-        foreach (Collider col in _sightableArr)
+    void StartInSight() => InvokeRepeating(nameof(InSightObject), 0, _updateDuration);
+    void StopInSight() { /* 視界の更新を止める処理 */ }
+    internal bool IsFindInSight() => _currentInSightObject != null;
+
+    /// <summary>複数のオブジェクトを見つけた場合は最初の1つが返る</summary>
+    void InSightObject()
+    {
+        Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _results, _sightableLayer);
+
+        foreach (Collider col in _results)
         {
             if (!col) break;
 
@@ -54,10 +64,8 @@ public class ActorSight : MonoBehaviour
 
             if(distance <= _sightRange && angle <= _sightAngle && isUnobstructed)
             {
-                return col.gameObject;
+                _currentInSightObject = col.gameObject;
             }
         }
-
-        return null;
     }
 }

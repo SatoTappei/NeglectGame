@@ -23,6 +23,9 @@ internal interface IStateControl
     // 攻撃ステートでしか使われていない、戦っている敵が死んだか判定する処理
     bool IsTargetLost();
 
+    // プレイヤーの周囲のオブジェクトの操作をさせる
+    void EffectAround();
+
     //// 全てのステートは基本この遷移条件に従う
     //public bool IsTransitionable();
 

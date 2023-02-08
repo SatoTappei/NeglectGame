@@ -29,28 +29,31 @@ public class ActorController : MonoBehaviour, IStateControl
     //                  ただそれはインターフェースがどっちに依存しているかの問題
 
     readonly string SystemObjectTag = "GameController";
+
     [SerializeField] ActorMove _actorAction;
     [SerializeField] ActorAnimation _actorAnimation;
     [SerializeField] ActorHpControl _actorHpControl;
     [SerializeField] ActorSight _actorSight;
+    [SerializeField] ActorEffecter _actorEffecter;
 
-    ActorStatus _actorStatus;
+    ActorControlHelper _actorControlHelper;
     PathfindingTarget _pathfindingTarget;
     IPathGetable _pathGetable;
 
-    /// <summary>
-    /// 各ステートに遷移した時にfalseになり
-    /// そのステートの行動が終わったらtrueになってステートからの遷移可能になる
-    /// </summary>
-    bool _isTransitionable;
-    // 仮の見つけたお宝(敵含む)、別のスクリプトに映す
-    GameObject _findedTreasure;
-
     // 次のステートを決める(次のステートに移る際にStateIDをNonにするように直すべき)
     StateID _nextState;
+    /// <summary>
+    /// 各ステートに遷移した時にfalseになり、そのステートの行動が終わったら
+    /// trueになってステートからの遷移可能になる
+    /// </summary>
+    bool _isTransitionable;
+    /// <summary>このフラグがtrueになった場合、次は必ずEscapeステートに遷移する</summary>
+    bool _isPurposeCompleted;
 
-    // ダンジョン脱出目的である敵を倒した時にtrueになる
-    bool isTargetDestroyed;
+    void Awake()
+    {
+        _actorControlHelper = new ActorControlHelper();
+    }
 
     void Start()
     {
@@ -59,20 +62,14 @@ public class ActorController : MonoBehaviour, IStateControl
         _pathGetable = system.GetComponent<IPathGetable>();
 
         _nextState = StateID.Non;
-        _actorStatus = new ActorStatus();
-        _actorHpControl.Init(_actorStatus);
-        _actorSight.Init(_actorStatus);
 
         // MessageBrokerで敵を倒したメッセージを受け取るテスト用
-        MessageBroker.Default.Receive<AttackDamageData>().Subscribe(_ => isTargetDestroyed = true);
+        MessageBroker.Default.Receive<AttackDamageData>().Subscribe(_ => _isPurposeCompleted = true);
     }
 
     void IStateControl.PlayAnim(StateID current, StateID next)
     {
-        string stateName = StateIDToString(current);
-
-        // stateNameが空だと再生するアニメーションがない
-        if (stateName == string.Empty) return;
+        string stateName = _actorControlHelper.StateIDToString(current);
 
         _isTransitionable = false;
         _actorAnimation.PlayAnim(stateName, () => 
@@ -80,21 +77,6 @@ public class ActorController : MonoBehaviour, IStateControl
             _isTransitionable = true;
             _nextState = next;
         });
-    }
-
-    string StateIDToString(StateID id)
-    {
-        switch (id)
-        {
-            case StateID.Appear:     return "Appear";
-            case StateID.Attack:     return "Attack";
-            case StateID.Joy:        return "Joy";
-            case StateID.LookAround: return "LookAround";
-            case StateID.Panic:      return "Panic";
-        }
-
-        Debug.LogError("ステートIDが登録されていません:" + id);
-        return string.Empty;
     }
 
     bool IStateControl.IsEqualNextState(StateID state) => _nextState == state;
@@ -108,12 +90,14 @@ public class ActorController : MonoBehaviour, IStateControl
         // アニメーションキャンセル処理
     }
 
-    bool IStateControl.IsDead() => _actorHpControl.IsHpIsZero();
+    bool IStateControl.IsDead() => _actorHpControl.IsHpEqualZero();
 
     bool IStateControl.IsTargetLost()
     {
+        // メッセージの受信は専用のメッセージReceiverを作ってそっちで受け取る
+
         // 攻撃している対象が倒れたらtrue
-        if (isTargetDestroyed)
+        if (_isPurposeCompleted)
         {
             _nextState = StateID.Escape;
             return true;
@@ -124,7 +108,9 @@ public class ActorController : MonoBehaviour, IStateControl
 
     void IStateControl.ExploreRandom()
     {
-        Stack<Vector3> pathStack = GetPathStack(_pathfindingTarget.GetPathfindingTarget());
+        Vector3 targetPos = _pathfindingTarget.GetPathfindingTarget();
+        Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
+
         _isTransitionable = false;
         _actorAction.MoveFollowPath(pathStack, () => 
         {
@@ -135,10 +121,14 @@ public class ActorController : MonoBehaviour, IStateControl
 
     void IStateControl.RunToTarget()
     {
-        SightableType target = _findedTreasure.GetComponent<SightableObject>().SightableType;
+        GameObject inSightObject = _actorSight.CurrentInSightObject;
+
+        SightableType target = inSightObject.GetComponent<SightableObject>().SightableType;
         _nextState = target == SightableType.Enemy ? StateID.Attack : StateID.Joy;
 
-        Stack<Vector3> pathStack = GetPathStack(_findedTreasure.transform.position);
+        Vector3 targetPos = inSightObject.transform.position;
+        Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
+
         _isTransitionable = false;
         _actorAction.RunFollowPath(pathStack, () =>
         {
@@ -148,18 +138,15 @@ public class ActorController : MonoBehaviour, IStateControl
 
     void IStateControl.MoveToExit()
     {
-        Stack<Vector3> pathStack = GetPathStack(_pathfindingTarget.GetExitPos());
+        Vector3 targetPos = _pathfindingTarget.GetExitPos();
+        Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
+
         _isTransitionable = false;
         _actorAction.MoveFollowPath(pathStack, () =>
         {
             _isTransitionable = true;
             _nextState = StateID.LookAround;
         });
-    }
-
-    Stack<Vector3> GetPathStack(Vector3 targetPos)
-    {
-        return _pathGetable.GetPathStack(transform.position, targetPos);
     }
 
     void IStateControl.CancelMoveToTarget()
@@ -169,14 +156,15 @@ public class ActorController : MonoBehaviour, IStateControl
 
     bool IStateControl.IsSightTarget()
     {
-        GameObject InsightObject = _actorSight.GetInSightObject();
-        if (InsightObject != null)
+        // TODO:他のキャラが発見状態にならないように対象の発見可能フラグを切り替える必要がある
+        if (_actorSight.IsFindInSight())
         {
-            _findedTreasure = InsightObject;
             _nextState = StateID.Panic;
             return true;
         }
 
         return false;
     }
+
+    void IStateControl.EffectAround() => _actorEffecter.EffectAround();
 }
