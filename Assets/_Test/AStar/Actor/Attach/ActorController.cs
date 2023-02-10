@@ -52,54 +52,26 @@ public class ActorController : MonoBehaviour, IStateControl
 
     void IStateControl.MoveToRandomWaypoint()
     {
-        //Vector3 targetPos = _pathfindingTarget.GetPathfindingTarget();
-        //Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
-
-        //_isTransitionable = false;
-        //_actorAction.MoveFollowPath(pathStack, () => 
-        //{
-        //    _isTransitionable = true;
-        //    _nextState = StateID.LookAround;
-        //});
-        Hoge(_pathfindingTarget.GetPathfindingTarget(), _actorAction.MoveFollowPath);
         _nextState = StateID.LookAround;
+        Move(_pathfindingTarget.GetPathfindingTarget(), _actorAction.MoveFollowPath);
     }
 
     void IStateControl.RunToTarget()
     {
         GameObject inSightObject = _actorSight.CurrentInSightObject.gameObject;
-
         SightableType target = inSightObject.GetComponent<SightableObject>().SightableType;
         _nextState = target == SightableType.Enemy ? StateID.Attack : StateID.Joy;
 
-        //Vector3 targetPos = inSightObject.transform.position;
-        //Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
-
-        //_isTransitionable = false;
-        //_actorAction.RunFollowPath(pathStack, () =>
-        //{
-        //    _isTransitionable = true;
-        //});
-        Hoge(inSightObject.transform.position, _actorAction.RunFollowPath);
+        Move(inSightObject.transform.position, _actorAction.RunFollowPath);
     }
 
     void IStateControl.MoveToExit()
     {
-        //Vector3 targetPos = _pathfindingTarget.GetExitPos();
-        //Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
-
-        //_isTransitionable = false;
-        //_actorAction.MoveFollowPath(pathStack, () =>
-        //{
-        //    _isTransitionable = true;
-        //    _nextState = StateID.LookAround;
-        //});
-
         _nextState = StateID.LookAround;
-        Hoge(_pathfindingTarget.GetExitPos(), _actorAction.MoveFollowPath);
+        Move(_pathfindingTarget.GetExitPos(), _actorAction.MoveFollowPath);
     }
 
-    void Hoge(Vector3 targetPos, UnityAction<Stack<Vector3>, UnityAction> moveMethod)
+    void Move(Vector3 targetPos, UnityAction<Stack<Vector3>, UnityAction> moveMethod)
     {
         Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
 

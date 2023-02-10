@@ -1580,12 +1580,12 @@ GameObject:
   m_Component:
   - component: {fileID: 7827161858156998821}
   - component: {fileID: 7827161858156998875}
-  - component: {fileID: 7827161858156998820}
-  - component: {fileID: 7827161858156998879}
-  - component: {fileID: 7827161858156998873}
-  - component: {fileID: 7827161858156998872}
-  - component: {fileID: 3008301139346742586}
-  - component: {fileID: 7827161858156998874}
+  - component: {fileID: 1573003225295027953}
+  - component: {fileID: 381900631246204336}
+  - component: {fileID: 9151162787842865226}
+  - component: {fileID: 8128630877907173875}
+  - component: {fileID: 6208038891388040988}
+  - component: {fileID: 7863350637977636272}
   m_Layer: 0
   m_Name: Hero
   m_TagString: Untagged
@@ -1618,15 +1618,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6540620725961212598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11e69e1e88b1fdb4a9fc1942c5e41f2a, type: 3}
+  m_Script: {fileID: 11500000, guid: 942f70f9f073f2a4eb9de3e1ecae8acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actorAction: {fileID: 7827161858156998820}
-  _actorAnimation: {fileID: 7827161858156998879}
-  _actorHpControl: {fileID: 7827161858156998873}
-  _actorSight: {fileID: 7827161858156998872}
-  _actorEffecter: {fileID: 3008301139346742586}
---- !u!114 &7827161858156998820
+  _actorAction: {fileID: 1573003225295027953}
+  _actorAnimation: {fileID: 381900631246204336}
+  _actorHpControl: {fileID: 9151162787842865226}
+  _actorSight: {fileID: 8128630877907173875}
+  _actorEffecter: {fileID: 6208038891388040988}
+--- !u!114 &1573003225295027953
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1635,14 +1635,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6540620725961212598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e57038bc47476342aab693cc0866cdd, type: 3}
+  m_Script: {fileID: 11500000, guid: 92b3dc0e693eee44faf7b55a868169c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actorAnimation: {fileID: 7827161858156998879}
+  _actorAnimation: {fileID: 381900631246204336}
   _model: {fileID: 1213252964996893984}
   _speed: 2
   _runSpeedMag: 2
---- !u!114 &7827161858156998879
+--- !u!114 &381900631246204336
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1651,11 +1651,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6540620725961212598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 497be3423ed16d640ac4ee4a24ad39d8, type: 3}
+  m_Script: {fileID: 11500000, guid: 25e83eaac2e8d254e8da40f2aa217d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _anim: {fileID: 1213252964996893991}
---- !u!114 &7827161858156998873
+--- !u!114 &9151162787842865226
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1664,14 +1664,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6540620725961212598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45a6eabb83131b049b4a2e3ec8b406b8, type: 3}
+  m_Script: {fileID: 11500000, guid: e6028fc0c4ba9204ca7d96c9ceafc23e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHp: 9999
+  _maxHp: 100
   _decreaseQuantity: 1
+  _decreaseDuration: 0.5
   _HpThreshold: 50
   _testText: {fileID: 0}
---- !u!114 &7827161858156998872
+--- !u!114 &8128630877907173875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1680,7 +1681,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6540620725961212598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91cc29d79717b9445bdb687e6447b879, type: 3}
+  m_Script: {fileID: 11500000, guid: 2924d2a823dfbdb48b433ca3347188f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _actorModel: {fileID: 1213252964996893984}
@@ -1690,9 +1691,10 @@ MonoBehaviour:
   _sightBlockableLayer:
     serializedVersion: 2
     m_Bits: 128
+  _updateDuration: 0.25
   _sightRange: 5
-  _sightAngle: 45
---- !u!114 &3008301139346742586
+  _sightAngle: 60
+--- !u!114 &6208038891388040988
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1701,14 +1703,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6540620725961212598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b149f7ce1e26324d90660aa2a5edfc2, type: 3}
+  m_Script: {fileID: 11500000, guid: 12c2aa2c64fb41e458dd054a415a51d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _effectRange: 3
+  _effectRange: 5
   _effectLayer:
     serializedVersion: 2
-    m_Bits: 256
---- !u!114 &7827161858156998874
+    m_Bits: 264
+--- !u!114 &7863350637977636272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1717,7 +1719,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6540620725961212598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50ac4404256820f4f904c7e77fb2aebf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f069abd912a23945beac0f6da3d1790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6573661602532900134
