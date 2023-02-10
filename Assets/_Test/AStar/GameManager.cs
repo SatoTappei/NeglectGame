@@ -1,5 +1,7 @@
-using System.Diagnostics;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -7,13 +9,17 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    void Start()
+    {
+
+    }
+
     void Update()
     {
 #if UNITY_EDITOR
+        // ƒV[ƒ“‚ÌÄ“Ç‚İ‚İ‚ğs‚¤
         if (Input.GetKeyDown(KeyCode.R))
-        {
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
-        }
 #endif
     }
 }

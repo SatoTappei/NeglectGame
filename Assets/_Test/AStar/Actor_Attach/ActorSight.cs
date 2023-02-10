@@ -6,9 +6,9 @@ using UnityEngine;
 public class ActorSight : MonoBehaviour
 {
     // 周囲の視界に映るオブジェクトの数に応じて増やす
-    static readonly int ResultsLength = 4;
+    readonly int ResultsLength = 4;
     // キャラクターモデルの頭上からRayを飛ばせるように設定する
-    static readonly float ActorModelHeight = 1.5f;
+    readonly float ActorModelHeight = 1.5f;
 
     [Header("視線のRayを飛ばすキャラクターモデル")]
     [SerializeField] Transform _actorModel;
@@ -22,10 +22,15 @@ public class ActorSight : MonoBehaviour
     [SerializeField] float _sightRange = 5.0f;
     [SerializeField] float _sightAngle = 60.0f;
 
-    Collider[] _results = new Collider[ResultsLength];
-    SightableObject _currentInSightObject;
+    Collider[] _results;
+    GameObject _currentInSightObject;
 
-    internal SightableObject CurrentInSightObject => _currentInSightObject;
+    public GameObject CurrentInSightObject => _currentInSightObject;
+
+    void Awake()
+    {
+        _results = new Collider[ResultsLength];
+    }
 
     void Start()
     {
@@ -43,7 +48,6 @@ public class ActorSight : MonoBehaviour
 
         foreach (Collider col in _results)
         {
-            // 定期的に呼び出しているので何も視界にない場合はbreakする
             if (!col) break;
 
             Vector3 modelForward = _actorModel.forward;
@@ -56,11 +60,11 @@ public class ActorSight : MonoBehaviour
             // 対象までRayを飛ばしてヒットしなかったら の判定だと対象が半分以上壁に埋まっているとfalseが返る
             Vector3 rayOrigin = _actorModel.transform.position;
             rayOrigin.y += ActorModelHeight;
-            bool dontHitObstacle = !Physics.Raycast(rayOrigin, treasureDir, distance, _sightBlockableLayer);
+            bool isUnobstructed = !Physics.Raycast(rayOrigin, treasureDir, distance, _sightBlockableLayer);
 
-            if(distance <= _sightRange && angle <= _sightAngle && dontHitObstacle)
+            if(distance <= _sightRange && angle <= _sightAngle && isUnobstructed)
             {
-                _currentInSightObject = col.gameObject.GetComponent<SightableObject>();
+                _currentInSightObject = col.gameObject;
             }
         }
     }

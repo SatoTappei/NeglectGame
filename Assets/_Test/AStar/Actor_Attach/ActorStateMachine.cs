@@ -40,6 +40,11 @@ public class ActorStateMachine : MonoBehaviour
     {
         _stateControl = GetComponent<IStateControl>();
 
+        /* 
+         *  そもそも各ステートはIStateControlを知っている必要はない
+         *  このコンポーネントが仲介役として各ステートのメソッドを管理する
+         */
+
         // TOOD:ここら辺の生成処理はVContainerに任せられないか
         ActorStateAppear appear          = new ActorStateAppear(this);
         ActorStateMove move              = new ActorStateMove(this);
