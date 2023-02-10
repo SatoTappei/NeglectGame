@@ -8,7 +8,7 @@ internal class ActorStateMove : ActorStateBase
 
     protected override void Enter()
     {
-        _stateMachine.StateControl.ExploreRandom();
+        _stateMachine.StateControl.MoveToRandomWaypoint();
     }
 
     protected override void Stay()
@@ -32,6 +32,6 @@ internal class ActorStateMove : ActorStateBase
 
     protected override void Exit()
     {
-        _stateMachine.StateControl.CancelMoveToTarget();
+        _stateMachine.StateControl.CancelMoving();
     }
 }

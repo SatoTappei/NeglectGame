@@ -24,6 +24,6 @@ internal class ActorStateEscape : ActorStateBase
 
     protected override void Exit()
     {
-        _stateMachine.StateControl.CancelMoveToTarget();
+        _stateMachine.StateControl.CancelMoving();
     }
 }

@@ -18,7 +18,7 @@ internal class ActorStateAttack : ActorStateBase
         {
             ChangeState(StateID.Dead);
         }
-        else if(_stateMachine.StateControl.IsTargetLost() &&
+        else if(_stateMachine.StateControl.IsCompleted() &&
                 _stateMachine.StateControl.IsEqualNextState(StateID.Escape))
         {
             ChangeState(StateID.Escape);
