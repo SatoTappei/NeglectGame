@@ -28,6 +28,10 @@ public class ActorController : MonoBehaviour, IStateControl
     /// <summary>このフラグがtrueになった場合、次は必ずEscapeステートに遷移する</summary>
     bool _isCompleted;
 
+    // 優先タスク
+    // Moveの処理とisTransitionable変数で一括で管理していいのか考える
+    // 敵を倒した時のメッセージング処理をどうにかする
+
     void Start()
     {
         GameObject system = GameObject.FindGameObjectWithTag(SystemObjectTag);
