@@ -4112,7 +4112,10 @@ GameObject:
   - component: {fileID: 7811914741926939680}
   - component: {fileID: 7811914741926939683}
   - component: {fileID: 7811914741926939682}
+<<<<<<< HEAD
   - component: {fileID: 7811914741926939687}
+=======
+>>>>>>> 4f061a4aa77bc4a0fc890f58d99f1b45da679be0
   - component: {fileID: 7811914741926939686}
   m_Layer: 8
   m_Name: Treasure
@@ -4133,6 +4136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a77f36c26b4a94cb99a44cedca7fc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
 --- !u!114 &7811914741926939687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4145,6 +4149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909299c3c0c167c4c8cda0d1e447c5d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+=======
+>>>>>>> 4f061a4aa77bc4a0fc890f58d99f1b45da679be0
   _sightableType: 0
 --- !u!1 &7811914742431283883
 GameObject:
@@ -4158,7 +4164,10 @@ GameObject:
   - component: {fileID: 7811914742431283886}
   - component: {fileID: 7811914742431283885}
   - component: {fileID: 7811914742431283884}
+<<<<<<< HEAD
   - component: {fileID: 7811914742431283889}
+=======
+>>>>>>> 4f061a4aa77bc4a0fc890f58d99f1b45da679be0
   - component: {fileID: 7811914742431283888}
   m_Layer: 8
   m_Name: Treasure (1)
@@ -4257,6 +4266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a77f36c26b4a94cb99a44cedca7fc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
 --- !u!114 &7811914742431283889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4269,6 +4279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909299c3c0c167c4c8cda0d1e447c5d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+=======
+>>>>>>> 4f061a4aa77bc4a0fc890f58d99f1b45da679be0
   _sightableType: 0
 --- !u!1 &7811914742614201864
 GameObject:
@@ -4282,7 +4294,10 @@ GameObject:
   - component: {fileID: 7811914742614201869}
   - component: {fileID: 7811914742614201870}
   - component: {fileID: 7811914742614201871}
+<<<<<<< HEAD
   - component: {fileID: 7811914742614201873}
+=======
+>>>>>>> 4f061a4aa77bc4a0fc890f58d99f1b45da679be0
   - component: {fileID: 7811914742614201872}
   m_Layer: 8
   m_Name: Enemy
@@ -4381,6 +4396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a77f36c26b4a94cb99a44cedca7fc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
 --- !u!114 &7811914742614201873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4394,6 +4410,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sightableType: 0
+=======
+  _sightableType: 1
+>>>>>>> 4f061a4aa77bc4a0fc890f58d99f1b45da679be0
 --- !u!4 &8187883059922261594
 Transform:
   m_ObjectHideFlags: 0
