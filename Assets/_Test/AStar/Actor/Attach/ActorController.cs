@@ -29,13 +29,12 @@ public class ActorController : MonoBehaviour, IStateControl
     bool _isCompleted;
 
     // 優先タスク
-    // Moveの処理とisTransitionable変数で一括で管理していいのか考える
     // 敵を倒した時のメッセージング処理をどうにかする
     // 戦闘するのでダメージを受ける処理を作る
     // オブジェクトのリポップ機能
     // 脱出の際の演出
     // ランダム生成しない地形で一通りゲームになるか試す
-    
+
     // どんなゲーム？
     // ダンジョンに入ってくる冒険者を罠で邪魔するゲーム
     // プレイヤーはダンジョンに罠を置ける
@@ -56,6 +55,8 @@ public class ActorController : MonoBehaviour, IStateControl
     {
         string stateName = _actorControlHelper.StateIDToString(current);
 
+        // アニメーションの再生が完了したタイミングでisTransitionableがtrueになることで
+        // _nextStateへの遷移が可能になる
         _isTransitionable = false;
         _actorAnimation.PlayAnim(stateName, () => 
         {
@@ -67,7 +68,7 @@ public class ActorController : MonoBehaviour, IStateControl
     void IStateControl.MoveToRandomWaypoint()
     {
         _nextState = StateID.LookAround;
-        Move(_pathfindingTarget.GetPathfindingTarget(), _actorAction.MoveFollowPath);
+        MoveTo(_pathfindingTarget.GetPathfindingTarget(), _actorAction.MoveFollowPath);
     }
 
     void IStateControl.RunToTarget()
@@ -76,19 +77,21 @@ public class ActorController : MonoBehaviour, IStateControl
         SightableType target = inSightObject.GetComponent<SightableObject>().SightableType;
         _nextState = target == SightableType.Enemy ? StateID.Attack : StateID.Joy;
 
-        Move(inSightObject.transform.position, _actorAction.RunFollowPath);
+        MoveTo(inSightObject.transform.position, _actorAction.RunFollowPath);
     }
 
     void IStateControl.MoveToExit()
     {
         _nextState = StateID.LookAround;
-        Move(_pathfindingTarget.GetExitPos(), _actorAction.MoveFollowPath);
+        MoveTo(_pathfindingTarget.GetExitPos(), _actorAction.MoveFollowPath);
     }
 
-    void Move(Vector3 targetPos, UnityAction<Stack<Vector3>, UnityAction> moveMethod)
+    void MoveTo(Vector3 targetPos, UnityAction<Stack<Vector3>, UnityAction> moveMethod)
     {
         Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
 
+        // ターゲットへの移動が完了したタイミングでisTransitionableがtrueになることで
+        // _nextStateへの遷移が可能になる
         _isTransitionable = false;
         moveMethod(pathStack, () =>
         {
