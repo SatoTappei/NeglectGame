@@ -36,7 +36,7 @@ public class DamageReceiver : MonoBehaviour
             Debug.Log("ƒqƒbƒg");
             if (_hp == 0)
             {
-                MessageBroker.Default.Publish(new AttackDamageData());
+                MessageBroker.Default.Publish(new DamageData());
 
                 Destroy(gameObject);
 

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,6 +22,7 @@ public class PathfindingGrid : MonoBehaviour
     // 変更すると直径が1ではなくなるので、色々な不具合が出るかもしれない
     readonly float NodeRadius = 0.5f;
 
+    [SerializeField] GameObject _testPrefab;
     [Header("そのマスに侵入可能か判定するレイヤー")]
     [SerializeField] LayerMask _movableLayer;
     [SerializeField] LayerMask _unmovableLayer;
@@ -46,7 +46,9 @@ public class PathfindingGrid : MonoBehaviour
         _neighbourNodeSet = new HashSet<Node>(8);
 
         foreach (TerrainData data in _terrainDataArr)
+        {
             _terrainDataDic.Add(data.Tag, data.Cost);
+        }
 
         GenerateGrid();
     }
@@ -83,17 +85,22 @@ public class PathfindingGrid : MonoBehaviour
 
     int GetPenaltyCost(bool isMovable, Vector3 pos)
     {
-        if (isMovable) return -1;
+        if (!isMovable) return -1;
 
         int penaltyCost = 0;
-
+        //Instantiate(_testPrefab, pos, Quaternion.identity);
         // 下方向にRayを飛ばしてヒットしたオブジェクトのタグでコストの判定を行う
         Ray ray = new Ray(pos + Vector3.up * 50, Vector3.down);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 100, _movableLayer))
+        {
             if (!_terrainDataDic.TryGetValue(hit.collider.gameObject.tag, out penaltyCost))
+            {
                 Debug.LogWarning("タグが存在しません: " + hit.collider.gameObject.tag);
+            }    
+        }
 
+        Debug.Log(penaltyCost);
         return penaltyCost;
     }
 

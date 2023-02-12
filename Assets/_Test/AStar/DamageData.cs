@@ -1,9 +1,9 @@
 /// <summary>
 /// UniRxのMessageBroker機能を用いてDamageReceiverコンポーネントから送信されるデータ
 /// </summary>
-public struct AttackDamageData
+public struct DamageData
 {
-    public AttackDamageData(bool isDead)
+    public DamageData(bool isDead)
     {
         IsDead = isDead;
     }

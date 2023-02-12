@@ -11,7 +11,7 @@ public class PathfindingSystem : MonoBehaviour, IPathGetable
 {
     [SerializeField] PathfindingGrid _pathfindingGrid;
 
-    public Stack<Vector3> GetPathStack(Vector3 startPos, Vector3 targetPos)
+    Stack<Vector3> IPathGetable.GetPathStack(Vector3 startPos, Vector3 targetPos)
     {
         return Pathfinding(startPos, targetPos);
     }

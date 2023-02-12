@@ -17,7 +17,7 @@ public class ActorController : MonoBehaviour, IStateControl
     [SerializeField] ActorEffecter _actorEffecter;
 
     ActorControlHelper _actorControlHelper = new ActorControlHelper();
-    PathfindingTarget _pathfindingTarget;
+    ITargetSelectable _targetSelectable;
     IPathGetable _pathGetable;
     StateID _nextState = StateID.Non;
     /// <summary>
@@ -44,11 +44,11 @@ public class ActorController : MonoBehaviour, IStateControl
     void Start()
     {
         GameObject system = GameObject.FindGameObjectWithTag(SystemObjectTag);
-        _pathfindingTarget = system.GetComponent<PathfindingTarget>();
+        _targetSelectable = system.GetComponent<ITargetSelectable>();
         _pathGetable = system.GetComponent<IPathGetable>();
 
         // MessageBrokerで敵を倒したメッセージを受け取るテスト用
-        MessageBroker.Default.Receive<AttackDamageData>().Subscribe(_ => _isCompleted = true);
+        MessageBroker.Default.Receive<DamageData>().Subscribe(_ => _isCompleted = true);
     }
 
     void IStateControl.PlayAnim(StateID current, StateID next)
@@ -68,7 +68,7 @@ public class ActorController : MonoBehaviour, IStateControl
     void IStateControl.MoveToRandomWaypoint()
     {
         _nextState = StateID.LookAround;
-        MoveTo(_pathfindingTarget.GetPathfindingTarget(), _actorAction.MoveFollowPath);
+        MoveTo(_targetSelectable.GetNextWaypointPos(), _actorAction.MoveFollowPath);
     }
 
     void IStateControl.RunToTarget()
@@ -83,7 +83,7 @@ public class ActorController : MonoBehaviour, IStateControl
     void IStateControl.MoveToExit()
     {
         _nextState = StateID.LookAround;
-        MoveTo(_pathfindingTarget.GetExitPos(), _actorAction.MoveFollowPath);
+        MoveTo(_targetSelectable.GetExitPos(), _actorAction.MoveFollowPath);
     }
 
     void MoveTo(Vector3 targetPos, UnityAction<Stack<Vector3>, UnityAction> moveMethod)
