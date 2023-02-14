@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 public class InGameStream : MonoBehaviour
 {
+    [SerializeField] PathfindingGrid _pathfindingGrid;
     [SerializeField] DungeonBuilder _dungeonBuilder;
     [SerializeField] InGameTimer _inGameTimer;
     [SerializeField] Generator _generator;
@@ -47,6 +48,12 @@ public class InGameStream : MonoBehaviour
         // 先にダンジョンを生成する必要がある。
         _dungeonBuilder.Build();
 
+        // ここで1フレーム待たないとRayが正常に判定しない
+        await UniTask.Yield();
+
+        // キャラクター生成時にはグリッドの情報が必要なので先に生成する必要がある
+        _pathfindingGrid.GenerateGrid();
+
         // インゲームのタイマーと冒険者の生成はかみ合っていない
         // インゲームのタイマーのスタートと同時に敵の生成を行うGeneratorも起動する
         // Generatorは独自の間隔で生成している
@@ -56,10 +63,5 @@ public class InGameStream : MonoBehaviour
         // 値の加算はMessagePipeを用いたメッセージングで行う
         await _inGameTimer.StartAsync(this.GetCancellationTokenOnDestroy());
 
-    }
-
-    void Update()
-    {
-        
     }
 }

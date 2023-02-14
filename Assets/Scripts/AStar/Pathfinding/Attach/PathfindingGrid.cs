@@ -22,7 +22,8 @@ public class PathfindingGrid : MonoBehaviour
     // 変更すると直径が1ではなくなるので、色々な不具合が出るかもしれない
     readonly float NodeRadius = 0.5f;
 
-    [SerializeField] GameObject _testPrefab;
+    [Header("デバッグ用:マスの位置を視覚化するためプレハブ")]
+    [SerializeField] GameObject _testMassVisualizer;
     [Header("そのマスに侵入可能か判定するレイヤー")]
     [SerializeField] LayerMask _movableLayer;
     [SerializeField] LayerMask _unmovableLayer;
@@ -49,11 +50,10 @@ public class PathfindingGrid : MonoBehaviour
         {
             _terrainDataDic.Add(data.Tag, data.Cost);
         }
-
-        GenerateGrid();
     }
 
-    void GenerateGrid()
+    /// <summary>このメソッドを外部から呼び出すことで経路探索用のグリッドを生成する</summary>
+    public void GenerateGrid()
     {
         _grid = new Node[_gridDepth, _gridWidth];
 
@@ -81,14 +81,29 @@ public class PathfindingGrid : MonoBehaviour
     float NodeDiameter() => NodeRadius * 2;
 
     /// <summary>球状の当たり判定を出して障害物のレイヤーにヒットしなかったら移動できるのでtrueを返す</summary>
-    bool IsMovableNode(Vector3 pos) => !Physics.CheckSphere(pos, NodeRadius, _unmovableLayer);
+    bool IsMovableNode(Vector3 pos)
+    {
+        bool b1 = !Physics.CheckSphere(pos, NodeRadius, _unmovableLayer);
+        bool b2 = Physics.CheckSphere(pos, NodeRadius, _movableLayer);
+
+        if (b1&&b2)
+        {
+            // デバッグ用、マスの位置を視覚化する
+            if (_testMassVisualizer)
+            {
+                Instantiate(_testMassVisualizer, pos, Quaternion.identity);
+            }
+        }
+
+        return b1 && b2;
+    }
 
     int GetPenaltyCost(bool isMovable, Vector3 pos)
     {
         if (!isMovable) return -1;
 
         int penaltyCost = 0;
-        //Instantiate(_testPrefab, pos, Quaternion.identity);
+
         // 下方向にRayを飛ばしてヒットしたオブジェクトのタグでコストの判定を行う
         Ray ray = new Ray(pos + Vector3.up * 50, Vector3.down);
         RaycastHit hit;
@@ -100,7 +115,6 @@ public class PathfindingGrid : MonoBehaviour
             }    
         }
 
-        Debug.Log(penaltyCost);
         return penaltyCost;
     }
 

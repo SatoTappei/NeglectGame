@@ -13,6 +13,5 @@ public class GenerateDecorator : MonoBehaviour
     {
         // ˆÊ’u‚ğŠK’i‚É‚·‚é
         // UI‚Éî•ñ‚ğˆø‚«“n‚·
-        Debug.Log("‚Å‚±‚ê[‚µ‚å‚");
     }
 }

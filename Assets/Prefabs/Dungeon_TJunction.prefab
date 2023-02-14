@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 18916187375985392}
   - component: {fileID: 28443385910767218}
   - component: {fileID: -8453094833379404367}
-  m_Layer: 0
+  - component: {fileID: 7964546497153656303}
+  m_Layer: 6
   m_Name: Dungeon_TJunction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,6 +98,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8da3f4086e7613b4fa7bce0e303a2c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &7964546497153656303
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13582061540714980}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.8679466, y: 0.10282877, z: 2.8679466}
+  m_Center: {x: 0, y: -0.051414885, z: 0}
 --- !u!1 &757468308766863301
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,7 +122,8 @@ GameObject:
   - component: {fileID: 759440148458980673}
   - component: {fileID: 788735454794910241}
   - component: {fileID: 780408577461123005}
-  m_Layer: 0
+  - component: {fileID: 7853071570458094202}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,3 +195,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7853071570458094202
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757468308766863301}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17662124, y: 1.4444053, z: 1.955153}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066396}

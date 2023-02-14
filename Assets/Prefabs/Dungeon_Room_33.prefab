@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 8641844307563870909}
   - component: {fileID: 3875144518329237560}
   - component: {fileID: 5280854547963719287}
-  m_Layer: 0
+  - component: {fileID: 7601669716011800305}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (26)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3875144518329237560
 MeshFilter:
@@ -83,6 +84,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7601669716011800305
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 26351494729860575}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1766212, y: 1.4444053, z: 1.9551525}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066395}
 --- !u!1 &122922828757683869
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +108,8 @@ GameObject:
   - component: {fileID: 5022658812646667752}
   - component: {fileID: 3631742771749389298}
   - component: {fileID: 7060469850811293955}
-  m_Layer: 0
+  - component: {fileID: 3550960634439894919}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (34)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +129,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3631742771749389298
 MeshFilter:
@@ -166,6 +181,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3550960634439894919
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122922828757683869}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17662124, y: 1.4444053, z: 1.955153}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066396}
 --- !u!1 &126295217659115325
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +205,8 @@ GameObject:
   - component: {fileID: 6237270327675125116}
   - component: {fileID: 2953226211029454048}
   - component: {fileID: 1953183684951304574}
-  m_Layer: 0
+  - component: {fileID: 9021094226416374345}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (30)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,7 +226,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2953226211029454048
 MeshFilter:
@@ -249,6 +278,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &9021094226416374345
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126295217659115325}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1766212, y: 1.4444053, z: 1.9551525}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066395}
 --- !u!1 &808300719887476374
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,7 +302,8 @@ GameObject:
   - component: {fileID: 1342384809576973313}
   - component: {fileID: 648329807059329625}
   - component: {fileID: 6734067299921684068}
-  m_Layer: 0
+  - component: {fileID: 2897679153579604656}
+  m_Layer: 6
   m_Name: Dungeon_Room_Large (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,7 +323,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &648329807059329625
 MeshFilter:
@@ -332,6 +375,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2897679153579604656
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808300719887476374}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.8679466, y: 0.10282877, z: 2.8679466}
+  m_Center: {x: 0, y: -0.051414885, z: 0}
 --- !u!1 &833797954965270813
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,7 +399,8 @@ GameObject:
   - component: {fileID: 2162474770865019149}
   - component: {fileID: 8559327895222468808}
   - component: {fileID: 4103272009598220111}
-  m_Layer: 0
+  - component: {fileID: 3122277212958988911}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (33)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -363,7 +420,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8559327895222468808
 MeshFilter:
@@ -415,6 +472,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3122277212958988911
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833797954965270813}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17662124, y: 1.4444053, z: 1.955153}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066396}
 --- !u!1 &3049084103422726424
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,7 +496,8 @@ GameObject:
   - component: {fileID: 3952181834174920380}
   - component: {fileID: 4827411723126381566}
   - component: {fileID: 8789390728230346003}
-  m_Layer: 0
+  - component: {fileID: 566305907549042456}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (25)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -446,7 +517,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4827411723126381566
 MeshFilter:
@@ -498,6 +569,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &566305907549042456
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3049084103422726424}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1766212, y: 1.4444053, z: 1.9551525}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066395}
 --- !u!1 &3138672121044420084
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,7 +593,8 @@ GameObject:
   - component: {fileID: 1133602059828178386}
   - component: {fileID: 7028945238038758483}
   - component: {fileID: 3458726890959089368}
-  m_Layer: 0
+  - component: {fileID: 6066991496841156890}
+  m_Layer: 6
   m_Name: Dungeon_Room_Large (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -529,7 +614,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7028945238038758483
 MeshFilter:
@@ -581,6 +666,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6066991496841156890
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3138672121044420084}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.8679466, y: 0.10282877, z: 2.8679466}
+  m_Center: {x: 0, y: -0.051414885, z: 0}
 --- !u!1 &3263123142744150925
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,7 +690,8 @@ GameObject:
   - component: {fileID: 5082167278830455347}
   - component: {fileID: 5036721643221186540}
   - component: {fileID: 7287912718537608324}
-  m_Layer: 0
+  - component: {fileID: 3552325465925401226}
+  m_Layer: 6
   m_Name: Dungeon_Room_Large (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -612,7 +711,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5036721643221186540
 MeshFilter:
@@ -664,6 +763,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3552325465925401226
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3263123142744150925}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.8679466, y: 0.10282877, z: 2.8679466}
+  m_Center: {x: 0, y: -0.051414885, z: 0}
 --- !u!1 &3467402767457673426
 GameObject:
   m_ObjectHideFlags: 0
@@ -675,7 +787,8 @@ GameObject:
   - component: {fileID: 7111037713922448895}
   - component: {fileID: 1912097998780562630}
   - component: {fileID: 8463192176575837775}
-  m_Layer: 0
+  - component: {fileID: 1001370576730794175}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (36)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -695,7 +808,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1912097998780562630
 MeshFilter:
@@ -747,6 +860,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1001370576730794175
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3467402767457673426}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17662124, y: 1.4444053, z: 1.955153}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066396}
 --- !u!1 &4014330553903911753
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,7 +884,8 @@ GameObject:
   - component: {fileID: 1682836723622370382}
   - component: {fileID: 4206840209963297397}
   - component: {fileID: 3647956204430437547}
-  m_Layer: 0
+  - component: {fileID: 3100251046300512405}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (32)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -778,7 +905,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4206840209963297397
 MeshFilter:
@@ -830,6 +957,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3100251046300512405
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4014330553903911753}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17662124, y: 1.4444053, z: 1.955153}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066396}
 --- !u!1 &5636894998908565421
 GameObject:
   m_ObjectHideFlags: 0
@@ -842,7 +982,8 @@ GameObject:
   - component: {fileID: 5641095941523094713}
   - component: {fileID: 5651749153634971707}
   - component: {fileID: 4593594875855105333}
-  m_Layer: 0
+  - component: {fileID: 3597349231704949320}
+  m_Layer: 6
   m_Name: Dungeon_Room_33
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -861,7 +1002,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3342665818535562237}
   - {fileID: 5839012983972929335}
   - {fileID: 6258714144776781174}
   - {fileID: 2484538455083085123}
@@ -946,6 +1086,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8da3f4086e7613b4fa7bce0e303a2c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &3597349231704949320
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5636894998908565421}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.8679466, y: 0.10282877, z: 2.8679466}
+  m_Center: {x: 0, y: -0.051414885, z: 0}
 --- !u!1 &6138792860056667183
 GameObject:
   m_ObjectHideFlags: 0
@@ -957,7 +1110,8 @@ GameObject:
   - component: {fileID: 4086388343626814325}
   - component: {fileID: 1963122603240293999}
   - component: {fileID: 6821469451120798985}
-  m_Layer: 0
+  - component: {fileID: 7530074714241306707}
+  m_Layer: 6
   m_Name: Dungeon_Room_Large (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -977,7 +1131,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1963122603240293999
 MeshFilter:
@@ -1029,6 +1183,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7530074714241306707
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6138792860056667183}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.8679466, y: 0.10282877, z: 2.8679466}
+  m_Center: {x: 0, y: -0.051414885, z: 0}
 --- !u!1 &6291694661016342847
 GameObject:
   m_ObjectHideFlags: 0
@@ -1040,7 +1207,8 @@ GameObject:
   - component: {fileID: 2484538455083085123}
   - component: {fileID: 9021450334906947576}
   - component: {fileID: 6822705543969119336}
-  m_Layer: 0
+  - component: {fileID: 5339607890031875330}
+  m_Layer: 6
   m_Name: Dungeon_Room_Large (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1060,7 +1228,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9021450334906947576
 MeshFilter:
@@ -1112,6 +1280,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5339607890031875330
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6291694661016342847}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.8679466, y: 0.10282877, z: 2.8679466}
+  m_Center: {x: 0, y: -0.051414885, z: 0}
 --- !u!1 &6322785956635800789
 GameObject:
   m_ObjectHideFlags: 0
@@ -1123,7 +1304,8 @@ GameObject:
   - component: {fileID: 5839012983972929335}
   - component: {fileID: 8353013354859078551}
   - component: {fileID: 5717642884038617875}
-  m_Layer: 0
+  - component: {fileID: 2309443296092909901}
+  m_Layer: 6
   m_Name: Dungeon_Room_Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1143,7 +1325,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8353013354859078551
 MeshFilter:
@@ -1195,6 +1377,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2309443296092909901
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6322785956635800789}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.8679466, y: 0.10282877, z: 2.8679466}
+  m_Center: {x: 0, y: -0.051414885, z: 0}
 --- !u!1 &6394317622712581070
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,7 +1401,8 @@ GameObject:
   - component: {fileID: 3807120590307949110}
   - component: {fileID: 1626697057646761159}
   - component: {fileID: 5443082414873799513}
-  m_Layer: 0
+  - component: {fileID: 7605283881757702497}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (31)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1226,7 +1422,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1626697057646761159
 MeshFilter:
@@ -1278,6 +1474,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7605283881757702497
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6394317622712581070}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1766212, y: 1.4444053, z: 1.9551525}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066395}
 --- !u!1 &6593417390760305644
 GameObject:
   m_ObjectHideFlags: 0
@@ -1289,7 +1498,8 @@ GameObject:
   - component: {fileID: 6815288037169133093}
   - component: {fileID: 1950165130384648157}
   - component: {fileID: 6066904578807287077}
-  m_Layer: 0
+  - component: {fileID: 745586197122543190}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (27)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1309,7 +1519,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1950165130384648157
 MeshFilter:
@@ -1361,6 +1571,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &745586197122543190
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6593417390760305644}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1766212, y: 1.4444053, z: 1.9551525}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066395}
 --- !u!1 &7779270186303770822
 GameObject:
   m_ObjectHideFlags: 0
@@ -1372,7 +1595,8 @@ GameObject:
   - component: {fileID: 8757228133610818269}
   - component: {fileID: 4608428586378911801}
   - component: {fileID: 4141974686228221208}
-  m_Layer: 0
+  - component: {fileID: 6503253591136710112}
+  m_Layer: 6
   m_Name: Dungeon_Room_Large (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1392,7 +1616,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4608428586378911801
 MeshFilter:
@@ -1444,103 +1668,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &8374580726776688896
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3342665818535562237}
-  - component: {fileID: 4273573793629498785}
-  - component: {fileID: 2315714929617739119}
-  - component: {fileID: 6460699862366266298}
-  m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3342665818535562237
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8374580726776688896}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: -1.112}
-  m_LocalScale: {x: 0.5, y: 1, z: 0.5}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &4273573793629498785
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8374580726776688896}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &2315714929617739119
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8374580726776688896}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: e745492728544aa488aa0429b6068e71, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6460699862366266298
+--- !u!65 &6503253591136710112
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8374580726776688896}
+  m_GameObject: {fileID: 7779270186303770822}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.8679466, y: 0.10282877, z: 2.8679466}
+  m_Center: {x: 0, y: -0.051414885, z: 0}
 --- !u!1 &8754227282744937720
 GameObject:
   m_ObjectHideFlags: 0
@@ -1552,7 +1692,8 @@ GameObject:
   - component: {fileID: 6258714144776781174}
   - component: {fileID: 6184956341225409291}
   - component: {fileID: 7748000240967743328}
-  m_Layer: 0
+  - component: {fileID: 1595668178460149174}
+  m_Layer: 6
   m_Name: Dungeon_Room_Large (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1572,7 +1713,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6184956341225409291
 MeshFilter:
@@ -1624,6 +1765,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1595668178460149174
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8754227282744937720}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.8679466, y: 0.10282877, z: 2.8679466}
+  m_Center: {x: 0, y: -0.051414885, z: 0}
 --- !u!1 &8814577489653035155
 GameObject:
   m_ObjectHideFlags: 0
@@ -1635,7 +1789,8 @@ GameObject:
   - component: {fileID: 3377603792638455096}
   - component: {fileID: 5675632465162654273}
   - component: {fileID: 8604890271398668398}
-  m_Layer: 0
+  - component: {fileID: 3602116302362156193}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (29)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1655,7 +1810,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5675632465162654273
 MeshFilter:
@@ -1707,6 +1862,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3602116302362156193
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8814577489653035155}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1766212, y: 1.4444053, z: 1.9551525}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066395}
 --- !u!1 &9174366435200892779
 GameObject:
   m_ObjectHideFlags: 0
@@ -1718,7 +1886,8 @@ GameObject:
   - component: {fileID: 2567274078251251560}
   - component: {fileID: 5090863195021074888}
   - component: {fileID: 8291805513995579097}
-  m_Layer: 0
+  - component: {fileID: 1477323962188830284}
+  m_Layer: 7
   m_Name: Wall_Stone_Normal (35)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1738,7 +1907,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5633658939234661849}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5090863195021074888
 MeshFilter:
@@ -1790,3 +1959,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1477323962188830284
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9174366435200892779}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17662124, y: 1.4444053, z: 1.955153}
+  m_Center: {x: 0, y: 0.72169673, z: 0.0000005066396}

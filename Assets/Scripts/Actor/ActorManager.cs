@@ -10,7 +10,6 @@ public class ActorManager : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Start‚ªŒÄ‚Î‚ê‚½");
 
     }
 
