@@ -132,6 +132,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 30291594}
+  - component: {fileID: 30291596}
+  - component: {fileID: 30291595}
+  - component: {fileID: 30291597}
   m_Layer: 0
   m_Name: Generator
   m_TagString: Untagged
@@ -154,6 +157,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &30291595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30291593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecc80cee475f3204f90ea82b415da059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _generateDecorator: {fileID: 30291597}
+  _prefabs:
+  - {fileID: 5082487634999176885, guid: e0fa60e4f9a40cc43abe19c9f9f888ac, type: 3}
+  - {fileID: 886694880418085231, guid: b8214121c6f30a84d97be1a53878386b, type: 3}
+  _interval: 1
+--- !u!114 &30291596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30291593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b232965816871064a8d0b94b26921299, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentReference:
+    TypeName: 
+  autoRun: 1
+  autoInjectGameObjects:
+  - {fileID: 30291593}
+--- !u!114 &30291597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30291593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2242001607b1e4788b4c665c41d8c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &149537784
 GameObject:
   m_ObjectHideFlags: 0
@@ -1235,6 +1284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dungeonBuilder: {fileID: 5436764155890790653}
   _inGameTimer: {fileID: 1968672613}
+  _generator: {fileID: 30291595}
 --- !u!4 &1656048325
 Transform:
   m_ObjectHideFlags: 0

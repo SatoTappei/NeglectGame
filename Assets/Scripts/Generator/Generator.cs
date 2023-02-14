@@ -6,11 +6,6 @@ using UnityEngine;
 using MessagePipe;
 using VContainer;
 
-// 冒険者はn人以上生成させない
-// 定期的にフィールド内の冒険者数をチェックする
-// 今何人いるかのフラグが必要
-// 生成/脱出/死亡時に上下する
-
 /// <summary>
 /// ActorGeneratorに生成を停止/再開するようメッセージの送受信するのに使う構造体
 /// </summary>
@@ -32,6 +27,7 @@ public class Generator : MonoBehaviour
     [Inject]
     readonly ISubscriber<GeneratorControl> _subscriber;
 
+    [SerializeField] GenerateDecorator _generateDecorator;
     [Header("生成するプレハブ")]
     [SerializeField] GameObject[] _prefabs;
     [Header("生成する間隔")]
@@ -66,10 +62,9 @@ public class Generator : MonoBehaviour
                 {
                     int r = UnityEngine.Random.Range(0, _prefabs.Length);
 
-                    // TODO:生成された際に初期化したい
-                    // 生成する場所を階段にしたい
-                    // 生成したらUIをシュッと出す演出をしたい
-                    Instantiate(_prefabs[r]);
+                    // 生成した際の初期化処理を別のコンポーネントに委任する
+                    GameObject go = Instantiate(_prefabs[r]);
+                    _generateDecorator?.Decorate(go);
                 }
                 await UniTask.Delay(TimeSpan.FromSeconds(_interval), cancellationToken: tokenSource.Token);
             }
