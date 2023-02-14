@@ -38,13 +38,15 @@ public class InGameTimer : MonoBehaviour
 
     void Start()
     {
-        //_subscriber.Subscribe(addValue => 
-        //{
-        //    AddCount(addValue.Value);
-        //}).AddTo(this);
+        // 外部からタイマーの値を増やしたい時はInGameTimerAddValueをPublishする
+        _subscriber.Subscribe(addValue =>
+        {
+            AddCount(addValue.Value);
+        }).AddTo(this);
     }
 
-    public async UniTask CountStart(CancellationToken token)
+    /// <summary>タイマーを起動したい場合はこのメソッドを呼ぶ</summary>
+    public async UniTask StartAsync(CancellationToken token)
     {
         _count.Value = _timeLimit;
 
@@ -64,7 +66,7 @@ public class InGameTimer : MonoBehaviour
         }
         catch(OperationCanceledException e)
         {
-            UnityEngine.Debug.Log("インゲームのタイマーの処理がキャンセルされました。: " + e.Message);
+            Debug.Log("インゲームのタイマーの処理がキャンセルされました。: " + e.Message);
         }  
     }
 

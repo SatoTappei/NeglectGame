@@ -14,7 +14,7 @@ public class TestInGameStream : MonoBehaviour
      *  ステージの自動生成をしない状態できちんと動くように作る 
      */
 
-    [SerializeField] ActorGenerator _actorGenerator;
+    //[SerializeField] ActorGenerator _actorGenerator;
 
     void Start()
     {
@@ -26,6 +26,6 @@ public class TestInGameStream : MonoBehaviour
     async UniTaskVoid Hoge(CancellationToken token)
     {
         await UniTask.Yield();
-        await _actorGenerator.GenerateRegularly(token);
+        //await _actorGenerator.GenerateRegularly(token);
     }
 }

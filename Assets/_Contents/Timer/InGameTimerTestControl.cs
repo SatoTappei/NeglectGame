@@ -15,7 +15,8 @@ public class InGameTimerTestControl : MonoBehaviour
 
     async void Start()
     {
-        await _inGameTimer.CountStart(this.GetCancellationTokenOnDestroy());
+        await _inGameTimer.StartAsync(this.GetCancellationTokenOnDestroy());
+        Debug.Log("タイマー停止");
     }
 
     void Update()

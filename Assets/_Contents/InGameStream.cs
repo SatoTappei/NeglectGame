@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UnityEngine;
 
 /// <summary>
 /// ゲーム全体の流れを制御するコンポーネント
@@ -9,8 +9,10 @@ using DG.Tweening;
 public class InGameStream : MonoBehaviour
 {
     [SerializeField] DungeonBuilder _dungeonBuilder;
+    [SerializeField] InGameTimer _inGameTimer;
+    [SerializeField] Generator _generator;
 
-    void Start()
+    async void Start()
     {
         // カメラはクォータービューで固定
 
@@ -40,8 +42,19 @@ public class InGameStream : MonoBehaviour
         // ダンジョン生成時にアニメーションさせるのでCapacityを増やして警告を消す
         // 処理負荷が問題になった場合はアニメーションをやめること
         DOTween.SetTweensCapacity(500, 50);
+
+        // キャラクターを生成するのにダンジョンの地形情報が必要なので
+        // 先にダンジョンを生成する必要がある。
         _dungeonBuilder.Build();
 
+        // インゲームのタイマーと冒険者の生成はかみ合っていない
+        // インゲームのタイマーのスタートと同時に敵の生成を行うGeneratorも起動する
+        // Generatorは独自の間隔で生成している
+        _generator.GenerateRegularlyAsync(new CancellationTokenSource()).Forget();
+
+        // インゲームのタイマーの開始はメソッドの呼び出しで行うが
+        // 値の加算はMessagePipeを用いたメッセージングで行う
+        await _inGameTimer.StartAsync(this.GetCancellationTokenOnDestroy());
 
     }
 

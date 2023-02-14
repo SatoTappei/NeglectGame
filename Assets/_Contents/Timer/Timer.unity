@@ -229,7 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a7e112985c96e4ba6300d50b618310, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeLimit: 98
+  _timeLimit: 5
 --- !u!1 &1410005985
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,7 +538,9 @@ MonoBehaviour:
   parentReference:
     TypeName: 
   autoRun: 1
-  autoInjectGameObjects: []
+  autoInjectGameObjects:
+  - {fileID: 1410005985}
+  - {fileID: 1298094197}
 --- !u!1 &1670118689
 GameObject:
   m_ObjectHideFlags: 0
