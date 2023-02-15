@@ -10,18 +10,18 @@ public class DungeonRoomBuilder : MonoBehaviour
     /// <summary>インスペクターで割り当てた生成する部屋の数の合計を初期容量として確保する</summary>
     static readonly int RoomEntranceDicCap = 16;
     /// <summary>生成する部屋の最大の大きさである5*5を初期容量として確保する</summary>
-    static readonly int RoomRangeSetCap = 25;
+    static readonly int RoomRangeListCap = 25;
 
     [Header("生成する部屋のデータ")]
     [SerializeField] DungeonRoomData[] _roomDatas;
     [Header("生成したプレハブの親")]
-    [SerializeField] Transform _parent;
+    [SerializeField] Transform _prefabParent;
 
     DungeonHelper _helper = new();
     /// <summary>部屋の出入り口の正面の通路の見た目を修正するので保持しておく</summary>
     Dictionary<Vector3Int, Direction> _roomEntranceDic = new (RoomEntranceDicCap);
     /// <summary>何度も部屋の範囲を格納するのでメンバ変数として保持しておく</summary>
-    HashSet<Vector3Int> _roomRangeSet = new (RoomRangeSetCap);
+    List<Vector3Int> _roomRangeList = new (RoomRangeListCap);
 
     internal IReadOnlyDictionary<Vector3Int, Direction> RoomEntranceDic => _roomEntranceDic;
 
@@ -32,7 +32,7 @@ public class DungeonRoomBuilder : MonoBehaviour
         IReadOnlyCollection<Vector3Int> passMassPositions = passMassDic.Keys as IReadOnlyCollection<Vector3Int>;
         IReadOnlyDictionary<Vector3Int, Direction> estimatePosDic = GetAvailablePosDic(passMassPositions);
         // 通路上に部屋を立てられないように通路の座標のコレクションをもとに生成する
-        HashSet <Vector3Int> alreadyBuildPosSet = new (passMassPositions);
+        List<Vector3Int> alreadyBuildPosList = new (passMassPositions);
 
         // インスペクターで割り当てた順に、生成可能なランダムな位置に部屋を生成していく
         int roomIndex = 0;
@@ -42,28 +42,27 @@ public class DungeonRoomBuilder : MonoBehaviour
             Direction dir = pair.Value;
 
             DungeonRoomData roomData = _roomDatas[roomIndex];
-            HashSet<Vector3Int> roomRangeSet = GetRoomRangeSet(pos, dir, roomData);
+            IReadOnlyCollection<Vector3Int> roomRanges = GetRoomRangeSet(pos, dir, roomData);
             
-            if (IsAlreadyBuilded(roomRangeSet, alreadyBuildPosSet)) continue;
+            if (IsAlreadyBuilded(roomRanges, alreadyBuildPosList)) continue;
 
             if (roomData.IsAvailable())
             {
                 GameObject prefab = roomData.GetRandomVariationPrefab();
                 Quaternion rot = _helper.ConvertToInverseRot(dir);
-                Instantiate(prefab, pos, rot, _parent);
+                Instantiate(prefab, pos, rot, _prefabParent);
 
                 // 部屋同士が重ならないように生成した部屋の座標を追加する
-                foreach (Vector3Int v in roomRangeSet)
+                foreach (Vector3Int v in roomRanges)
                 {
-                    alreadyBuildPosSet.Add(v);
+                    alreadyBuildPosList.Add(v);
                 }
 
                 _roomEntranceDic.Add(pos, dir);
             }
-            else
+            else if (++roomIndex >= _roomDatas.Length)
             {
-                // 生成する部屋が無ければループを抜ける
-                if (++roomIndex >= _roomDatas.Length) break;
+                break;
             }
         }
     }
@@ -97,13 +96,13 @@ public class DungeonRoomBuilder : MonoBehaviour
     }
 
     /// <summary>生成する部屋の範囲を取得する</summary>
-    HashSet<Vector3Int> GetRoomRangeSet(Vector3Int pos, Direction dir, DungeonRoomData roomData)
+    IReadOnlyCollection<Vector3Int> GetRoomRangeSet(Vector3Int pos, Direction dir, DungeonRoomData roomData)
     {
         int depth = roomData.Depth;
         int width = roomData.Width;
 
         // 繰り返し呼び出すメソッドなので何回もnewせずに空にして使いまわす
-        _roomRangeSet.Clear();
+        _roomRangeList.Clear();
 
         for (int i = 0; i < depth; i++)
         {
@@ -129,18 +128,18 @@ public class DungeonRoomBuilder : MonoBehaviour
             }
         }
 
-        return _roomRangeSet;
+        return _roomRangeList;
 
         // 指定された座標とその上下もしくは左右の座標を追加していく
         void Add(Vector3Int center, Vector3Int dir)
         {
             // 原点を追加
-            _roomRangeSet.Add(center);
+            _roomRangeList.Add(center);
             // 左右の幅分を追加
             for (int i = 1; i <= width / 2; i++)
             {
-                _roomRangeSet.Add(center + dir * i * _helper.PrefabScale);
-                _roomRangeSet.Add(center - dir * i * _helper.PrefabScale);
+                _roomRangeList.Add(center + dir * i * _helper.PrefabScale);
+                _roomRangeList.Add(center - dir * i * _helper.PrefabScale);
             }
         }
     }
