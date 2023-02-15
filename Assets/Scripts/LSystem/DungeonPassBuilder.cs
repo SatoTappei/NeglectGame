@@ -141,7 +141,6 @@ public class DungeonPassBuilder : MonoBehaviour
             {
                 // 行き止まり
                 case 1:
-                    //Replace(_passEndPrefab, _helper.GetPassEndRotY(binary), ComponentShape.PassEnd);
                     rotY = _helper.GetPassEndRotY(binary);
                     prefab = Instantiate(_passEndPrefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.PassEnd;
@@ -149,15 +148,13 @@ public class DungeonPassBuilder : MonoBehaviour
                     _waypointList.Add(pos);
                     break;
                 // 角
-                case 2 when !_helper.IsPassStraight(binary):
-                    //Replace(_cornerPrefab, _helper.GetCornerRotY(binary), ComponentShape.Corner);
+                case 2:
                     rotY = _helper.GetCornerRotY(binary);
                     prefab = Instantiate(_cornerPrefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.Corner;
                     break;
                 // 丁字路
                 case 3:
-                    //Replace(_tJunctionPrefab, _helper.GetTJunctionRotY(binary), ComponentShape.TJunction);
                     rotY = _helper.GetTJunctionRotY(binary);
                     prefab = Instantiate(_tJunctionPrefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.TJunction;
@@ -166,7 +163,6 @@ public class DungeonPassBuilder : MonoBehaviour
                     break;
                 // 十字路
                 case 4:
-                    //Replace(_crossPrefab, 0, ComponentShape.Cross);
                     rotY = 0;
                     prefab = Instantiate(_crossPrefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.Cross;
@@ -180,18 +176,9 @@ public class DungeonPassBuilder : MonoBehaviour
 
             Direction dir = _helper.ConvertToDirection(rotY);
 
+            // プレハブを置き換えるので元のプレハブは削除する
             Destroy(_passMassDic[pos].Prefab);
             _passMassDic[pos].Replace(dir, shape, prefab, connect);
-
-            //void Replace(GameObject prefab, float rotY, ComponentShape shape)
-            //{
-            //    // オブジェクトを置き換えるので以前のものを削除する
-            //    Destroy(_passMassDic[pos].Prefab);
-
-            //    Direction dir = _helper.ConvertToDirection(rotY);
-            //    GameObject go = Instantiate(prefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
-            //    _passMassDic[pos].Replace(dir, shape, go, connect);
-            //}
         }
     }
 
@@ -207,38 +194,60 @@ public class DungeonPassBuilder : MonoBehaviour
             Vector3Int frontPos = roomPos - _helper.ConvertToPos(roomDir);
             DungeonPassMassData frontmassData = _passMassDic[frontPos];
 
+            float rotY;
+            GameObject prefab;
+            ComponentShape shape;
+
             // 正面のマスの接続数を+1して、部屋の出入り口と繋がった見た目に変更する
             switch (++frontmassData.Connect)
             {
-                // 十字路
-                case 4:
-                    Replace(_crossPrefab, 0);
+                // 直線
+                case 2 when roomDir == frontmassData.Dir:
+                    rotY = _helper.GetPassStraightRotY(roomDir);
+                    prefab = Instantiate(_passPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+                    shape = ComponentShape.Pass;
+                    //Replace(_passPrefab, _helper.GetPassStraightRotY(roomDir));
+                    break;
+                // 角
+                case 2:
+                    //Replace(_cornerPrefab, _helper.GetCornerRotY(roomDir, frontmassData.Dir));
+                    rotY = _helper.GetCornerRotY(roomDir, frontmassData.Dir);
+                    prefab = Instantiate(_cornerPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+                    shape = ComponentShape.Corner;
                     break;
                 // 丁字路
                 case 3:
-                    float rot = _helper.GetTJunctionRotY(roomDir, frontmassData.Dir, frontmassData.Shape);
-                    Replace(_tJunctionPrefab, rot);
+                    rotY = _helper.GetTJunctionRotY(roomDir, frontmassData.Dir, frontmassData.Shape);
+                    prefab = Instantiate(_tJunctionPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+                    shape = ComponentShape.TJunction;
+                    //float rot = _helper.GetTJunctionRotY(roomDir, frontmassData.Dir, frontmassData.Shape);
+                    //Replace(_tJunctionPrefab, rot);
                     break;
-                // 直線もしくは角
-                case 2:
-                    if (roomDir == frontmassData.Dir)
-                    {
-                        Replace(_passPrefab, _helper.GetPassStraightRotY(roomDir));
-                    }
-                    else
-                    {
-                        Replace(_cornerPrefab, _helper.GetCornerRotY(roomDir, frontmassData.Dir));
-                    }
+                // 十字路
+                case 4:
+                    //Replace(_crossPrefab, 0);
+                    rotY = 0;
+                    prefab = Instantiate(_crossPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+                    shape = ComponentShape.Cross;
                     break;
+                default:
+                    Debug.LogError("不正なcaseです: " + roomPos);
+                    continue;
             }
 
-            void Replace(GameObject prefab, float rotY)
-            {
-                // オブジェクトを置き換えるので以前のものを削除する
-                Destroy(frontmassData.Prefab);
+            Direction dir = _helper.ConvertToDirection(rotY);
 
-                frontmassData.Prefab = Instantiate(prefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
-            }
+            // プレハブを置き換えるので元のプレハブは削除する
+            Destroy(frontmassData.Prefab);
+            frontmassData.Replace(dir, shape, prefab, frontmassData.Connect);
+
+            //void Replace(GameObject prefab, float rotY)
+            //{
+            //    // オブジェクトを置き換えるので以前のものを削除する
+            //    Destroy(frontmassData.Prefab);
+
+            //    frontmassData.Prefab = Instantiate(prefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+            //}
         }
     }
 }
