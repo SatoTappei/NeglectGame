@@ -13,7 +13,7 @@ public class LSystem : MonoBehaviour
     [SerializeField] int _iteration;
 
     /// <summary>インスペクターに割り当てた値で文字列の生成を行う</summary>
-    internal string Generate() => Generate(_ruleSO.InitLetter, _ruleSO.RuleArr);
+    internal string Generate() => Generate(_ruleSO.InitLine, _ruleSO.Rules);
 
     string Generate(string letter, RewriteRule[] ruleArr)
     {

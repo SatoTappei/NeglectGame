@@ -21,10 +21,10 @@ internal struct RewriteRule
 public class LSystemRuleSO : ScriptableObject
 {
     [Header("‰Šú•¶Žš—ñ")]
-    [SerializeField] string _initLetter;
+    [SerializeField] string _initLine;
     [Header("‘‚«Š·‚¦ƒ‹[ƒ‹")]
-    [SerializeField] RewriteRule[] _ruleArr;
+    [SerializeField] RewriteRule[] _rules;
 
-    internal string InitLetter => _initLetter;
-    internal RewriteRule[] RuleArr => _ruleArr;
+    internal string InitLine => _initLine;
+    internal RewriteRule[] Rules => _rules;
 }

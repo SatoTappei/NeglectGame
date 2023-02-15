@@ -130,38 +130,68 @@ public class DungeonPassBuilder : MonoBehaviour
             // いくつ接続されているかで対応する見た目に変更する
             (int binary, int connect) = _helper.GetNeighbourBinary(pos, _passMassDic.Keys);
 
+            // 直線の通路の場合は処理しない
+            if (connect == 2 && _helper.IsPassStraight(binary)) continue;
+
+            float rotY;
+            GameObject prefab;
+            ComponentShape shape;
+
             switch (connect)
             {
                 // 行き止まり
                 case 1:
-                    Replace(_passEndPrefab, _helper.GetPassEndRotY(binary), ComponentShape.PassEnd);
+                    //Replace(_passEndPrefab, _helper.GetPassEndRotY(binary), ComponentShape.PassEnd);
+                    rotY = _helper.GetPassEndRotY(binary);
+                    prefab = Instantiate(_passEndPrefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+                    shape = ComponentShape.PassEnd;
+
                     _waypointList.Add(pos);
                     break;
                 // 角
                 case 2 when !_helper.IsPassStraight(binary):
-                    Replace(_cornerPrefab, _helper.GetCornerRotY(binary), ComponentShape.Corner);
+                    //Replace(_cornerPrefab, _helper.GetCornerRotY(binary), ComponentShape.Corner);
+                    rotY = _helper.GetCornerRotY(binary);
+                    prefab = Instantiate(_cornerPrefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+                    shape = ComponentShape.Corner;
                     break;
                 // 丁字路
                 case 3:
-                    Replace(_tJunctionPrefab, _helper.GetTJunctionRotY(binary), ComponentShape.TJunction);
+                    //Replace(_tJunctionPrefab, _helper.GetTJunctionRotY(binary), ComponentShape.TJunction);
+                    rotY = _helper.GetTJunctionRotY(binary);
+                    prefab = Instantiate(_tJunctionPrefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+                    shape = ComponentShape.TJunction;
+
                     _waypointList.Add(pos);
                     break;
                 // 十字路
                 case 4:
-                    Replace(_crossPrefab, 0, ComponentShape.Cross);
+                    //Replace(_crossPrefab, 0, ComponentShape.Cross);
+                    rotY = 0;
+                    prefab = Instantiate(_crossPrefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+                    shape = ComponentShape.Cross;
+
                     _waypointList.Add(pos);
                     break;
+                default:
+                    Debug.LogError("不正なcaseです: " + pos);
+                    continue;
             }
 
-            void Replace(GameObject prefab, float rotY, ComponentShape shape)
-            {
-                // オブジェクトを置き換えるので以前のものを削除する
-                Destroy(_passMassDic[pos].Prefab);
+            Direction dir = _helper.ConvertToDirection(rotY);
 
-                Direction dir = _helper.ConvertToDirection(rotY);
-                GameObject go = Instantiate(prefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
-                _passMassDic[pos].Replace(dir, shape, go, connect);
-            }
+            Destroy(_passMassDic[pos].Prefab);
+            _passMassDic[pos].Replace(dir, shape, prefab, connect);
+
+            //void Replace(GameObject prefab, float rotY, ComponentShape shape)
+            //{
+            //    // オブジェクトを置き換えるので以前のものを削除する
+            //    Destroy(_passMassDic[pos].Prefab);
+
+            //    Direction dir = _helper.ConvertToDirection(rotY);
+            //    GameObject go = Instantiate(prefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+            //    _passMassDic[pos].Replace(dir, shape, go, connect);
+            //}
         }
     }
 
