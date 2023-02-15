@@ -1,7 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
+
+/// <summary>
+/// LSystemを用いて書き換えを行う際のルールの構造体
+/// </summary>
+[Serializable]
+internal struct RewriteRule
+{
+    [SerializeField] char _target;
+    [SerializeField] string[] _rewrite;
+
+    internal string Target => _target.ToString();
+    internal string[] Rewrite => _rewrite;
+}
 
 /// <summary>
 /// LSystemで生成する際のルールを記述するSO
@@ -9,16 +20,6 @@ using System;
 [CreateAssetMenu(fileName = "LSystemRule_")]
 public class LSystemRuleSO : ScriptableObject
 {
-    [Serializable]
-    internal struct RewriteRule
-    {
-        [SerializeField] char _target;
-        [SerializeField] string[] _rewrite;
-
-        internal string Target => _target.ToString();
-        internal string[] Rewrite => _rewrite;
-    }
-
     [Header("初期文字列")]
     [SerializeField] string _initLetter;
     [Header("書き換えルール")]

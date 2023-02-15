@@ -1,8 +1,6 @@
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Direction = DungeonHelper.Direction;
 
 /// <summary>
 /// ダンジョンの通路に応じた部屋を立てるコンポーネント

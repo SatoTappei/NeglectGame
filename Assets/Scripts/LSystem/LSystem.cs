@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Text;
-using RewriteRule = LSystemRuleSO.RewriteRule;
 
 /// <summary>
 /// 確率的LSystemを用いて文字列の生成を行う

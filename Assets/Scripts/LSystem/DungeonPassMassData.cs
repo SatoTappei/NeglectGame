@@ -1,22 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Direction = DungeonHelper.Direction;
 
 /// <summary>
 /// ダンジョンを構成する通路1マス単位のデータ
 /// </summary>
 internal class DungeonPassMassData
 {
-    internal enum ComponentShape
-    {
-        Pass,
-        Corner,
-        TJunction,
-        Cross,
-        PassEnd,
-    }
-
     Direction _dir;
     ComponentShape _shape;
     GameObject _obj;
