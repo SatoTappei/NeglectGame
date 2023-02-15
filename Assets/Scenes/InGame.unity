@@ -2259,33 +2259,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 735289a9dd770574abb5687ce98c691c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _roomDataArr:
-  - _prefabArr:
+  _roomDatas:
+  - _prefabs:
     - {fileID: 5636894998908565421, guid: 06cd80e312dfc764bb57911da0222d90, type: 3}
     _width: 5
     _depth: 5
     _maxQuantity: 3
-  - _prefabArr:
+  - _prefabs:
     - {fileID: 5636894998908565421, guid: b3744975958c36547b28505f8799499b, type: 3}
     _width: 5
     _depth: 4
     _maxQuantity: 3
-  - _prefabArr:
+  - _prefabs:
     - {fileID: 5636894998908565421, guid: 1ff1273af92c34247bc094aaa4e9b56b, type: 3}
     _width: 5
     _depth: 3
     _maxQuantity: 2
-  - _prefabArr:
+  - _prefabs:
     - {fileID: 5636894998908565421, guid: 6a842f26fc18b214dac74128759dc6e7, type: 3}
     _width: 3
     _depth: 4
     _maxQuantity: 3
-  - _prefabArr:
+  - _prefabs:
     - {fileID: 5636894998908565421, guid: 6b10ee7499f6ee54882a458ee2a59243, type: 3}
     _width: 3
     _depth: 3
     _maxQuantity: 3
-  - _prefabArr:
+  - _prefabs:
     - {fileID: 5636894998908565421, guid: 16a454a9b5fffbe4ea83078c4557ef01, type: 3}
     _width: 3
     _depth: 2
@@ -2380,7 +2380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb48f68b53c48242bbe80c19d8b2540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _testMassVisualizer: {fileID: 7079537059908555760, guid: 3f32c1cb6549c7f4782bfbbed5d4b574, type: 3}
+  _testMassVisualizer: {fileID: 0}
   _movableLayer:
     serializedVersion: 2
     m_Bits: 64

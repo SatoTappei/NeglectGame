@@ -23,10 +23,10 @@ public class DungeonBuilder : MonoBehaviour
 
         _dungeonPassBuilder.BuildDungeonPass(result);
         _dungeonPassBuilder.FixPassVisual();
-        var massDataAll = _dungeonPassBuilder.PassMassDic;
+        var passMassDic = _dungeonPassBuilder.PassMassDic;
 
-        _dungeonRoomBuilder.BuildDungeonRoom(massDataAll);
-        var roomEntranceDic = _dungeonRoomBuilder.GetRoomEntranceDataAll();
+        _dungeonRoomBuilder.BuildDungeonRoom(passMassDic);
+        var roomEntranceDic = _dungeonRoomBuilder.RoomEntranceDic;
 
         _dungeonPassBuilder.FixConnectRoomEntrance(roomEntranceDic);
 

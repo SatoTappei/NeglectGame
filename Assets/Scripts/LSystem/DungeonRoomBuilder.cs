@@ -7,97 +7,101 @@ using UnityEngine;
 /// </summary>
 public class DungeonRoomBuilder : MonoBehaviour
 {
-    // インスペクターで登録している部屋の数の合計
-    readonly int RoomEntranceDicCap = 16;
-    // 部屋の大きさが最大5*5なので
-    readonly int RoomRangeSetCap = 25;
+    /// <summary>インスペクターで割り当てた生成する部屋の数の合計を初期容量として確保する</summary>
+    static readonly int RoomEntranceDicCap = 16;
+    /// <summary>生成する部屋の最大の大きさである5*5を初期容量として確保する</summary>
+    static readonly int RoomRangeSetCap = 25;
 
     [Header("生成する部屋のデータ")]
-    [SerializeField] DungeonRoomData[] _roomDataArr;
+    [SerializeField] DungeonRoomData[] _roomDatas;
     [Header("生成したプレハブの親")]
     [SerializeField] Transform _parent;
 
-    DungeonHelper _helper;
+    DungeonHelper _helper = new();
     /// <summary>部屋の出入り口の正面の通路の見た目を修正するので保持しておく</summary>
-    Dictionary<Vector3Int, Direction> _roomEntranceDic;
+    Dictionary<Vector3Int, Direction> _roomEntranceDic = new (RoomEntranceDicCap);
     /// <summary>何度も部屋の範囲を格納するのでメンバ変数として保持しておく</summary>
-    HashSet<Vector3Int> _roomRangeSet;
+    HashSet<Vector3Int> _roomRangeSet = new (RoomRangeSetCap);
 
-    internal IReadOnlyDictionary<Vector3Int, Direction> GetRoomEntranceDataAll() => _roomEntranceDic;
-
-    void Awake()
-    {
-        _helper = new();
-        _roomEntranceDic = new Dictionary<Vector3Int, Direction>(RoomEntranceDicCap);
-        _roomRangeSet = new HashSet<Vector3Int>(RoomRangeSetCap);
-    }
+    internal IReadOnlyDictionary<Vector3Int, Direction> RoomEntranceDic => _roomEntranceDic;
 
     /// <summary>通路の周囲に部屋を建てるので、先に通路を建てている必要がある</summary>
-    internal void BuildDungeonRoom(IReadOnlyDictionary<Vector3Int, DungeonPassMassData> massDataAll)
+    internal void BuildDungeonRoom(IReadOnlyDictionary<Vector3Int, DungeonPassMassData> passMassDic)
     {
         // 部屋を建てる候補として通路の側の座標を辞書型で受け取る
-        IReadOnlyCollection<Vector3Int> massPosAll = massDataAll.Keys as IReadOnlyCollection<Vector3Int>;
-        Dictionary<Vector3Int, Direction> estimatePosDic = GetAvailablePosDic(massPosAll);
-        HashSet <Vector3Int> alreadyBuildPosSet = new HashSet<Vector3Int>(massPosAll);
+        IReadOnlyCollection<Vector3Int> passMassPositions = passMassDic.Keys as IReadOnlyCollection<Vector3Int>;
+        IReadOnlyDictionary<Vector3Int, Direction> estimatePosDic = GetAvailablePosDic(passMassPositions);
+        // 通路上に部屋を立てられないように通路の座標のコレクションをもとに生成する
+        HashSet <Vector3Int> alreadyBuildPosSet = new (passMassPositions);
 
+        // インスペクターで割り当てた順に、生成可能なランダムな位置に部屋を生成していく
         int roomIndex = 0;
         foreach (KeyValuePair<Vector3Int, Direction> pair in estimatePosDic.OrderBy(_ => System.Guid.NewGuid()))
         {
             Vector3Int pos = pair.Key;
             Direction dir = pair.Value;
-            DungeonRoomData data = _roomDataArr[roomIndex];
-            HashSet<Vector3Int> roomRangeSet = GetRoomRangeSet(pos, dir, data.Width, data.Depth);
 
-            if (!IsAvailableRange(roomRangeSet, alreadyBuildPosSet)) continue;
+            DungeonRoomData roomData = _roomDatas[roomIndex];
+            HashSet<Vector3Int> roomRangeSet = GetRoomRangeSet(pos, dir, roomData);
+            
+            if (IsAlreadyBuilded(roomRangeSet, alreadyBuildPosSet)) continue;
 
-            if (data.IsAvailable())
+            if (roomData.IsAvailable())
             {
-                Instantiate(data.GetPrefab(), pos, _helper.ConvertToInverseRot(dir), _parent);
-                // 部屋同士が重ならないように生成した部屋の座標をコレクションに格納していく
+                GameObject prefab = roomData.GetRandomVariationPrefab();
+                Quaternion rot = _helper.ConvertToInverseRot(dir);
+                Instantiate(prefab, pos, rot, _parent);
+
+                // 部屋同士が重ならないように生成した部屋の座標を追加する
                 foreach (Vector3Int v in roomRangeSet)
+                {
                     alreadyBuildPosSet.Add(v);
+                }
 
                 _roomEntranceDic.Add(pos, dir);
             }
             else
             {
                 // 生成する部屋が無ければループを抜ける
-                if (++roomIndex > _roomDataArr.Length - 1) break;
+                if (++roomIndex >= _roomDatas.Length) break;
             }
         }
     }
 
     /// <summary>通路の側の座標を調べて、部屋を建てられる座標の辞書型として返す</summary>
-    Dictionary<Vector3Int, Direction> GetAvailablePosDic(IReadOnlyCollection<Vector3Int> massPosAll)
+    IReadOnlyDictionary<Vector3Int, Direction> GetAvailablePosDic(IReadOnlyCollection<Vector3Int> passMassPositions)
     {
         // 初期容量は通路の両脇分を想定して通路の数*2を用意しておく
-        Dictionary<Vector3Int, Direction> dic = new Dictionary<Vector3Int, Direction>(massPosAll.Count * 2);
+        Dictionary<Vector3Int, Direction> estimatePosDic = new (passMassPositions.Count * 2);
 
-        foreach (Vector3Int pos in massPosAll)
+        foreach (Vector3Int pos in passMassPositions)
         {
-            (int dirs, _) = _helper.GetNeighbourBinary(pos, massPosAll);
+            (int binary, _) = _helper.GetNeighbourBinary(pos, passMassPositions);
 
             // 各方向に通路が無ければその方向を部屋を生成可能な場所として辞書に追加する
-            if (!_helper.IsConnectFromBinary(dirs, DungeonHelper.BinaryForward)) Add(Direction.Forward);
-            if (!_helper.IsConnectFromBinary(dirs, DungeonHelper.BinaryBack))    Add(Direction.Back);
-            if (!_helper.IsConnectFromBinary(dirs, DungeonHelper.BinaryLeft))    Add(Direction.Left);
-            if (!_helper.IsConnectFromBinary(dirs, DungeonHelper.BinaryRight))   Add(Direction.Right);
+            if (!_helper.IsConnectFromBinary(binary, DungeonHelper.BinaryForward)) Add(Direction.Forward);
+            if (!_helper.IsConnectFromBinary(binary, DungeonHelper.BinaryBack))    Add(Direction.Back);
+            if (!_helper.IsConnectFromBinary(binary, DungeonHelper.BinaryLeft))    Add(Direction.Left);
+            if (!_helper.IsConnectFromBinary(binary, DungeonHelper.BinaryRight))   Add(Direction.Right);
 
-            void Add(Direction dir)
+            void Add(Direction placeDir)
             {
-                Vector3Int placePos = pos + _helper.ConvertToPos(dir);
+                Vector3Int placePos = pos + _helper.ConvertToPos(placeDir);
                 // 重複チェック
-                if (dic.ContainsKey(placePos)) return;
-                dic.Add(placePos, dir);
+                if (estimatePosDic.ContainsKey(placePos)) return;
+                estimatePosDic.Add(placePos, placeDir);
             }
         }
 
-        return dic;
+        return estimatePosDic;
     }
 
     /// <summary>生成する部屋の範囲を取得する</summary>
-    HashSet<Vector3Int> GetRoomRangeSet(Vector3Int pos, Direction dir, int width, int depth)
+    HashSet<Vector3Int> GetRoomRangeSet(Vector3Int pos, Direction dir, DungeonRoomData roomData)
     {
+        int depth = roomData.Depth;
+        int width = roomData.Width;
+
         // 繰り返し呼び出すメソッドなので何回もnewせずに空にして使いまわす
         _roomRangeSet.Clear();
 
@@ -141,15 +145,15 @@ public class DungeonRoomBuilder : MonoBehaviour
         }
     }
 
-    bool IsAvailableRange(IReadOnlyCollection<Vector3Int> roomRangeSet, 
+    bool IsAlreadyBuilded(IReadOnlyCollection<Vector3Int> roomRangeSet, 
                           IReadOnlyCollection<Vector3Int> alreadyBuildPosSet)
     {
         foreach (Vector3Int pos in roomRangeSet)
         {
             if (alreadyBuildPosSet.Contains(pos)) 
-                return false;
+                return true;
         }
 
-        return true;
+        return false;
     }
 }
