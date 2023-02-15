@@ -2246,7 +2246,7 @@ MonoBehaviour:
   _tJunctionPrefab: {fileID: 13582061540714980, guid: 3b55cf294ae1bed41af2624b619a88ec, type: 3}
   _crossPrefab: {fileID: 13582061540714980, guid: c382ad309a465224cbbf4df4f86db381, type: 3}
   _passEndPrefab: {fileID: 13582061540714980, guid: 9475f240b967ae84b8c337eb124c3dcc, type: 3}
-  _parent: {fileID: 764930541}
+  _prefabParent: {fileID: 764930541}
 --- !u!114 &5436764155890790652
 MonoBehaviour:
   m_ObjectHideFlags: 0

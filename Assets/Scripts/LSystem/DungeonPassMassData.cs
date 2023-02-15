@@ -7,41 +7,27 @@ internal class DungeonPassMassData
 {
     Direction _dir;
     ComponentShape _shape;
-    GameObject _obj;
+    GameObject _prefab;
     int _connect;
 
-    internal DungeonPassMassData(Direction dir, ComponentShape shape, GameObject obj, int connect)
+    internal DungeonPassMassData(Direction dir, ComponentShape shape, GameObject prefab, int connect)
     {
         _dir = dir;
         _shape = shape;
-        _obj = obj;
+        _prefab = prefab;
         _connect = connect;
     }
 
-    internal Direction Dir { get => _dir; }
-    internal ComponentShape Shape { get => _shape; }
-    internal GameObject Obj { get => _obj; set => _obj = value; }
-    internal int Connect 
-    { 
-        get => _connect;
-        set
-        {
-            if (value < 1 || 4 < value)
-            {
-                Debug.LogError("Ú‘±”‚Í1‚©‚ç4‚Å‚·: " + value);
-            }
-            else
-            {
-                _connect = value;
-            }
-        } 
-    }
+    internal Direction Dir => _dir;
+    internal ComponentShape Shape => _shape;
+    internal GameObject Prefab { get => _prefab; set => _prefab = value; }
+    internal int Connect { get => _connect; set => _connect = value; }
 
     internal void Replace(Direction dir, ComponentShape shape, GameObject obj, int connect)
     {
         _dir = dir;
         _shape = shape;
-        _obj = obj;
+        _prefab = obj;
         _connect = connect;
     }
 }

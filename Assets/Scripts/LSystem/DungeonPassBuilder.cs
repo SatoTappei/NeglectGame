@@ -156,7 +156,7 @@ public class DungeonPassBuilder : MonoBehaviour
             void Replace(GameObject prefab, float rotY, ComponentShape shape)
             {
                 // オブジェクトを置き換えるので以前のものを削除する
-                Destroy(_passMassDic[pos].Obj);
+                Destroy(_passMassDic[pos].Prefab);
 
                 Direction dir = _helper.ConvertToDirection(rotY);
                 GameObject go = Instantiate(prefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
@@ -205,9 +205,9 @@ public class DungeonPassBuilder : MonoBehaviour
             void Replace(GameObject prefab, float rotY)
             {
                 // オブジェクトを置き換えるので以前のものを削除する
-                Destroy(frontmassData.Obj);
+                Destroy(frontmassData.Prefab);
 
-                frontmassData.Obj = Instantiate(prefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+                frontmassData.Prefab = Instantiate(prefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
             }
         }
     }

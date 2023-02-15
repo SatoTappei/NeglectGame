@@ -6,18 +6,14 @@ using UnityEngine;
 /// </summary>
 internal class CursorParam
 {
-    Vector3Int _pos;
-    Vector3Int _dirVec;
-    int _dist;
-
     internal CursorParam(Vector3Int pos, Vector3Int dirVec, int dist)
     {
-        _pos = pos;
-        _dirVec = dirVec;
-        _dist = dist;
+        Pos = pos;
+        DirVec = dirVec;
+        Dist = dist;
     }
 
-    internal Vector3Int Pos => _pos;
-    internal Vector3Int DirVec => _dirVec;
-    internal int Dist => _dist;
+    internal Vector3Int Pos { get; }
+    internal Vector3Int DirVec { get; }
+    internal int Dist { get; }
 }
