@@ -13,7 +13,7 @@ public class GenerateObserver : MonoBehaviour
     {
         _generator.LastInstantiatedPrefab.Where(gameobject => gameobject!=null).Subscribe(gameObject => 
         {
-            Debug.Log(gameObject.name);
+            //Debug.Log(gameObject.name);
         });
     }
 

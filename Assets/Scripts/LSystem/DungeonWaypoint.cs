@@ -15,5 +15,5 @@ public class DungeonWaypoint : MonoBehaviour
     [Header("Waypoint‚ÌŽí—Þ‚ðŽ¯•Ê‚·‚é‚½‚ß‚Ì—ñ‹“Œ^")]
     [SerializeField] WaypointType _type;
 
-    internal WaypointType Type => _type;
+    public WaypointType Type => _type;
 }

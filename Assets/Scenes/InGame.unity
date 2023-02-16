@@ -820,7 +820,7 @@ GameObject:
   m_Component:
   - component: {fileID: 947083635}
   m_Layer: 0
-  m_Name: DungeonWaypointParent
+  m_Name: WaypointParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2321,7 +2321,7 @@ MonoBehaviour:
     _width: 3
     _depth: 2
     _maxQuantity: 2
-  _prefabParent: {fileID: 0}
+  _prefabParent: {fileID: 764930541}
 --- !u!114 &5436764155890790653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2352,10 +2352,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _passWaypointVisualizer: {fileID: 0}
   _roomWaypointVisualizer: {fileID: 0}
-  _dungeonWaypointParent: {fileID: 947083635}
   _passWaypointPrefab: {fileID: 257592772319012978, guid: a90e943c52f6b1c45a727941f21ea789, type: 3}
   _roomWaypointPrefab: {fileID: 4880610646160836894, guid: 908cba94c00e3db4eb3948383b120abb, type: 3}
   _exitWaypointPrefab: {fileID: 5249068700444684476, guid: 0a8df8cc625cfe142bca6840cbf931a8, type: 3}
+  _waypointParent: {fileID: 947083635}
 --- !u!1 &5632890598956847948
 GameObject:
   m_ObjectHideFlags: 0
