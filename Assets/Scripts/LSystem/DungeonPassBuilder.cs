@@ -48,7 +48,7 @@ public class DungeonPassBuilder : MonoBehaviour
     List<Vector3Int> _waypointList = new (FixPassSetCap/2);
 
     internal IReadOnlyDictionary<Vector3Int, DungeonPassMassData> PassMassDic => _passMassDic;
-    internal IReadOnlyCollection<Vector3Int> GetWaypointAll() => _waypointList;
+    internal IReadOnlyCollection<Vector3Int> WaypointList => _waypointList;
 
     internal void BuildDungeonPass(string str)
     {
