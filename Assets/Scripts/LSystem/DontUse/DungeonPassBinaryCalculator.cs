@@ -7,16 +7,16 @@ using UnityEngine;
 /// </summary>
 internal class DungeonPassBinaryCalculator
 {
-    DungeonHelper _helper;
-    const int Forward = DungeonHelper.BinaryForward;
-    const int Back = DungeonHelper.BinaryBack;
-    const int Left = DungeonHelper.BinaryLeft;
-    const int Right = DungeonHelper.BinaryRight;
+    //DungeonHelper _helper;
+    //const int Forward = DungeonHelper.BinaryForward;
+    //const int Back = DungeonHelper.BinaryBack;
+    //const int Left = DungeonHelper.BinaryLeft;
+    //const int Right = DungeonHelper.BinaryRight;
 
-    internal DungeonPassBinaryCalculator()
-    {
-        _helper = new();
-    }
+    //internal DungeonPassBinaryCalculator()
+    //{
+    //    _helper = new();
+    //}
 
     // Žg‚í‚È‚¢‚©‚à‚µ‚ê‚È‚¢
 }

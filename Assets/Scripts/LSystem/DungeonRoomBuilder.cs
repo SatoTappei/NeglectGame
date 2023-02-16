@@ -49,7 +49,7 @@ public class DungeonRoomBuilder : MonoBehaviour
             if (roomData.IsAvailable())
             {
                 GameObject prefab = roomData.GetRandomVariationPrefab();
-                Quaternion rot = _helper.ConvertToInverseRot(dir);
+                Quaternion rot = _helper.GetDirectionAngle(dir);
                 Instantiate(prefab, pos, rot, _prefabParent);
 
                 // 部屋同士が重ならないように生成した部屋の座標を追加する
@@ -78,14 +78,14 @@ public class DungeonRoomBuilder : MonoBehaviour
             (int binary, _) = _helper.GetNeighbourBinary(pos, passMassPositions);
 
             // 各方向に通路が無ければその方向を部屋を生成可能な場所として辞書に追加する
-            if (!_helper.IsConnectFromBinary(binary, DungeonHelper.BinaryForward)) Add(Direction.Forward);
-            if (!_helper.IsConnectFromBinary(binary, DungeonHelper.BinaryBack))    Add(Direction.Back);
-            if (!_helper.IsConnectFromBinary(binary, DungeonHelper.BinaryLeft))    Add(Direction.Left);
-            if (!_helper.IsConnectFromBinary(binary, DungeonHelper.BinaryRight))   Add(Direction.Right);
+            if (!_helper.IsConnectedUsingBinary(binary, DungeonHelper.BinaryForward)) Add(Direction.Forward);
+            if (!_helper.IsConnectedUsingBinary(binary, DungeonHelper.BinaryBack))    Add(Direction.Back);
+            if (!_helper.IsConnectedUsingBinary(binary, DungeonHelper.BinaryLeft))    Add(Direction.Left);
+            if (!_helper.IsConnectedUsingBinary(binary, DungeonHelper.BinaryRight))   Add(Direction.Right);
 
             void Add(Direction placeDir)
             {
-                Vector3Int placePos = pos + _helper.ConvertToPos(placeDir);
+                Vector3Int placePos = pos + _helper.GetDirectionPos(placeDir);
                 // 重複チェック
                 if (estimatePosDic.ContainsKey(placePos)) return;
                 estimatePosDic.Add(placePos, placeDir);
@@ -110,19 +110,19 @@ public class DungeonRoomBuilder : MonoBehaviour
             switch (dir)
             {
                 case Direction.Forward:
-                    center.z += i * _helper.PrefabScale;
+                    center.z += i * DungeonHelper.PrefabScale;
                     Add(center, Vector3Int.right);
                     break;
                 case Direction.Back:
-                    center.z -= i * _helper.PrefabScale;
+                    center.z -= i * DungeonHelper.PrefabScale;
                     Add(center, Vector3Int.right);
                     break;
                 case Direction.Left:
-                    center.x -= i * _helper.PrefabScale;
+                    center.x -= i * DungeonHelper.PrefabScale;
                     Add(center, Vector3Int.forward);
                     break;
                 case Direction.Right:
-                    center.x += i * _helper.PrefabScale;
+                    center.x += i * DungeonHelper.PrefabScale;
                     Add(center, Vector3Int.forward);
                     break;
             }
@@ -138,8 +138,8 @@ public class DungeonRoomBuilder : MonoBehaviour
             // 左右の幅分を追加
             for (int i = 1; i <= width / 2; i++)
             {
-                _roomRangeList.Add(center + dir * i * _helper.PrefabScale);
-                _roomRangeList.Add(center - dir * i * _helper.PrefabScale);
+                _roomRangeList.Add(center + dir * i * DungeonHelper.PrefabScale);
+                _roomRangeList.Add(center - dir * i * DungeonHelper.PrefabScale);
             }
         }
     }

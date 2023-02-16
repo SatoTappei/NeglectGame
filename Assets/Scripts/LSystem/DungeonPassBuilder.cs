@@ -66,17 +66,17 @@ public class DungeonPassBuilder : MonoBehaviour
                 // 直線の通路を生成して通路の先に基準点を移す
                 case Command.Forward:
                     GeneratePassStraight(currentPos, dirVec, passDist);
-                    currentPos = currentPos + dirVec * passDist * _helper.PrefabScale;
+                    currentPos = currentPos + dirVec * passDist * DungeonHelper.PrefabScale;
                     passDist -= DecreaseDist;
                     passDist = Mathf.Max(1, passDist);
                     break;
                 // 基準点を右に90°回転させる
                 case Command.RotRight:
-                    dirVec = _helper.GetRotate90(dirVec, isPositive: true);
+                    dirVec = _helper.GetDirectionVectorRotate90(dirVec, isPositive: true);
                     break;
                 // 基準点を左に90°回転させる
                 case Command.RotLeft:
-                    dirVec = _helper.GetRotate90(dirVec, isPositive: false);
+                    dirVec = _helper.GetDirectionVectorRotate90(dirVec, isPositive: false);
                     break;
                 // 現在の基準点をスタックに積む
                 case Command.Save:
@@ -98,12 +98,12 @@ public class DungeonPassBuilder : MonoBehaviour
     {
         for (int i = 0; i < dist; i++)
         {
-            Vector3Int pos = startPos + dirVec * i * _helper.PrefabScale;
+            Vector3Int pos = startPos + dirVec * i * DungeonHelper.PrefabScale;
 
             // 同じ座標に通路が生成されないようにチェック
             if (_passMassDic.ContainsKey(pos)) continue;
 
-            Direction dir = _helper.ConvertToDirection(dirVec);
+            Direction dir = _helper.GetDirection(dirVec);
             float rotY = _helper.GetPassStraightRotY(dir);
             GameObject go = Instantiate(_passPrefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
             int connect = _helper.GetConnectedFromShape(ComponentShape.Pass);
@@ -174,7 +174,7 @@ public class DungeonPassBuilder : MonoBehaviour
                     continue;
             }
 
-            Direction dir = _helper.ConvertToDirection(rotY);
+            Direction dir = _helper.GetDirection(rotY);
 
             // プレハブを置き換えるので元のプレハブは削除する
             Destroy(_passMassDic[pos].Prefab);
@@ -191,7 +191,7 @@ public class DungeonPassBuilder : MonoBehaviour
             Direction roomDir = pair.Value;
 
             // 出入口の座標と部屋が向いている方向から部屋の正面の座標を求める
-            Vector3Int frontPos = roomPos - _helper.ConvertToPos(roomDir);
+            Vector3Int frontPos = roomPos - _helper.GetDirectionPos(roomDir);
             DungeonPassMassData frontmassData = _passMassDic[frontPos];
 
             float rotY;
@@ -206,11 +206,9 @@ public class DungeonPassBuilder : MonoBehaviour
                     rotY = _helper.GetPassStraightRotY(roomDir);
                     prefab = Instantiate(_passPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.Pass;
-                    //Replace(_passPrefab, _helper.GetPassStraightRotY(roomDir));
                     break;
                 // 角
                 case 2:
-                    //Replace(_cornerPrefab, _helper.GetCornerRotY(roomDir, frontmassData.Dir));
                     rotY = _helper.GetCornerRotY(roomDir, frontmassData.Dir);
                     prefab = Instantiate(_cornerPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.Corner;
@@ -220,12 +218,9 @@ public class DungeonPassBuilder : MonoBehaviour
                     rotY = _helper.GetTJunctionRotY(roomDir, frontmassData.Dir, frontmassData.Shape);
                     prefab = Instantiate(_tJunctionPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.TJunction;
-                    //float rot = _helper.GetTJunctionRotY(roomDir, frontmassData.Dir, frontmassData.Shape);
-                    //Replace(_tJunctionPrefab, rot);
                     break;
                 // 十字路
                 case 4:
-                    //Replace(_crossPrefab, 0);
                     rotY = 0;
                     prefab = Instantiate(_crossPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.Cross;
@@ -235,19 +230,11 @@ public class DungeonPassBuilder : MonoBehaviour
                     continue;
             }
 
-            Direction dir = _helper.ConvertToDirection(rotY);
+            Direction dir = _helper.GetDirection(rotY);
 
             // プレハブを置き換えるので元のプレハブは削除する
             Destroy(frontmassData.Prefab);
             frontmassData.Replace(dir, shape, prefab, frontmassData.Connect);
-
-            //void Replace(GameObject prefab, float rotY)
-            //{
-            //    // オブジェクトを置き換えるので以前のものを削除する
-            //    Destroy(frontmassData.Prefab);
-
-            //    frontmassData.Prefab = Instantiate(prefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
-            //}
         }
     }
 }

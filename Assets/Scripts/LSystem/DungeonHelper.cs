@@ -7,13 +7,13 @@ using UnityEngine;
 /// </summary>
 internal class DungeonHelper
 {
-    // ダンジョン生成に使うプレハブの大きさ(TransformのScaleとは別)
-    internal readonly int PrefabScale = 3;
-    // 前後左右の4方向を表すバイナリ
-    internal const int BinaryForward = 0b1000;
-    internal const int BinaryBack    = 0b0100;
-    internal const int BinaryLeft    = 0b0010;
-    internal const int BinaryRight   = 0b0001;
+    /// <summary>ダンジョン生成に使うプレハブの大きさ(TransformのScaleとは別)</summary>
+    internal static readonly int PrefabScale = 3;
+    /// <summary>前後左右の4方向を表すバイナリ</summary>
+    internal static readonly int BinaryForward = 0b1000;
+    internal static readonly int BinaryBack    = 0b0100;
+    internal static readonly int BinaryLeft    = 0b0010;
+    internal static readonly int BinaryRight   = 0b0001;
 
     internal int GetConnectedFromShape(ComponentShape shape)
     {
@@ -24,49 +24,37 @@ internal class DungeonHelper
             case ComponentShape.Corner:    return 2;
             case ComponentShape.TJunction: return 3;
             case ComponentShape.Cross:     return 4;
+            default:
+                Debug.LogError("値が不正です: " + shape);
+                return -1;
         }
-
-        return -1;
-    }
-
-    /// <summary>隣にオブジェクトが存在する方向をまとめて返す</summary>
-    internal HashSet<Direction> GetNeighbour(Vector3Int pos, ICollection<Vector3Int> coll)
-    {
-        HashSet<Direction> dirSet = new HashSet<Direction>(4);
-
-        if (coll.Contains(pos + Vector3Int.forward * PrefabScale)) dirSet.Add(Direction.Forward);
-        if (coll.Contains(pos + Vector3Int.back * PrefabScale))    dirSet.Add(Direction.Back);
-        if (coll.Contains(pos + Vector3Int.right * PrefabScale))   dirSet.Add(Direction.Right);
-        if (coll.Contains(pos + Vector3Int.left * PrefabScale))    dirSet.Add(Direction.Left);
-
-        return dirSet;
     }
 
     /// <summary>
-    /// 隣にオブジェクトがある方向と接続数をバイナリで返す
-    /// 指定された方向が含まれているかどうかの判定はこちらを使う
+    /// どの方向にいくつ接続されているかの判定はわざわざコレクションを生成しなくても良い
     /// </summary>
     /// <returns>0b前後左右, 接続数</returns>
-    internal (int, int) GetNeighbourBinary(Vector3Int pos, IReadOnlyCollection<Vector3Int> coll)
+    internal (int, int) GetNeighbourBinary(Vector3Int centerPos, IReadOnlyCollection<Vector3Int> positions)
     {
         int binary = 0b0000;
         int count = 0;
-        if (coll.Contains(pos + Vector3Int.forward * PrefabScale))
+
+        if (positions.Contains(centerPos + Vector3Int.forward * PrefabScale))
         {
             binary += BinaryForward;
             count++;
         }
-        if (coll.Contains(pos + Vector3Int.back * PrefabScale))
+        if (positions.Contains(centerPos + Vector3Int.back * PrefabScale))
         {
             binary += BinaryBack;
             count++;
         }
-        if (coll.Contains(pos + Vector3Int.left * PrefabScale))
+        if (positions.Contains(centerPos + Vector3Int.left * PrefabScale))
         {
             binary += BinaryLeft;
             count++;
         }
-        if (coll.Contains(pos + Vector3Int.right * PrefabScale))
+        if (positions.Contains(centerPos + Vector3Int.right * PrefabScale))
         {
             binary += BinaryRight;
             count++;
@@ -75,46 +63,50 @@ internal class DungeonHelper
         return (binary, count);
     }
 
-    internal bool IsConnectFromBinary(int dirs, int BinaryDir) => (dirs & BinaryDir) == BinaryDir;
+    internal bool IsConnectedUsingBinary(int neighbour, int center) => (neighbour & center) == center;
 
-    internal Vector3Int ConvertToPos(Direction dir)
+    internal Vector3Int GetDirectionPos(Direction dir)
     {
         switch (dir)
         {
-            case Direction.Forward:
-                return Vector3Int.forward * PrefabScale;
-            case Direction.Back:
-                return Vector3Int.back * PrefabScale;
-            case Direction.Left:
-                return Vector3Int.left * PrefabScale;
-            case Direction.Right:
-                return Vector3Int.right * PrefabScale;
+            case Direction.Forward: return Vector3Int.forward * PrefabScale;
+            case Direction.Back:    return Vector3Int.back * PrefabScale;
+            case Direction.Left:    return Vector3Int.left * PrefabScale;
+            case Direction.Right:   return Vector3Int.right * PrefabScale;
             default:
-                Debug.LogError("列挙型Directionで定義されていない値です。: " + dir);
+                Debug.LogError("列挙型Directionで定義されていない値です: " + dir);
                 return Vector3Int.zero;
         }
     }
 
-    /// <summary>方向と逆の回転を取得する</summary>
-    internal Quaternion ConvertToInverseRot(Direction dir)
+    internal Quaternion GetDirectionAngle(Direction dir)
     {
         switch (dir)
         {
-            case Direction.Forward:
-                return Quaternion.Euler(0, 0, 0);
-            case Direction.Back:
-                return Quaternion.Euler(0, 180, 0);
-            case Direction.Left:
-                return Quaternion.Euler(0, -90, 0);
-            case Direction.Right:
-                return Quaternion.Euler(0, 90, 0);
+            case Direction.Forward: return Quaternion.Euler(0, 0, 0);
+            case Direction.Back:    return Quaternion.Euler(0, 180, 0);
+            case Direction.Left:    return Quaternion.Euler(0, -90, 0);
+            case Direction.Right:   return Quaternion.Euler(0, 90, 0);
             default:
-                Debug.LogError("列挙型Directionで定義されていない値です。: " + dir);
+                Debug.LogError("列挙型Directionで定義されていない値です: " + dir);
                 return Quaternion.identity;
         }
     }
 
-    internal Direction ConvertToDirection(Vector3Int dirVec)
+    internal Direction GetDirection(float rotY)
+    {
+        if      (rotY == 0)   return GetDirection(Vector3Int.forward);
+        else if (rotY == 180) return GetDirection(Vector3Int.back);
+        else if (rotY == -90) return GetDirection(Vector3Int.left);
+        else if (rotY == 90)  return GetDirection(Vector3Int.right);
+        else
+        {
+            Debug.LogError("floatの値が不正です: " + rotY);
+            return Direction.Forward;
+        }
+    }
+
+    internal Direction GetDirection(Vector3Int dirVec)
     {
         if      (dirVec == Vector3Int.forward) return Direction.Forward;
         else if (dirVec == Vector3Int.back)    return Direction.Back;
@@ -127,62 +119,87 @@ internal class DungeonHelper
         }
     }
 
-    internal Direction ConvertToDirection(float rotY)
-    {
-        if      (rotY == 0)   return Direction.Forward;
-        else if (rotY == 180) return Direction.Back;
-        else if (rotY == -90) return Direction.Left;
-        else if (rotY == 90)  return Direction.Right;
-        else
-        {
-            Debug.LogError("floatの値が不正です: " + rotY);
-            return Direction.Forward;
-        }
-    }
-
     /// <summary>渡された方向ベクトルから90度回転させた方向ベクトルを返す</summary>
     /// <param name="isPositive">trueだと前右後左の時計回り、falseだと反時計回り</param>
-    internal Vector3Int GetRotate90(Vector3Int dirVec, bool isPositive)
+    internal Vector3Int GetDirectionVectorRotate90(Vector3Int dirVec, bool isPositive)
     {
         if      (dirVec == Vector3Int.forward) return isPositive ? Vector3Int.right : Vector3Int.left;
         else if (dirVec == Vector3Int.right)   return isPositive ? Vector3Int.back : Vector3Int.forward;
         else if (dirVec == Vector3Int.back)    return isPositive ? Vector3Int.left : Vector3Int.right;
         else if (dirVec == Vector3Int.left)    return isPositive ? Vector3Int.forward : Vector3Int.back;
+        else
+        {
+            Debug.LogError("上下左右以外の角度です: " + dirVec);
+            return Vector3Int.zero;
+        }
+    }
 
-        Debug.LogError("上下左右以外の角度です。: " + dirVec);
-        return Vector3Int.zero;
+    internal bool IsPassStraight(int dirs)
+    {
+        if (IsConnectedUsingBinary(dirs, BinaryForward) && IsConnectedUsingBinary(dirs, BinaryBack) ||
+            IsConnectedUsingBinary(dirs, BinaryLeft) && IsConnectedUsingBinary(dirs, BinaryRight))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     internal float GetPassStraightRotY(Direction roomDir)
     {
-        if (roomDir == Direction.Left ||
-           roomDir == Direction.Right)
+        if (roomDir == Direction.Left || roomDir == Direction.Right)
         {
             return 90;
         }
-
-        return 0;
+        else
+        {
+            return 0;
+        }
     }
 
     internal float GetCornerRotY(Direction roomDir, Direction frontMassDir)
     {
-        if ((roomDir == Direction.Forward && frontMassDir == Direction.Right) ||
-           (roomDir == Direction.Left && frontMassDir == Direction.Back))
+        if ((roomDir == Direction.Forward && frontMassDir == Direction.Right) || 
+            (roomDir == Direction.Left && frontMassDir == Direction.Back))
         {
             return 90;
         }
         else if ((roomDir == Direction.Back && frontMassDir == Direction.Left) ||
-                (roomDir == Direction.Right && frontMassDir == Direction.Forward))
+                 (roomDir == Direction.Right && frontMassDir == Direction.Forward))
         {
             return -90;
         }
         else if ((roomDir == Direction.Forward && frontMassDir == Direction.Left) ||
-                (roomDir == Direction.Right && frontMassDir == Direction.Back))
+                 (roomDir == Direction.Right && frontMassDir == Direction.Back))
         {
             return 180;
         }
+        else
+        {
+            return 0;
+        }
+    }
 
-        return 0;
+    internal float GetCornerRotY(int dirs)
+    {
+        if (IsConnectedUsingBinary(dirs, BinaryForward) && IsConnectedUsingBinary(dirs, BinaryRight))
+        {
+            return 180;
+        }
+        else if (IsConnectedUsingBinary(dirs, BinaryForward) && IsConnectedUsingBinary(dirs, BinaryLeft))
+        {
+            return 90;
+        }
+        else if (IsConnectedUsingBinary(dirs, BinaryBack) && IsConnectedUsingBinary(dirs, BinaryRight))
+        {
+            return -90;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     internal float GetTJunctionRotY(Direction roomDir, Direction frontMassDir, ComponentShape frontMassShape)
@@ -190,15 +207,15 @@ internal class DungeonHelper
         // 通路に部屋が隣接して生成されるパターン
         if (frontMassShape == ComponentShape.Pass)
         {
-            if (roomDir == Direction.Forward) return 180;
-            else if (roomDir == Direction.Left) return 90;
-            else if (roomDir == Direction.Right) return -90;
+            if      (roomDir == Direction.Forward) return 180;
+            else if (roomDir == Direction.Left)    return 90;
+            else if (roomDir == Direction.Right)   return -90;
         }
         // 通路の端で部屋2つが挟み込むパターン
         else if (frontMassShape == ComponentShape.PassEnd)
         {
-            if (frontMassDir == Direction.Back) return 180;
-            else if (frontMassDir == Direction.Left) return -90;
+            if      (frontMassDir == Direction.Back)  return 180;
+            else if (frontMassDir == Direction.Left)  return -90;
             else if (frontMassDir == Direction.Right) return 90;
         }
         // 通路の角に部屋が生成されるパターン
@@ -227,50 +244,35 @@ internal class DungeonHelper
         return 0;
     }
 
-    // ばいなり計算機クラス
-    const int Forward = DungeonHelper.BinaryForward;
-    const int Back = DungeonHelper.BinaryBack;
-    const int Left = DungeonHelper.BinaryLeft;
-    const int Right = DungeonHelper.BinaryRight;
+    internal float GetTJunctionRotY(int dirs)
+    {
+        if (IsConnectedUsingBinary(dirs, BinaryForward) && 
+            IsConnectedUsingBinary(dirs, BinaryBack) && 
+            IsConnectedUsingBinary(dirs, BinaryLeft))
+        {
+            return 90;
+        }
+        else if (IsConnectedUsingBinary(dirs, BinaryForward) && 
+                 IsConnectedUsingBinary(dirs, BinaryBack) && 
+                 IsConnectedUsingBinary(dirs, BinaryRight))
+        {
+            return -90;
+        }
+        else if (IsConnectedUsingBinary(dirs, BinaryForward) && 
+                 IsConnectedUsingBinary(dirs, BinaryLeft) && 
+                 IsConnectedUsingBinary(dirs, BinaryRight))
+        {
+            return 180;
+        }
 
-    bool IsConnect(int dirs, int BinaryDir) => /*_helper.*/IsConnectFromBinary(dirs, BinaryDir);
+        return 0;
+    }
 
     internal float GetPassEndRotY(int dirs)
     {
-        if (IsConnect(dirs, Forward)) return 180;
-        else if (IsConnect(dirs, Left)) return 90;
-        else if (IsConnect(dirs, Right)) return -90;
-
-        return 0;
-    }
-
-    internal bool IsPassStraight(int dirs)
-    {
-        if (IsConnect(dirs, Forward) && IsConnect(dirs, Back) ||
-            IsConnect(dirs, Left) && IsConnect(dirs, Right))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    internal float GetCornerRotY(int dirs)
-    {
-        if (IsConnect(dirs, Forward) && IsConnect(dirs, Right)) return 180;
-        else if (IsConnect(dirs, Forward) && IsConnect(dirs, Left)) return 90;
-        else if (IsConnect(dirs, Back) && IsConnect(dirs, Right)) return -90;
-
-        return 0;
-    }
-
-    internal float GetTJunctionRotY(int dirs)
-    {
-        if (IsConnect(dirs, Forward) && IsConnect(dirs, Back) && IsConnect(dirs, Left)) return 90;
-        else if (IsConnect(dirs, Forward) && IsConnect(dirs, Back) && IsConnect(dirs, Right)) return -90;
-        else if (IsConnect(dirs, Forward) && IsConnect(dirs, Left) && IsConnect(dirs, Right)) return 180;
+        if      (IsConnectedUsingBinary(dirs, BinaryForward)) return 180;
+        else if (IsConnectedUsingBinary(dirs, BinaryLeft)) return 90;
+        else if (IsConnectedUsingBinary(dirs, BinaryRight)) return -90;
 
         return 0;
     }
