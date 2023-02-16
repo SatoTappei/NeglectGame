@@ -27,7 +27,6 @@ public class Generator : MonoBehaviour
     [Inject]
     readonly ISubscriber<GeneratorControl> _subscriber;
 
-    [SerializeField] GenerateDecorator _generateDecorator;
     [Header("生成するプレハブ")]
     [SerializeField] GameObject[] _prefabs;
     [Header("生成する間隔")]
@@ -39,6 +38,13 @@ public class Generator : MonoBehaviour
     /// CancellationTokenSourceをこちら側で保持しておく
     /// </summary>
     CancellationTokenSource _tokenSource;
+    /// <summary>
+    /// オブジェクトを生成したタイミングで
+    /// 外部からそのオブジェクトを初期化できるように保持しておく
+    /// </summary>
+    ReactiveProperty<GameObject> _lastInstantiatedPrefab = new ();
+
+    public IReadOnlyReactiveProperty<GameObject> LastInstantiatedPrefab => _lastInstantiatedPrefab;
 
     void Start()
     {
@@ -63,8 +69,7 @@ public class Generator : MonoBehaviour
                     int r = UnityEngine.Random.Range(0, _prefabs.Length);
 
                     // 生成した際の初期化処理を別のコンポーネントに委任する
-                    GameObject go = Instantiate(_prefabs[r]);
-                    _generateDecorator?.Decorate(go);
+                    _lastInstantiatedPrefab.Value  = Instantiate(_prefabs[r]);
                 }
                 await UniTask.Delay(TimeSpan.FromSeconds(_interval), cancellationToken: tokenSource.Token);
             }

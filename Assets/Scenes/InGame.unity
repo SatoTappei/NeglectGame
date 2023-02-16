@@ -169,7 +169,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecc80cee475f3204f90ea82b415da059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _generateDecorator: {fileID: 30291597}
   _prefabs:
   - {fileID: 2670713393931791704, guid: 68f5e0de1d21ee64d929742257110a40, type: 3}
   - {fileID: 6540620725961212598, guid: 3b3f957bd5df76a499507e479a10fafb, type: 3}
@@ -204,6 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b2242001607b1e4788b4c665c41d8c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _generator: {fileID: 30291595}
 --- !u!1 &149537784
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,6 +810,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 929334112}
   m_CullTransparentMesh: 1
+--- !u!1 &947083634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 947083635}
+  m_Layer: 0
+  m_Name: DungeonWaypointParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &947083635
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 947083634}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1086934700
 GameObject:
   m_ObjectHideFlags: 0
@@ -2319,8 +2350,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 806653dd8ec5d994081e7d2565536568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _passWaypointPrefab: {fileID: 7079537059908555760, guid: 8db082d0e0119224ca2ba8657e8efcb0, type: 3}
-  _roomEntranceWaypointPrefab: {fileID: 7079537059908555760, guid: 162eab2e1abafae479328c17bf89a33c, type: 3}
+  _passWaypointVisualizer: {fileID: 0}
+  _roomWaypointVisualizer: {fileID: 0}
+  _dungeonWaypointParent: {fileID: 947083635}
+  _passWaypointPrefab: {fileID: 257592772319012978, guid: a90e943c52f6b1c45a727941f21ea789, type: 3}
+  _roomWaypointPrefab: {fileID: 4880610646160836894, guid: 908cba94c00e3db4eb3948383b120abb, type: 3}
+  _exitWaypointPrefab: {fileID: 5249068700444684476, guid: 0a8df8cc625cfe142bca6840cbf931a8, type: 3}
 --- !u!1 &5632890598956847948
 GameObject:
   m_ObjectHideFlags: 0
@@ -2380,7 +2415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb48f68b53c48242bbe80c19d8b2540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _testMassVisualizer: {fileID: 0}
+  _testMassVisualizer: {fileID: 7079537059908555760, guid: 3f32c1cb6549c7f4782bfbbed5d4b574, type: 3}
   _movableLayer:
     serializedVersion: 2
     m_Bits: 64

@@ -8,7 +8,7 @@ public class DungeonBuilder : MonoBehaviour
     [SerializeField] LSystem _lSystem;
     [SerializeField] DungeonPassBuilder _dungeonPassBuilder;
     [SerializeField] DungeonRoomBuilder _dungeonRoomBuilder;
-    [SerializeField] DungeonWaypointVisualizer _dungeonWaypointBuilder;
+    [SerializeField] DungeonWaypointBuilder _dungeonWaypointBuilder;
 
     /* 
      *  ƒ_ƒ“ƒWƒ‡ƒ“¶¬‚Ìƒ‹[ƒ‹
@@ -30,10 +30,9 @@ public class DungeonBuilder : MonoBehaviour
 
         _dungeonPassBuilder.FixConnectRoomEntrance(roomEntranceDic);
 
-        // \š˜H,Tš˜H,•”‰®‚Ì“üŒû‚ÉWayPoint‚ğ•~‚­
         var passWaypointList = _dungeonPassBuilder.WaypointList;
         var roomWaypointList = _dungeonRoomBuilder.RoomEntranceDic.Keys;
-        _dungeonWaypointBuilder.VisualizePassWaypoint(passWaypointList);
-        _dungeonWaypointBuilder.VisualizeRoomWaypoint(roomWaypointList);
+        _dungeonWaypointBuilder.BuildPassWaypoint(passWaypointList);
+        _dungeonWaypointBuilder.BuildRoomWaypoint(roomWaypointList);
     }
 }
