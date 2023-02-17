@@ -10,7 +10,7 @@ public class ActorController : MonoBehaviour, IStateControl
 {
     readonly string SystemObjectTag = "GameController";
 
-    [SerializeField] ActorMove _actorAction;
+    [SerializeField] ActorPathfindingMove _actorAction;
     [SerializeField] ActorAnimation _actorAnimation;
     [SerializeField] ActorHpControl _actorHpControl;
     [SerializeField] ActorSight _actorSight;
@@ -19,7 +19,7 @@ public class ActorController : MonoBehaviour, IStateControl
 
     ActorControlHelper _actorControlHelper = new ActorControlHelper();
     ITargetSelectable _targetSelectable;
-    IPathGetable _pathGetable;
+    IPathfinding _pathGetable;
     StateID _nextState = StateID.Non;
     /// <summary>
     /// 各ステートに遷移した時にfalseになり、そのステートの行動が終わったら
@@ -54,7 +54,7 @@ public class ActorController : MonoBehaviour, IStateControl
     {
         GameObject system = GameObject.FindGameObjectWithTag(SystemObjectTag);
         _targetSelectable = system.GetComponent<ITargetSelectable>();
-        _pathGetable = system.GetComponent<IPathGetable>();
+        _pathGetable = system.GetComponent<IPathfinding>();
     }
 
     void IStateControl.PlayAnim(StateID current, StateID next)
@@ -94,7 +94,7 @@ public class ActorController : MonoBehaviour, IStateControl
 
     void MoveTo(Vector3 targetPos, UnityAction<Stack<Vector3>, UnityAction> moveMethod)
     {
-        Stack<Vector3> pathStack = _pathGetable.GetPathStack(transform.position, targetPos);
+        Stack<Vector3> pathStack = _pathGetable.GetPathToWaypoint(transform.position, targetPos);
 
         // ターゲットへの移動が完了したタイミングでisTransitionableがtrueになることで
         // _nextStateへの遷移が可能になる

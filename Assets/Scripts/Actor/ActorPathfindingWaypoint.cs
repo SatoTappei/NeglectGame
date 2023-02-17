@@ -2,24 +2,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 各キャラクターが経路探索に使用するWaypointを管理するコンポーネント
+/// 各キャラクターが経路探索に使用するWaypointを管理するクラス
 /// </summary>
-public class ActorPathfindingWaypoint : MonoBehaviour
+public class ActorPathfindingWaypoint
 {
     IReadOnlyDictionary<WaypointType, List<Vector3>> _waypointDic;
 
-    public void Init(IReadOnlyDictionary<WaypointType, List<Vector3>> waypointDic)
+    public ActorPathfindingWaypoint(IReadOnlyDictionary<WaypointType, List<Vector3>> waypointDic)
     {
-        if (_waypointDic != null)
-        {
-            Debug.LogWarning("既に初期化済みです");
-        }
-        else
-        {
-            _waypointDic = waypointDic;
-        }
+        _waypointDic = waypointDic;
     }
 
+    // TODO:同じウェイポイントを連続で獲得してしまうのを避ける
     public Vector3 GetPassWaypoint()
     {
         List<Vector3> list = _waypointDic[WaypointType.Pass]; 

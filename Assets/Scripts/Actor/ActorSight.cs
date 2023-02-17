@@ -1,13 +1,14 @@
 using UnityEngine;
+using UniRx;
 
 /// <summary>
 /// キャラクターの視界を制御するコンポーネント
 /// </summary>
 public class ActorSight : MonoBehaviour
 {
-    // 周囲の視界に映るオブジェクトの数に応じて増やす
+    /// <summary>視界に映る周囲のオブジェクト数に応じて設定する</summary>
     static readonly int ResultsLength = 4;
-    // キャラクターモデルの頭上からRayを飛ばせるように設定する
+    /// <summary>頭上からRayを飛ばすためにキャラクターのモデルの高さに応じて設定する</summary>
     static readonly float ActorModelHeight = 1.5f;
 
     [Header("視線のRayを飛ばすキャラクターモデル")]
@@ -27,13 +28,8 @@ public class ActorSight : MonoBehaviour
 
     internal SightableObject CurrentInSightObject => _currentInSightObject;
 
-    void Start()
-    {
-        StartInSight();
-    }
-
-    void StartInSight() => InvokeRepeating(nameof(InSightObject), 0, _updateDuration);
-    void StopInSight() { /* 視界の更新を止める処理 */ }
+    public void StartInSight() => InvokeRepeating(nameof(InSightObject), 0, _updateDuration);
+    public void StopInSight() { /* 視界の更新を止める処理 */ }
     internal bool IsFindInSight() => _currentInSightObject != null;
 
     /// <summary>複数のオブジェクトを見つけた場合は最初の1つが返る</summary>

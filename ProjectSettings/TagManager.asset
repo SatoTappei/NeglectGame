@@ -6,6 +6,8 @@ TagManager:
   tags:
   - HighPenaltyCost
   - Weapon
+  - WaypointSystem
+  - PathfindingSystem
   layers:
   - Default
   - TransparentFX

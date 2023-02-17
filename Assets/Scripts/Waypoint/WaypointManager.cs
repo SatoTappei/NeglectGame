@@ -6,7 +6,7 @@ using System;
 /// 経路探索に使用するWaypointを管理するコンポーネント
 /// 各キャラクターはこのクラスからWaypointの一覧を取得し、キャラクター毎にWaypointを管理する
 /// </summary>
-public class WaypointManager : MonoBehaviour
+public class WaypointManager : MonoBehaviour, IWaypointManage
 {
     static readonly int DicCapacity = Enum.GetValues(typeof(WaypointType)).Length;
 
@@ -17,7 +17,7 @@ public class WaypointManager : MonoBehaviour
 
     // TODO:ValueのListを読み取り専用にキャストするとキャスト不可能エラーが出るのをどうにかする
     //      Listを読み取り専用で渡していないのでDictionaryを読み取り専用にしても意味がない
-    public IReadOnlyDictionary<WaypointType, List<Vector3>> WaypointDic => _waypointDic;
+    IReadOnlyDictionary<WaypointType, List<Vector3>> IWaypointManage.WaypointDic => _waypointDic;
 
     /// <summary>
     /// WayPointの数や位置が更新されたタイミングで呼ぶことで更新可能

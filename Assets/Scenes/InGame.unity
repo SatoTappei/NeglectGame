@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 81955032}
   m_Layer: 0
   m_Name: Waypoint
-  m_TagString: Untagged
+  m_TagString: WaypointSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1541,6 +1541,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pathfindingGrid: {fileID: 5632890598956847952}
+  _waypointManager: {fileID: 81955032}
   _dungeonBuilder: {fileID: 5436764155890790653}
   _inGameTimer: {fileID: 1968672613}
   _generator: {fileID: 30291595}
@@ -2414,7 +2415,7 @@ GameObject:
   - component: {fileID: 5632890598956847952}
   m_Layer: 0
   m_Name: Pathfinding
-  m_TagString: Untagged
+  m_TagString: PathfindingSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2459,7 +2460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb48f68b53c48242bbe80c19d8b2540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _testMassVisualizer: {fileID: 7079537059908555760, guid: 3f32c1cb6549c7f4782bfbbed5d4b574, type: 3}
+  _testMassVisualizer: {fileID: 0}
   _movableLayer:
     serializedVersion: 2
     m_Bits: 64

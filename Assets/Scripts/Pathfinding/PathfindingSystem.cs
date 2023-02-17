@@ -1,17 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
-using System;
+using UnityEngine;
 
 /// <summary>
 /// A*を用いて経路探索を行うコンポーネント
 /// </summary>
-public class PathfindingSystem : MonoBehaviour, IPathGetable
+public class PathfindingSystem : MonoBehaviour, IPathfinding
 {
     [SerializeField] PathfindingGrid _pathfindingGrid;
 
-    Stack<Vector3> IPathGetable.GetPathStack(Vector3 startPos, Vector3 targetPos)
+    Stack<Vector3> IPathfinding.GetPathToWaypoint(Vector3 startPos, Vector3 targetPos)
     {
         return Pathfinding(startPos, targetPos);
     }

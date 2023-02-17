@@ -447,7 +447,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2670713393931791705}
   - component: {fileID: 8285164219684680550}
-  - component: {fileID: -3966225005915305820}
   m_Layer: 0
   m_Name: Actor_Boy
   m_TagString: Untagged
@@ -483,18 +482,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29005487558134647980fe79709c3956, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-3966225005915305820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2670713393931791704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7478525cd2e771049a83227229cb7130, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _model: {fileID: 4038228652531750984}
+  _moveSpeed: 3
+  _runSpeedMag: 2
 --- !u!1 &3116145210212608323
 GameObject:
   m_ObjectHideFlags: 0
