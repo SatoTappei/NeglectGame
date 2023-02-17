@@ -295,6 +295,7 @@ GameObject:
   m_Component:
   - component: {fileID: 908045884462929549}
   - component: {fileID: -6157919514075864504}
+  - component: {fileID: 5242753772126003136}
   m_Layer: 0
   m_Name: Actor_Princess
   m_TagString: Untagged
@@ -328,6 +329,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 29005487558134647980fe79709c3956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5242753772126003136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908045884462929550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7478525cd2e771049a83227229cb7130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &976946184240705824

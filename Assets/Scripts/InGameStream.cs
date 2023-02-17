@@ -9,6 +9,7 @@ using UnityEngine;
 public class InGameStream : MonoBehaviour
 {
     [SerializeField] PathfindingGrid _pathfindingGrid;
+    [SerializeField] WaypointManager _waypointManager;
     [SerializeField] DungeonBuilder _dungeonBuilder;
     [SerializeField] InGameTimer _inGameTimer;
     [SerializeField] Generator _generator;
@@ -53,6 +54,9 @@ public class InGameStream : MonoBehaviour
 
         // キャラクター生成時にはグリッドの情報が必要なので先に生成する必要がある
         _pathfindingGrid.GenerateGrid();
+
+        // DungeonBuilderで生成したWaypointを取得して経路探索に使えるようにする
+        _waypointManager.RegisterWaypoint();
 
         // インゲームのタイマーと冒険者の生成はかみ合っていない
         // インゲームのタイマーのスタートと同時に敵の生成を行うGeneratorも起動する

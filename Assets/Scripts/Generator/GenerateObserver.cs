@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -8,19 +9,21 @@ using UnityEngine;
 public class GenerateObserver : MonoBehaviour
 {
     [SerializeField] Generator _generator;
+    [Header("参照したい処理を持つコンポーネントへの参照")]
+    [SerializeField] WaypointManager _waypointManager;
 
     void Awake()
     {
-        _generator.LastInstantiatedPrefab.Where(gameobject => gameobject!=null).Subscribe(gameObject => 
+        // Awake()とEnabled()の後、Start()の前に呼ばれる
+        _generator.LastInstantiatedPrefab.Where(gameobject => gameobject != null).Subscribe(gameObject =>
         {
-            //Debug.Log(gameObject.name);
-        });
-    }
+            // 経路探索に使うWaypointを渡す
+            IReadOnlyDictionary<WaypointType, List<Vector3>> dic = _waypointManager.WaypointDic;
+            gameObject.GetComponent<ActorPathfindingWaypoint>().Init(dic);
 
-    /// <summary>Awake()とOnEnable()より後、Start()の前に呼ばれる</summary>
-    public void Decorate(GameObject instance)
-    {
-        // 位置を階段にする
-        // UIに情報を引き渡す
+            // 位置を階段にする
+
+            // UIに情報を引き渡す
+        });
     }
 }

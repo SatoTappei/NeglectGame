@@ -10,7 +10,7 @@ public enum WaypointType
 /// <summary>
 /// ダンジョンのWaypointとして機能させるコンポーネント
 /// </summary>
-public class DungeonWaypoint : MonoBehaviour
+public class WaypointTag : MonoBehaviour
 {
     [Header("Waypointの種類を識別するための列挙型")]
     [SerializeField] WaypointType _type;
