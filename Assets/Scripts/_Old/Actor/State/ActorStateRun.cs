@@ -1,9 +1,9 @@
 /// <summary>
 /// ターゲットに向かって走って移動するステートのクラス
 /// </summary>
-internal class ActorStateRun : ActorStateBase
+internal class ActorStateRun : ActorStateBaseOld
 {
-    internal ActorStateRun(ActorStateMachine stateMachine)
+    internal ActorStateRun(ActorStateMachineOld stateMachine)
     : base(stateMachine) { }
 
     protected override void Enter()
@@ -14,19 +14,19 @@ internal class ActorStateRun : ActorStateBase
     protected override void Stay()
     {
         if (_stateMachine.StateControl.IsDead() &&
-            _stateMachine.StateControl.IsEqualNextState(StateID.Dead))
+            _stateMachine.StateControl.IsEqualNextState(StateIDOld.Dead))
         {
-            ChangeState(StateID.Dead);
+            ChangeState(StateIDOld.Dead);
         }
         else if (_stateMachine.StateControl.IsTransitionable() &&
-                 _stateMachine.StateControl.IsEqualNextState(StateID.Attack))
+                 _stateMachine.StateControl.IsEqualNextState(StateIDOld.Attack))
         {
-            ChangeState(StateID.Attack);
+            ChangeState(StateIDOld.Attack);
         }
         else if (_stateMachine.StateControl.IsTransitionable() &&
-                 _stateMachine.StateControl.IsEqualNextState(StateID.Joy))
+                 _stateMachine.StateControl.IsEqualNextState(StateIDOld.Joy))
         {
-            ChangeState(StateID.Joy);
+            ChangeState(StateIDOld.Joy);
         }
     }
 

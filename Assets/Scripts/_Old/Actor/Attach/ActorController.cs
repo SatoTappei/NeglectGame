@@ -20,7 +20,7 @@ public class ActorController : MonoBehaviour, IStateControl
     ActorControlHelper _actorControlHelper = new ActorControlHelper();
     ITargetSelectable _targetSelectable;
     IPathfinding _pathGetable;
-    StateID _nextState = StateID.Non;
+    StateIDOld _nextState = StateIDOld.Non;
     /// <summary>
     /// 各ステートに遷移した時にfalseになり、そのステートの行動が終わったら
     /// trueになってステートからの遷移可能になる
@@ -57,7 +57,7 @@ public class ActorController : MonoBehaviour, IStateControl
         _pathGetable = system.GetComponent<IPathfinding>();
     }
 
-    void IStateControl.PlayAnim(StateID current, StateID next)
+    void IStateControl.PlayAnim(StateIDOld current, StateIDOld next)
     {
         string stateName = _actorControlHelper.StateIDToString(current);
 
@@ -73,7 +73,7 @@ public class ActorController : MonoBehaviour, IStateControl
 
     void IStateControl.MoveToRandomWaypoint()
     {
-        _nextState = StateID.LookAround;
+        _nextState = StateIDOld.LookAround;
         MoveTo(_targetSelectable.GetNextWaypointPos(), _actorAction.MoveFollowPath);
     }
 
@@ -81,14 +81,14 @@ public class ActorController : MonoBehaviour, IStateControl
     {
         GameObject inSightObject = _actorSight.CurrentInSightObject.gameObject;
         SightableType target = inSightObject.GetComponent<SightableObject>().SightableType;
-        _nextState = target == SightableType.Enemy ? StateID.Attack : StateID.Joy;
+        _nextState = target == SightableType.Enemy ? StateIDOld.Attack : StateIDOld.Joy;
 
         MoveTo(inSightObject.transform.position, _actorAction.RunFollowPath);
     }
 
     void IStateControl.MoveToExit()
     {
-        _nextState = StateID.LookAround;
+        _nextState = StateIDOld.LookAround;
         MoveTo(_targetSelectable.GetExitPos(), _actorAction.MoveFollowPath);
     }
 
@@ -107,7 +107,7 @@ public class ActorController : MonoBehaviour, IStateControl
 
     void IStateControl.CancelMoving() => _actorAction.MoveCancel();
 
-    bool IStateControl.IsEqualNextState(StateID state) => _nextState == state;
+    bool IStateControl.IsEqualNextState(StateIDOld state) => _nextState == state;
 
     bool IStateControl.IsTransitionable() => _isTransitionable;
 
@@ -117,7 +117,7 @@ public class ActorController : MonoBehaviour, IStateControl
     {
         if (_isCompleted)
         {
-            _nextState = StateID.Escape;
+            _nextState = StateIDOld.Escape;
             return true;
         }
 
@@ -133,7 +133,7 @@ public class ActorController : MonoBehaviour, IStateControl
             if (inSightObject.HasWitness()) return false;
             inSightObject.SetWitness(gameObject);
 
-            _nextState = StateID.Panic;
+            _nextState = StateIDOld.Panic;
             return true;
         }
 

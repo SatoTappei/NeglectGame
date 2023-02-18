@@ -84,6 +84,6 @@ public class Generator : MonoBehaviour
 
     void OnDestroy()
     {
-        _tokenSource.Cancel();
+        _tokenSource?.Cancel();
     }
 }

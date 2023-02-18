@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
-using System;
 
 /// <summary>
 /// 経路探索をした結果を用いてキャラクターを移動させるクラス
@@ -43,6 +42,8 @@ public class ActorPathfindingMove
     async UniTaskVoid MoveAsync(Stack<Vector3> stack, float speed, UnityAction callBack)
     {
         _token = new CancellationTokenSource();
+
+        CancellationToken v = _actor.GetCancellationTokenOnDestroy();
 
         foreach (Vector3 nextPos in stack)
         {

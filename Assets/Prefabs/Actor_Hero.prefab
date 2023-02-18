@@ -1579,6 +1579,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7827161858156998821}
+  - component: {fileID: -1069038614329203367}
   - component: {fileID: -1613357774641133722}
   m_Layer: 8
   m_Name: Actor_Hero
@@ -1603,6 +1604,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-1069038614329203367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6540620725961212598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ee5fff7e426f4141ac44019ea54a7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &-1613357774641133722
 MonoBehaviour:
   m_ObjectHideFlags: 0

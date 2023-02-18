@@ -1,22 +1,22 @@
 /// <summary>
 /// 目標を発見した時のアニメーションを行うステートのクラス
 /// </summary>
-internal class ActorStatePanic : ActorStateBase
+internal class ActorStatePanic : ActorStateBaseOld
 {
-    internal ActorStatePanic(ActorStateMachine stateMachine)
+    internal ActorStatePanic(ActorStateMachineOld stateMachine)
         : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateMachine.StateControl.PlayAnim(StateID.Panic, StateID.Run);
+        _stateMachine.StateControl.PlayAnim(StateIDOld.Panic, StateIDOld.Run);
     }
 
     protected override void Stay()
     {
         if (_stateMachine.StateControl.IsTransitionable() &&
-            _stateMachine.StateControl.IsEqualNextState(StateID.Run))
+            _stateMachine.StateControl.IsEqualNextState(StateIDOld.Run))
         {
-            ChangeState(StateID.Run);
+            ChangeState(StateIDOld.Run);
         }
     }
 }

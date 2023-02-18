@@ -7,15 +7,15 @@ using UnityEngine;
 /// </summary>
 internal class ActorControlHelper
 {
-    internal string StateIDToString(StateID id)
+    internal string StateIDToString(StateIDOld id)
     {
         switch (id)
         {
-            case StateID.Appear: return "Appear";
-            case StateID.Attack: return "Attack";
-            case StateID.Joy: return "Joy";
-            case StateID.LookAround: return "LookAround";
-            case StateID.Panic: return "Panic";
+            case StateIDOld.Appear: return "Appear";
+            case StateIDOld.Attack: return "Attack";
+            case StateIDOld.Joy: return "Joy";
+            case StateIDOld.LookAround: return "LookAround";
+            case StateIDOld.Panic: return "Panic";
         }
 
         Debug.LogError("ステートIDが登録されていません:" + id);

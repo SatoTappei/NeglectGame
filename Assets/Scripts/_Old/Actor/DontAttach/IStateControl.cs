@@ -5,7 +5,7 @@ internal interface IStateControl
 {
     // TODO:メソッド名がよくない
     //      遷移先のステート名とそのステートから通常遷移するステート名が引数
-    void PlayAnim(StateID current, StateID next);
+    void PlayAnim(StateIDOld current, StateIDOld next);
 
     void MoveToRandomWaypoint();
     void RunToTarget();
@@ -13,7 +13,7 @@ internal interface IStateControl
     void CancelMoving();
 
     bool IsTransitionable();
-    bool IsEqualNextState(StateID state);
+    bool IsEqualNextState(StateIDOld state);
     bool IsDead();
     bool IsSightTarget();
     bool IsCompleted();

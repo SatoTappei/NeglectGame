@@ -1,9 +1,9 @@
 /// <summary>
 /// ターゲットに向かって移動するステートのクラス
 /// </summary>
-internal class ActorStateMove : ActorStateBase
+internal class ActorStateMoveOld : ActorStateBaseOld
 {
-    internal ActorStateMove(ActorStateMachine stateMachine)
+    internal ActorStateMoveOld(ActorStateMachineOld stateMachine)
         : base(stateMachine) { }
 
     protected override void Enter()
@@ -14,19 +14,19 @@ internal class ActorStateMove : ActorStateBase
     protected override void Stay()
     {
         if (_stateMachine.StateControl.IsDead() && 
-            _stateMachine.StateControl.IsEqualNextState(StateID.Dead))
+            _stateMachine.StateControl.IsEqualNextState(StateIDOld.Dead))
         {
-            ChangeState(StateID.Dead);
+            ChangeState(StateIDOld.Dead);
         }
         else if (_stateMachine.StateControl.IsSightTarget() && 
-                 _stateMachine.StateControl.IsEqualNextState(StateID.Panic))
+                 _stateMachine.StateControl.IsEqualNextState(StateIDOld.Panic))
         {
-            ChangeState(StateID.Panic);
+            ChangeState(StateIDOld.Panic);
         }
         else if (_stateMachine.StateControl.IsTransitionable() &&
-                 _stateMachine.StateControl.IsEqualNextState(StateID.LookAround))
+                 _stateMachine.StateControl.IsEqualNextState(StateIDOld.LookAround))
         {
-            ChangeState(StateID.LookAround);
+            ChangeState(StateIDOld.LookAround);
         }
     }
 

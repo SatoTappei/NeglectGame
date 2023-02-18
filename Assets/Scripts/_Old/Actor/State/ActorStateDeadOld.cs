@@ -1,14 +1,14 @@
 /// <summary>
 /// もうこれ以上動かさない状態のステートのクラス
 /// </summary>
-internal class ActorStateDead : ActorStateBase
+internal class ActorStateDeadOld : ActorStateBaseOld
 {
-    internal ActorStateDead(ActorStateMachine stateMachine)
+    internal ActorStateDeadOld(ActorStateMachineOld stateMachine)
         : base(stateMachine) { }
 
     protected override void Enter()
     {
-        _stateMachine.StateControl.PlayAnim(StateID.Dead, StateID.Non);
+        _stateMachine.StateControl.PlayAnim(StateIDOld.Dead, StateIDOld.Non);
         //Debug.Log(_stateMachine.gameObject.name + ": 死亡");
     }
 }

@@ -1581,7 +1581,6 @@ GameObject:
   - component: {fileID: 7827161858156998821}
   - component: {fileID: 1423865013011506342}
   - component: {fileID: 7827161858156998875}
-  - component: {fileID: 1573003225295027953}
   - component: {fileID: 381900631246204336}
   - component: {fileID: 9151162787842865226}
   - component: {fileID: 8128630877907173875}
@@ -1640,28 +1639,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c507c01e8aebdd49adbcc2940aa1ca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actorAction: {fileID: 1573003225295027953}
   _actorAnimation: {fileID: 381900631246204336}
   _actorHpControl: {fileID: 9151162787842865226}
   _actorSight: {fileID: 8128630877907173875}
   _actorEffecter: {fileID: 6208038891388040988}
   _damagedMessageReceiver: {fileID: 5958194494144944083}
---- !u!114 &1573003225295027953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6540620725961212598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d087e57d5b96774d9029ffefa26a932, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _actorAnimation: {fileID: 381900631246204336}
-  _model: {fileID: 1213252964996893984}
-  _speed: 2
-  _runSpeedMag: 2
 --- !u!114 &381900631246204336
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,9 +1,9 @@
 /// <summary>
 /// 目標を達成し、返る際のステートのクラス
 /// </summary>
-internal class ActorStateEscape : ActorStateBase
+internal class ActorStateEscape : ActorStateBaseOld
 {
-    internal ActorStateEscape(ActorStateMachine stateMachine)
+    internal ActorStateEscape(ActorStateMachineOld stateMachine)
         : base(stateMachine) { }
 
     protected override void Enter()
@@ -14,9 +14,9 @@ internal class ActorStateEscape : ActorStateBase
     protected override void Stay()
     {
         if (_stateMachine.StateControl.IsDead() && 
-            _stateMachine.StateControl.IsEqualNextState(StateID.Dead))
+            _stateMachine.StateControl.IsEqualNextState(StateIDOld.Dead))
         {
-            ChangeState(StateID.Dead);
+            ChangeState(StateIDOld.Dead);
         }
 
         // TODO: else if 階段に到着したら脱出する処理

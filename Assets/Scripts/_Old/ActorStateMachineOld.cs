@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-internal enum StateID
+public enum StateIDOld
 {
     Non,
     Appear,
@@ -20,10 +20,10 @@ internal enum StateID
 /// <summary>
 /// A*を用いたキャラクターのステートマシン
 /// </summary>
-public class ActorStateMachine : MonoBehaviour
+public class ActorStateMachineOld : MonoBehaviour
 {
-    ActorStateBase _currentState;
-    Dictionary<StateID, ActorStateBase> _stateDic;
+    ActorStateBaseOld _currentState;
+    Dictionary<StateIDOld, ActorStateBaseOld> _stateDic;
     IStateControl _stateControl;
 
     // 各ステートはインターフェースで実装されているメソッドを適切なタイミングで呼び出す
@@ -32,8 +32,8 @@ public class ActorStateMachine : MonoBehaviour
     void Awake()
     {
         // 動的にステートを追加しないので初期容量を超えることはない
-        int capacity = Enum.GetValues(typeof(StateID)).Length;
-        _stateDic = new Dictionary<StateID, ActorStateBase>(capacity);
+        int capacity = Enum.GetValues(typeof(StateIDOld)).Length;
+        _stateDic = new Dictionary<StateIDOld, ActorStateBaseOld>(capacity);
     }
 
     void Start()
@@ -42,24 +42,24 @@ public class ActorStateMachine : MonoBehaviour
 
         // TOOD:ここら辺の生成処理はVContainerに任せられないか
         ActorStateAppear appear          = new ActorStateAppear(this);
-        ActorStateMove move              = new ActorStateMove(this);
+        ActorStateMoveOld move              = new ActorStateMoveOld(this);
         ActorStateRun run                = new ActorStateRun(this);
         ActorStateAttack attack          = new ActorStateAttack(this);
         ActorStateJoy joy                = new ActorStateJoy(this);
         ActorStateLookAround lookAround  = new ActorStateLookAround(this);
         ActorStatePanic panic            = new ActorStatePanic(this);
         ActorStateEscape escape          = new ActorStateEscape(this);
-        ActorStateDead dead              = new ActorStateDead(this);
+        ActorStateDeadOld dead              = new ActorStateDeadOld(this);
 
         // 遷移先には選ばれないのでStateID.Appearの追加処理はしないで良い
-        _stateDic.Add(StateID.Move, move);
-        _stateDic.Add(StateID.Run, run);
-        _stateDic.Add(StateID.Attack, attack);
-        _stateDic.Add(StateID.Joy, joy);
-        _stateDic.Add(StateID.LookAround, lookAround);
-        _stateDic.Add(StateID.Panic, panic);
-        _stateDic.Add(StateID.Escape, escape);
-        _stateDic.Add(StateID.Dead, dead);
+        _stateDic.Add(StateIDOld.Move, move);
+        _stateDic.Add(StateIDOld.Run, run);
+        _stateDic.Add(StateIDOld.Attack, attack);
+        _stateDic.Add(StateIDOld.Joy, joy);
+        _stateDic.Add(StateIDOld.LookAround, lookAround);
+        _stateDic.Add(StateIDOld.Panic, panic);
+        _stateDic.Add(StateIDOld.Escape, escape);
+        _stateDic.Add(StateIDOld.Dead, dead);
 
         // 登場時にアニメーションを再生するため
         _currentState = appear;
@@ -70,9 +70,9 @@ public class ActorStateMachine : MonoBehaviour
         _currentState = _currentState.Update();
     }
 
-    internal ActorStateBase GetState(StateID stateID)
+    internal ActorStateBaseOld GetState(StateIDOld stateID)
     {
-        if (_stateDic.TryGetValue(stateID, out ActorStateBase state))
+        if (_stateDic.TryGetValue(stateID, out ActorStateBaseOld state))
         {
             return state;
         }

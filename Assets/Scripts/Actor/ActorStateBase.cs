@@ -1,7 +1,7 @@
 /// <summary>
-/// キャラクターのステートマシンの各ステートの基底クラス
+/// ActorStateMachineで使用する各ステートの基底クラス
 /// </summary>
-internal abstract class ActorStateBase
+public abstract class ActorStateBase
 {
     protected enum Stage
     {
@@ -45,9 +45,9 @@ internal abstract class ActorStateBase
     protected virtual void Stay() { }
     protected virtual void Exit() { }
 
-    protected void ChangeState(StateID stateID)
+    protected void ChangeState(StateType stateType)
     {
-        _nextState = _stateMachine.GetState(stateID);
+        _nextState = _stateMachine.GetState(stateType);
         _stage = Stage.Exit;
     }
 }
