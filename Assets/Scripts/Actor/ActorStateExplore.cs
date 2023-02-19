@@ -6,6 +6,7 @@ using DG.Tweening;
 public class ActorStateExplore : ActorStateBase
 {
     bool _isArraival;
+    Tween _tween;
 
     public ActorStateExplore(ActorStateMachine stateMachine) : base(stateMachine)
     {
@@ -25,11 +26,11 @@ public class ActorStateExplore : ActorStateBase
         if (_stateMachine.StateControl.IsArrivalWaypoint())
         {
             _isArraival = true;
-            Debug.Log("‚¤‚ë‚¤‚ë‚¨‚í‚è");
-            _stateMachine.StateControl.PlayAnimation("Panic");
 
-            float delayTime = _stateMachine.StateControl.GetAnimationClipLength("Panic");
-            DOVirtual.DelayedCall(delayTime, () =>
+            _stateMachine.StateControl.PlayAnimation("LookAround");
+
+            float delayTime = _stateMachine.StateControl.GetAnimationClipLength("LookAround");
+            _tween = DOVirtual.DelayedCall(delayTime, () =>
             {
                 ChangeState(StateType.Explore);
             }).SetLink(_stateMachine.gameObject);
@@ -46,5 +47,6 @@ public class ActorStateExplore : ActorStateBase
     protected override void Exit()
     {
         _isArraival = false;
+        _tween?.Kill();
     }
 }

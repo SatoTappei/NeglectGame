@@ -5,6 +5,8 @@ using DG.Tweening;
 /// </summary>
 public class ActorStateEntry : ActorStateBase
 {
+    Tween _tween;
+
     public ActorStateEntry(ActorStateMachine stateMachine) : base(stateMachine)
     {
         
@@ -16,9 +18,14 @@ public class ActorStateEntry : ActorStateBase
 
         // アニメーションの長さ分だけDelayすることで、アニメーションに合わせた遷移に見せる
         float delayTime = _stateMachine.StateControl.GetAnimationClipLength("Entry");
-        DOVirtual.DelayedCall(delayTime, () =>
+        _tween = DOVirtual.DelayedCall(delayTime, () =>
         {
             ChangeState(StateType.Explore);
         }).SetLink(_stateMachine.gameObject);
+    }
+
+    protected override void Exit()
+    {
+        _tween?.Kill();
     }
 }

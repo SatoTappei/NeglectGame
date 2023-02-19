@@ -36,6 +36,16 @@ public class ActorStateMachine : MonoBehaviour
         _stateDic.Add(StateType.Explore, stateExplore);
         _stateDic.Add(StateType.Dead, stateDead);
 
+        // うろうろ中に部屋を見つけたら入っていく
+        // 一度入った部屋には二度はいらないようにする
+        // どうやって部屋を認識するか
+        //  ↑部屋かWaypointかをランダムに選択するのは部屋の手前まで来て引き返すので不自然
+        //  視界にとらえる必要がある
+        //  WaypointにTriggerが必要
+
+        // 1.部屋に入る == 部屋の出入り口に移動する
+        // 2.対象を視認、お宝か敵かによってSequenceを変える
+
         // やる気が一定以下のSequence
         //  脱出(位置に到着)
 
