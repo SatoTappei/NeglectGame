@@ -36,7 +36,7 @@ public class ActorAnimation : MonoBehaviour
 
     void Init()
     {
-        // ステート名でAnimationClipの長さを取得できないので専用の構造体と辞書を用意した
+        // ステート名でAnimationClipの長さを取得できないので専用の構造体と辞書を用意
         AnimatorController controller = _anim.runtimeAnimatorController as AnimatorController;
         AnimationClip[] clips = controller.animationClips;
         ChildAnimatorState[] states = controller.layers[0].stateMachine.states;
@@ -48,6 +48,19 @@ public class ActorAnimation : MonoBehaviour
         }
     }
 
+    public float GetStateLength(string stateName)
+    {
+        if (_stateDataDic.TryGetValue(stateName, out StateData stateData))
+        {
+            return stateData.Length;
+        }
+        else
+        {
+            Debug.LogError("ステートが登録されていません: " + stateName);
+            return -1;
+        }
+    }
+
     internal void PlayAnim(string stateName)
     {
         if(_stateDataDic.TryGetValue(stateName, out StateData stateData))
@@ -56,7 +69,7 @@ public class ActorAnimation : MonoBehaviour
         }     
         else
         {
-            Debug.LogError("対応するステートが存在しません:" + stateName);
+            Debug.LogError("対応するステートが存在しません: " + stateName);
         }
     }
 

@@ -5,12 +5,18 @@ using UnityEngine;
 /// <summary>
 /// キャラクターの各コンポーネントを制御するコンポーネント
 /// </summary>
-public class Actor : MonoBehaviour
+public class Actor : MonoBehaviour, IStateControl
 {
     [SerializeField] ActorMoveSystem _actorMoveSystem;
-    [SerializeField] ActorStateMachineOld _actorStateMachine;
+    [SerializeField] ActorStateMachine _actorStateMachine;
+    [SerializeField] ActorAnimation _actorAnimation;
     [SerializeField] ActorSight _actorSight;
     [SerializeField] ActorEffecter _actorEffecter;
+
+    void Start()
+    {
+        //_actorStateMachine.
+    }
 
     /* 今日のタスク:Statemachineの作成 */
 
@@ -36,4 +42,12 @@ public class Actor : MonoBehaviour
     // 発見するための視界
 
     // どの状態からも死ねる
+
+    void IStateControl.PlayAnimation(string name) => _actorAnimation.PlayAnim(name);
+
+    void IStateControl.MoveToWaypoint() => _actorMoveSystem.MoveToNextWaypoint();
+
+    float IStateControl.GetAnimationClipLength(string name) => _actorAnimation.GetStateLength(name);
+
+    bool IStateControl.IsArrivalWaypoint() => _actorMoveSystem.IsArrivalTargetPos();
 }

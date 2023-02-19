@@ -24,10 +24,10 @@ public class ActorStateMachineOld : MonoBehaviour
 {
     ActorStateBaseOld _currentState;
     Dictionary<StateIDOld, ActorStateBaseOld> _stateDic;
-    IStateControl _stateControl;
+    IStateControlOld _stateControl;
 
     // 各ステートはインターフェースで実装されているメソッドを適切なタイミングで呼び出す
-    internal IStateControl StateControl { get => _stateControl; }
+    internal IStateControlOld StateControl { get => _stateControl; }
 
     void Awake()
     {
@@ -38,7 +38,7 @@ public class ActorStateMachineOld : MonoBehaviour
 
     void Start()
     {
-        _stateControl = GetComponent<IStateControl>();
+        _stateControl = GetComponent<IStateControlOld>();
 
         // TOOD:ここら辺の生成処理はVContainerに任せられないか
         ActorStateAppear appear          = new ActorStateAppear(this);

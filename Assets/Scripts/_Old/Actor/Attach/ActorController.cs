@@ -6,7 +6,7 @@ using UnityEngine.Events;
 /// <summary>
 /// キャラクターの各行動を制御するコンポーネント
 /// </summary>
-public class ActorController : MonoBehaviour, IStateControl
+public class ActorController : MonoBehaviour, IStateControlOld
 {
     readonly string SystemObjectTag = "GameController";
 
@@ -57,7 +57,7 @@ public class ActorController : MonoBehaviour, IStateControl
         _pathGetable = system.GetComponent<IPathfinding>();
     }
 
-    void IStateControl.PlayAnim(StateIDOld current, StateIDOld next)
+    void IStateControlOld.PlayAnim(StateIDOld current, StateIDOld next)
     {
         string stateName = _actorControlHelper.StateIDToString(current);
 
@@ -71,13 +71,13 @@ public class ActorController : MonoBehaviour, IStateControl
         });
     }
 
-    void IStateControl.MoveToRandomWaypoint()
+    void IStateControlOld.MoveToRandomWaypoint()
     {
         _nextState = StateIDOld.LookAround;
         MoveTo(_targetSelectable.GetNextWaypointPos(), _actorAction.MoveFollowPath);
     }
 
-    void IStateControl.RunToTarget()
+    void IStateControlOld.RunToTarget()
     {
         GameObject inSightObject = _actorSight.CurrentInSightObject.gameObject;
         SightableType target = inSightObject.GetComponent<SightableObject>().SightableType;
@@ -86,7 +86,7 @@ public class ActorController : MonoBehaviour, IStateControl
         MoveTo(inSightObject.transform.position, _actorAction.RunFollowPath);
     }
 
-    void IStateControl.MoveToExit()
+    void IStateControlOld.MoveToExit()
     {
         _nextState = StateIDOld.LookAround;
         MoveTo(_targetSelectable.GetExitPos(), _actorAction.MoveFollowPath);
@@ -105,15 +105,15 @@ public class ActorController : MonoBehaviour, IStateControl
         });
     }
 
-    void IStateControl.CancelMoving() => _actorAction.MoveCancel();
+    void IStateControlOld.CancelMoving() => _actorAction.MoveCancel();
 
-    bool IStateControl.IsEqualNextState(StateIDOld state) => _nextState == state;
+    bool IStateControlOld.IsEqualNextState(StateIDOld state) => _nextState == state;
 
-    bool IStateControl.IsTransitionable() => _isTransitionable;
+    bool IStateControlOld.IsTransitionable() => _isTransitionable;
 
-    bool IStateControl.IsDead() => _actorHpControl.IsHpEqualZero();
+    bool IStateControlOld.IsDead() => _actorHpControl.IsHpEqualZero();
 
-    bool IStateControl.IsCompleted()
+    bool IStateControlOld.IsCompleted()
     {
         if (_isCompleted)
         {
@@ -124,7 +124,7 @@ public class ActorController : MonoBehaviour, IStateControl
         return false;
     }
 
-    bool IStateControl.IsSightTarget()
+    bool IStateControlOld.IsSightTarget()
     {
         if (_actorSight.IsFindInSight())
         {
@@ -140,5 +140,5 @@ public class ActorController : MonoBehaviour, IStateControl
         return false;
     }
 
-    void IStateControl.EffectAroundEffectableObject() => _actorEffecter.EffectAround();
+    void IStateControlOld.EffectAroundEffectableObject() => _actorEffecter.EffectAround();
 }

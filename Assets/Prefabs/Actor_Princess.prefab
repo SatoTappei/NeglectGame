@@ -296,6 +296,8 @@ GameObject:
   - component: {fileID: 908045884462929549}
   - component: {fileID: -6628936006394958655}
   - component: {fileID: -6157919514075864504}
+  - component: {fileID: 5286240754668127569}
+  - component: {fileID: -6988626446146838499}
   m_Layer: 0
   m_Name: Actor_Princess
   m_TagString: Untagged
@@ -331,6 +333,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ee5fff7e426f4141ac44019ea54a7d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _actorMoveSystem: {fileID: -6157919514075864504}
+  _actorStateMachine: {fileID: 5286240754668127569}
+  _actorAnimation: {fileID: -6988626446146838499}
+  _actorSight: {fileID: 0}
+  _actorEffecter: {fileID: 0}
 --- !u!114 &-6157919514075864504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,6 +353,31 @@ MonoBehaviour:
   _model: {fileID: 7779028308847724028}
   _moveSpeed: 2
   _runSpeedMag: 2
+--- !u!114 &5286240754668127569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908045884462929550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92e53a67bbe331b418564a0fa026c57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-6988626446146838499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908045884462929550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae0461b0478f104490d7236da4f0311, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anim: {fileID: 395941599810889862}
 --- !u!1 &976946184240705824
 GameObject:
   m_ObjectHideFlags: 0
@@ -1502,7 +1534,7 @@ Animator:
   m_GameObject: {fileID: 6750879145968105455}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: a8f3eefdd4d8dac4c93ff630dd0b7ec1, type: 3}
-  m_Controller: {fileID: 9100000, guid: c6d9a028ebe16254c8ea7a4bdb872a72, type: 2}
+  m_Controller: {fileID: 9100000, guid: af1d6b77d63836d4ca069c93efe10903, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1

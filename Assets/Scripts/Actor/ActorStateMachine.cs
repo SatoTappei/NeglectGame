@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Threading;
 using System;
+using System.Collections.Generic;
+using System.Threading;
+using UnityEngine;
 
 public enum StateType
 {
@@ -16,12 +15,26 @@ public enum StateType
 /// </summary>
 public class ActorStateMachine : MonoBehaviour
 {
+    static readonly int StateDicCapacity = Enum.GetValues(typeof(StateIDOld)).Length;
+
+    ActorStateBase _currentState;
+    Dictionary<StateType, ActorStateBase> _stateDic = new(StateDicCapacity);
+    IStateControl _stateControl;
     CancellationTokenSource _cts = new CancellationTokenSource();
 
-    void Start()
+    public IStateControl StateControl => _stateControl;
+
+    void Awake()
     {
-        // 基準ステート
-        //  ランダムなWaypointに向けて移動する
+        _stateControl = GetComponent<IStateControl>();
+
+        ActorStateEntry stateEntry = new(this);
+        ActorStateExplore stateExplore = new(this);
+        ActorStateDead stateDead = new(this);
+
+        _stateDic.Add(StateType.Entry, stateEntry);
+        _stateDic.Add(StateType.Explore, stateExplore);
+        _stateDic.Add(StateType.Dead, stateDead);
 
         // やる気が一定以下のSequence
         //  脱出(位置に到着)
@@ -50,19 +63,29 @@ public class ActorStateMachine : MonoBehaviour
         battleLoseSequence.Add(nodeRun);
         battleLoseSequence.Add(nodeBattleLoseAnimation);
 
-        battleLoseSequence.Play(_cts);
+        //battleLoseSequence.Play(_cts);
     }
 
-    internal ActorStateBase GetState(StateType stateType)
+    void Start()
     {
-        throw new NotImplementedException();
+        _currentState = GetState(StateType.Entry);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        _currentState = _currentState.Update();
+    }
+
+    internal ActorStateBase GetState(StateType stateType)
+    {
+        if (_stateDic.TryGetValue(stateType, out ActorStateBase state))
         {
-            _cts.Cancel();
+            return state;
+        }
+        else
+        {
+            Debug.LogError("遷移先のステートが辞書内にありません: " + stateType);
+            return null;
         }
     }
 }

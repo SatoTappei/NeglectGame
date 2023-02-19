@@ -1,7 +1,7 @@
 /// <summary>
 /// ステートマシンで使用する、各ステートの行動＆遷移条件を実装するインターフェース
 /// </summary>
-internal interface IStateControl
+internal interface IStateControlOld
 {
     // TODO:メソッド名がよくない
     //      遷移先のステート名とそのステートから通常遷移するステート名が引数

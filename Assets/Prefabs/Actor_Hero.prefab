@@ -508,7 +508,7 @@ Animator:
   m_GameObject: {fileID: 1213252964996893985}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 5af8bc9dfdea51945858c443f8084b05, type: 3}
-  m_Controller: {fileID: 9100000, guid: dacb8519f0c33d74784f820078647fd7, type: 2}
+  m_Controller: {fileID: 9100000, guid: 37d0778fb969fa1459b0d19de3712a13, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1581,6 +1581,8 @@ GameObject:
   - component: {fileID: 7827161858156998821}
   - component: {fileID: -1069038614329203367}
   - component: {fileID: -1613357774641133722}
+  - component: {fileID: -3073945408902330954}
+  - component: {fileID: -5877550896894328571}
   m_Layer: 8
   m_Name: Actor_Hero
   m_TagString: Untagged
@@ -1616,6 +1618,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ee5fff7e426f4141ac44019ea54a7d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _actorMoveSystem: {fileID: -1613357774641133722}
+  _actorStateMachine: {fileID: -3073945408902330954}
+  _actorAnimation: {fileID: -5877550896894328571}
+  _actorSight: {fileID: 0}
+  _actorEffecter: {fileID: 0}
 --- !u!114 &-1613357774641133722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1631,6 +1638,31 @@ MonoBehaviour:
   _model: {fileID: 1213252964996893984}
   _moveSpeed: 6
   _runSpeedMag: 2
+--- !u!114 &-3073945408902330954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6540620725961212598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92e53a67bbe331b418564a0fa026c57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-5877550896894328571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6540620725961212598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae0461b0478f104490d7236da4f0311, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anim: {fileID: 1213252964996893991}
 --- !u!1 &6573661602532900134
 GameObject:
   m_ObjectHideFlags: 0
