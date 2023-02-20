@@ -7,6 +7,7 @@ public enum StateType
 {
     Entry,
     Explore,
+    MoveToInSight,
     Dead,
 }
 
@@ -30,10 +31,12 @@ public class ActorStateMachine : MonoBehaviour
 
         ActorStateEntry stateEntry = new(this);
         ActorStateExplore stateExplore = new(this);
+        ActorStateMoveToInSight stateMoveToInSight = new(this);
         ActorStateDead stateDead = new(this);
 
         _stateDic.Add(StateType.Entry, stateEntry);
         _stateDic.Add(StateType.Explore, stateExplore);
+        _stateDic.Add(StateType.MoveToInSight, stateMoveToInSight);
         _stateDic.Add(StateType.Dead, stateDead);
 
         // うろうろ中に部屋を見つけたら入っていく
@@ -48,6 +51,12 @@ public class ActorStateMachine : MonoBehaviour
 
         // やる気が一定以下のSequence
         //  脱出(位置に到着)
+
+        // 部屋を発見したときのステート
+        // 部屋の中央に来る
+        // 見回すアニメーション
+        // うろうろへ
+        // 中央に来るまでに対象が見つかったら以下のSequenceに分岐
 
         // 宝箱を発見したときのSequence
         //  見つけたアニメーション(アニメーション終了)

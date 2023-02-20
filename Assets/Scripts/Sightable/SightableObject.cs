@@ -23,6 +23,8 @@ public class SightableObject : MonoBehaviour
 
     void Awake()
     {
+        gameObject.layer = LayerMask.NameToLayer("Sightable");
+
         SphereCollider collider = GetComponent<SphereCollider>();
         collider.isTrigger = true;
     }

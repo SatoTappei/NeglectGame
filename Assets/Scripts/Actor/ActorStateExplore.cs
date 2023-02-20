@@ -22,7 +22,8 @@ public class ActorStateExplore : ActorStateBase
     {
         if (_isArraival) return;
 
-        // 目的地に到着したら見回すアニメーションを再生した後に遷移する
+        // 目的地に到着したら見回すアニメーションの長さ分だけ待つことで
+        // アニメーションの終了を待機しての処理を実現している
         if (_stateMachine.StateControl.IsArrivalWaypoint())
         {
             _isArraival = true;
@@ -38,22 +39,11 @@ public class ActorStateExplore : ActorStateBase
             return;
         }
 
-        // 何かを発見したとき
         SightableObject inSightObject = _stateMachine.StateControl.GetInSightObject();
-        if (inSightObject?.SightableType == SightableType.Waypoint)
+        if (inSightObject != null)
         {
-            //  部屋を発見した
-            // 部屋の中へ入る
-            // うろうろへ戻る
-        }
-        else if(inSightObject?.SightableType == SightableType.Treasure)
-        {
-            //  宝箱を見つけた
-        }
-        else if (inSightObject?.SightableType == SightableType.Enemy)
-        {
-            //  敵を発見した
-            //      n%の確率で結果が勝ち/負けのステートに遷移
+            ChangeState(StateType.MoveToInSight);
+            return;
         }
 
         // やる気が一定以下の時

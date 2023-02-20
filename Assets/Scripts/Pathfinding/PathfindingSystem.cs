@@ -8,6 +8,8 @@ using UnityEngine;
 public class PathfindingSystem : MonoBehaviour, IPathfinding
 {
     [SerializeField] PathfindingGrid _pathfindingGrid;
+    [Header("デバッグ用:移動できない箇所が渡されたときに視覚化する")]
+    [SerializeField] GameObject _debugVisualizer;
 
     Stack<Vector3> IPathfinding.GetPathToWaypoint(Vector3 startPos, Vector3 targetPos)
     {
@@ -21,8 +23,21 @@ public class PathfindingSystem : MonoBehaviour, IPathfinding
         Node startNode = _pathfindingGrid.GetNode(startPos);
         Node targetNode = _pathfindingGrid.GetNode(targetPos);
 
-        if (!startNode.IsMovable || !targetNode.IsMovable)
+        if (!startNode.IsMovable)
+        {
+            Debug.LogWarning("だめなとっから移動します");
+            Instantiate(_debugVisualizer, startPos, Quaternion.identity);
+            UnityEditor.EditorApplication.isPaused = true;
+        }
+
+        if (/*!startNode.IsMovable || */!targetNode.IsMovable)
+        {
+            Debug.LogError("移動できない座標です: From " + startPos + " To " + targetPos);
+            
+            Instantiate(_debugVisualizer, targetPos, Quaternion.identity);
+
             return null;
+        }
 
         // グリッドの幅と奥行きの和の2倍分の初期容量を確保
         // 適度に障害物を配置し、グリッドの端から端まで探索させて決定した

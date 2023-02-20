@@ -52,4 +52,10 @@ public class Actor : MonoBehaviour, IStateControl
     bool IStateControl.IsArrivalWaypoint() => _actorMoveSystem.IsArrivalTargetPos();
 
     SightableObject IStateControl.GetInSightObject() => _actorSight.CurrentInSightObject;
+
+    void IStateControl.MoveToInSightObject()
+    {
+        SightableObject inSightObject = _actorSight.CurrentInSightObject;
+        _actorMoveSystem.MoveTo(inSightObject.transform.position);
+    }
 }

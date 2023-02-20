@@ -6,8 +6,13 @@ public interface IStateControl
 {
     void PlayAnimation(string name);
     void MoveToWaypoint();
+    void MoveToInSightObject();
 
     float GetAnimationClipLength(string name);
+    /// <summary>
+    /// 視界内のオブジェクト(InSightObject)に移動する際にも使うのでメソッド名を変更する
+    /// </summary>
+    /// <returns></returns>
     bool IsArrivalWaypoint();
     SightableObject GetInSightObject();
 }

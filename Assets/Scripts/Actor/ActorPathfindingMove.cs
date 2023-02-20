@@ -43,8 +43,6 @@ public class ActorPathfindingMove
     {
         _token = new CancellationTokenSource();
 
-        CancellationToken v = _actor.GetCancellationTokenOnDestroy();
-
         foreach (Vector3 nextPos in stack)
         {
             _model.DOLookAt(nextPos, 0.5f).SetLink(_actor);

@@ -5,6 +5,9 @@ using UnityEngine;
 /// </summary>
 public class ActorSight : MonoBehaviour
 {
+    /// <summary>視界の更新間隔、間隔を広くすると視界のパラメータによっては認識しなくなる</summary>
+    static readonly float UpdateInterval = 0.25f;
+
     /// <summary>視界に映る周囲のオブジェクト数に応じて設定する</summary>
     static readonly int ResultsLength = 4;
     /// <summary>頭上からRayを飛ばすためにキャラクターのモデルの高さに応じて設定する</summary>
@@ -16,8 +19,6 @@ public class ActorSight : MonoBehaviour
     [SerializeField] LayerMask _sightableLayer;
     [Header("キャラクターの視界を遮蔽するレイヤー")]
     [SerializeField] LayerMask _sightBlockableLayer;
-    [Header("視界の更新間隔")]
-    [SerializeField] float _updateDuration = 0.25f;
     [Header("視界のパラメータを設定")]
     [SerializeField] float _sightRange = 5.0f;
     [SerializeField] float _sightAngle = 60.0f;
@@ -27,34 +28,41 @@ public class ActorSight : MonoBehaviour
 
     internal SightableObject CurrentInSightObject => _currentInSightObject;
 
-    public void StartLookInSight() => InvokeRepeating(nameof(LookInSight), 0, _updateDuration);
+    public void StartLookInSight() => InvokeRepeating(nameof(LookInSight), 0, UpdateInterval);
     public void StopLookInSight() { /* 視界の更新を止める処理 */ }
 
-    /// <summary>複数のオブジェクトを見つけた場合は最初の1つが返る</summary>
+    /// <summary></summary>
     void LookInSight()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _results, _sightableLayer);
 
-        foreach (Collider col in _results)
+        // 複数のオブジェクトを見つけた場合は最初の1つが返る
+        foreach (Collider rangeInSide in _results)
         {
             // 定期的に呼び出しているので何も視界にない場合はbreakする
-            if (!col) break;
+            if (rangeInSide == null) break;
 
-            Vector3 modelForward = _actorModel.forward;
-            Vector3 treasurePos = col.gameObject.transform.position;
-            Vector3 treasureDir = (treasurePos - _actorModel.position).normalized;
+            Vector3 rangeInSidePos = rangeInSide.gameObject.transform.position;
+            Vector3 rangeInSideDir = (rangeInSidePos - _actorModel.position).normalized;
 
-            float distance = Vector3.Distance(treasurePos, _actorModel.position);
-            float angle = Vector3.Angle(modelForward, treasureDir);
+            float distance = Vector3.Distance(rangeInSidePos, _actorModel.position);
+            float angle = Vector3.Angle(_actorModel.forward, rangeInSideDir);
 
+            // TODO:現状は問題ないが、Rayの飛ばし方を直すと良い感じ
+            // モデルの頭上から水平にRayを飛ばして障害物に衝突しなかったらという判定なので
+            // モデルより低い障害物は無視される
+            
             // 対象までRayを飛ばしてヒットしなかったら の判定だと対象が半分以上壁に埋まっているとfalseが返る
             Vector3 rayOrigin = _actorModel.transform.position;
             rayOrigin.y += ActorModelHeight;
-            bool dontHitObstacle = !Physics.Raycast(rayOrigin, treasureDir, distance, _sightBlockableLayer);
+            bool dontBlocked = !Physics.Raycast(rayOrigin, rangeInSideDir, distance, _sightBlockableLayer);
 
-            if(distance <= _sightRange && angle <= _sightAngle && dontHitObstacle)
+            UnityEngine.Debug.DrawRay(rayOrigin, rangeInSideDir * distance, Color.red, 0.1f, false);
+
+            if(distance <= _sightRange && angle <= _sightAngle && dontBlocked)
             {
-                _currentInSightObject = col.gameObject.GetComponent<SightableObject>();
+                _currentInSightObject = rangeInSide.gameObject.GetComponent<SightableObject>();
+                break;
             }
         }
     }
