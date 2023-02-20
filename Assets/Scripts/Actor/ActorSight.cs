@@ -1,5 +1,4 @@
 using UnityEngine;
-using UniRx;
 
 /// <summary>
 /// キャラクターの視界を制御するコンポーネント
@@ -28,12 +27,11 @@ public class ActorSight : MonoBehaviour
 
     internal SightableObject CurrentInSightObject => _currentInSightObject;
 
-    public void StartInSight() => InvokeRepeating(nameof(InSightObject), 0, _updateDuration);
-    public void StopInSight() { /* 視界の更新を止める処理 */ }
-    internal bool IsFindInSight() => _currentInSightObject != null;
+    public void StartLookInSight() => InvokeRepeating(nameof(LookInSight), 0, _updateDuration);
+    public void StopLookInSight() { /* 視界の更新を止める処理 */ }
 
     /// <summary>複数のオブジェクトを見つけた場合は最初の1つが返る</summary>
-    void InSightObject()
+    void LookInSight()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _results, _sightableLayer);
 

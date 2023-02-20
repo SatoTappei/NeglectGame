@@ -15,7 +15,7 @@ public class Actor : MonoBehaviour, IStateControl
 
     void Start()
     {
-        //_actorStateMachine.
+        _actorSight.StartLookInSight();
     }
 
     /* ¡“ú‚Ìƒ^ƒXƒN:Statemachine‚Ìì¬ */
@@ -50,4 +50,6 @@ public class Actor : MonoBehaviour, IStateControl
     float IStateControl.GetAnimationClipLength(string name) => _actorAnimation.GetStateLength(name);
 
     bool IStateControl.IsArrivalWaypoint() => _actorMoveSystem.IsArrivalTargetPos();
+
+    SightableObject IStateControl.GetInSightObject() => _actorSight.CurrentInSightObject;
 }

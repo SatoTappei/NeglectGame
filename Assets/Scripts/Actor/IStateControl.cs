@@ -9,4 +9,5 @@ public interface IStateControl
 
     float GetAnimationClipLength(string name);
     bool IsArrivalWaypoint();
+    SightableObject GetInSightObject();
 }

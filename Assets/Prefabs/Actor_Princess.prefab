@@ -298,6 +298,7 @@ GameObject:
   - component: {fileID: -6157919514075864504}
   - component: {fileID: 5286240754668127569}
   - component: {fileID: -6988626446146838499}
+  - component: {fileID: 170183322904586823}
   m_Layer: 0
   m_Name: Actor_Princess
   m_TagString: Untagged
@@ -336,7 +337,7 @@ MonoBehaviour:
   _actorMoveSystem: {fileID: -6157919514075864504}
   _actorStateMachine: {fileID: 5286240754668127569}
   _actorAnimation: {fileID: -6988626446146838499}
-  _actorSight: {fileID: 0}
+  _actorSight: {fileID: 170183322904586823}
   _actorEffecter: {fileID: 0}
 --- !u!114 &-6157919514075864504
 MonoBehaviour:
@@ -378,6 +379,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _anim: {fileID: 395941599810889862}
+--- !u!114 &170183322904586823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908045884462929550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acce0c90bce1cca488355a5ad8e17081, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actorModel: {fileID: 7779028308847724028}
+  _sightableLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  _sightBlockableLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  _updateDuration: 0.25
+  _sightRange: 5
+  _sightAngle: 60
 --- !u!1 &976946184240705824
 GameObject:
   m_ObjectHideFlags: 0

@@ -34,14 +34,29 @@ public class ActorStateExplore : ActorStateBase
             {
                 ChangeState(StateType.Explore);
             }).SetLink(_stateMachine.gameObject);
+
+            return;
+        }
+
+        // 何かを発見したとき
+        SightableObject inSightObject = _stateMachine.StateControl.GetInSightObject();
+        if (inSightObject?.SightableType == SightableType.Waypoint)
+        {
+            //  部屋を発見した
+            // 部屋の中へ入る
+            // うろうろへ戻る
+        }
+        else if(inSightObject?.SightableType == SightableType.Treasure)
+        {
+            //  宝箱を見つけた
+        }
+        else if (inSightObject?.SightableType == SightableType.Enemy)
+        {
+            //  敵を発見した
+            //      n%の確率で結果が勝ち/負けのステートに遷移
         }
 
         // やる気が一定以下の時
-
-        // 宝箱を見つけたとき
-
-        // 敵を発見したとき
-        //  n%の確率で結果が勝ち/負けのステートに遷移
     }
 
     protected override void Exit()

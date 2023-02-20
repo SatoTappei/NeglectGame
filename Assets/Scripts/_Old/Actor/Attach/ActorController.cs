@@ -126,16 +126,16 @@ public class ActorController : MonoBehaviour, IStateControlOld
 
     bool IStateControlOld.IsSightTarget()
     {
-        if (_actorSight.IsFindInSight())
-        {
-            SightableObject inSightObject = _actorSight.CurrentInSightObject;
+        //if (_actorSight.IsFindInSight())
+        //{
+        //    SightableObject inSightObject = _actorSight.CurrentInSightObject;
             
-            if (inSightObject.HasWitness()) return false;
-            inSightObject.SetWitness(gameObject);
+        //    if (inSightObject.HasWitness()) return false;
+        //    inSightObject.SetWitness(gameObject);
 
-            _nextState = StateIDOld.Panic;
-            return true;
-        }
+        //    _nextState = StateIDOld.Panic;
+        //    return true;
+        //}
 
         return false;
     }

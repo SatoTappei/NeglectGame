@@ -3,18 +3,16 @@ using UnityEngine;
 
 /// <summary>
 /// ダンジョンのWaypointを生成するコンポーネント
-/// 生成したWaypointはヒエラルキー上のオブジェクトの親子構造を通して参照される
+/// 生成したWaypointはヒエラルキー上のオブジェクトの親子構造を通して
+/// Waypoint側のコンポーネントから参照される
 /// </summary>
 public class DungeonWaypointBuilder : MonoBehaviour
 {
-    [Header("デバッグ用:Waypointの可視化に使用するプレハブ")]
-    [SerializeField] GameObject _passWaypointVisualizer;
-    [SerializeField] GameObject _roomWaypointVisualizer;
     [Header("各Waypointとして生成するプレハブ")]
     [SerializeField] GameObject _passWaypointPrefab;
     [SerializeField] GameObject _roomWaypointPrefab;
     [SerializeField] GameObject _exitWaypointPrefab;
-    [Header("生成したWaypointの親")]
+    [Header("生成したWaypointの親とするオブジェクト")]
     [SerializeField] Transform _waypointParent;
 
     internal void BuildPassWaypoint(IEnumerable<Vector3Int> positions)
@@ -33,16 +31,6 @@ public class DungeonWaypointBuilder : MonoBehaviour
     {
         List<GameObject> list = BuildWaypoint(positions, _exitWaypointPrefab);
         list.ForEach(go => go.transform.parent = _waypointParent);
-    }
-
-    internal void VisualizePassWaypoint(IEnumerable<Vector3Int> positions)
-    {
-        BuildWaypoint(positions, _passWaypointVisualizer);
-    }
-
-    internal void VisualizeRoomWaypoint(IEnumerable<Vector3Int> positions)
-    {
-        BuildWaypoint(positions, _roomWaypointVisualizer);
     }
 
     List<GameObject> BuildWaypoint(IEnumerable<Vector3Int> positions, GameObject prefab)
