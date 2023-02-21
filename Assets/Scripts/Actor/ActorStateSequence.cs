@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 
 /// <summary>
-/// 各ActorSequenceNodeを順に実行するクラス
+/// 各ノードを順に実行するクラス
 /// </summary>
 public class ActorStateSequence
 {

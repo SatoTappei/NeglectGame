@@ -1683,7 +1683,7 @@ MonoBehaviour:
   _sightBlockableLayer:
     serializedVersion: 2
     m_Bits: 128
-  _sightRange: 5
+  _sightRange: 10
   _sightAngle: 110
 --- !u!1 &6573661602532900134
 GameObject:

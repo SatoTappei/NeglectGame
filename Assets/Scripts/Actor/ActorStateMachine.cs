@@ -15,7 +15,6 @@ public enum StateType
 
 public enum SequenceType
 {
-    Room,
     Treasure,
     BattleWin,
     BattleLose,
@@ -53,9 +52,33 @@ public class ActorStateMachine : MonoBehaviour
         _stateDic.Add(StateType.MoveToRoom, stateMoveToRoom);
         _stateDic.Add(StateType.InSightSelect, stateInSightSelect);
         _stateDic.Add(StateType.SequenceExecute, stateSequenceExecute);
-        _stateDic.Add(StateType.Dead, stateDead); 
+        _stateDic.Add(StateType.Dead, stateDead);
 
+        // “G”­Œ©Žž‚ÌSequence
+        ActorStateSequence battleWinSequence = new(length: 4);
+        ActorStateSequence battleLoseSequence = new(length: 4);
+        // ‚¨•ó”­Œ©Žž‚ÌSequence
+        ActorStateSequence treasureSequence = new(length: 4);
 
+        ActorNodeRunToInSightObject nodeRunToInSightObject = new(this, battleWinSequence);
+        ActorNodeMoveToExit nodeMoveToExit = new(this, battleWinSequence);
+        ActorNodeAnimation nodePanicAnimation = new(this, battleWinSequence, "Panic");
+        ActorNodeAnimation nodeJoyAnimation = new(this, battleWinSequence, "Joy");
+        ActorNodeAnimation nodeAttackAnimation = new(this, battleWinSequence, "Attack");
+
+        battleWinSequence.Add(nodePanicAnimation);
+        battleWinSequence.Add(nodeRunToInSightObject);
+        battleWinSequence.Add(nodeAttackAnimation);
+        battleWinSequence.Add(nodeMoveToExit);
+
+        treasureSequence.Add(nodePanicAnimation);
+        treasureSequence.Add(nodeRunToInSightObject);
+        treasureSequence.Add(nodeJoyAnimation);
+        treasureSequence.Add(nodeMoveToExit);
+
+        _sequenceDic.Add(SequenceType.BattleWin, battleWinSequence);
+        _sequenceDic.Add(SequenceType.BattleLose, battleLoseSequence);
+        _sequenceDic.Add(SequenceType.Treasure, treasureSequence);
     }
 
     void Start()

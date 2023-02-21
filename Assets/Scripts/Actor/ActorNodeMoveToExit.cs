@@ -1,15 +1,12 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using UnityEngine;
 
 /// <summary>
-/// ActorStateSequenceクラスで使用する指定した位置への移動を行うノード
+/// 出口に向かって移動するノード
 /// </summary>
-public class ActorNodeRun : ActorNodeBase
+public class ActorNodeMoveToExit : ActorNodeBase
 {
-    Vector3 _targetPos;
-
-    public ActorNodeRun(ActorStateMachine stateMachine, ActorStateSequence sequence)
+    public ActorNodeMoveToExit(ActorStateMachine stateMachine, ActorStateSequence sequence)
         : base(stateMachine, sequence)
     {
 
@@ -17,7 +14,7 @@ public class ActorNodeRun : ActorNodeBase
 
     protected override async UniTask ExecuteAsync(CancellationTokenSource cts)
     {
-        _stateMachine.StateControl.MoveTo(_targetPos);
+        _stateMachine.StateControl.MoveToExit();
         await UniTask.WaitUntil(() => _stateMachine.StateControl.IsArrivalTargetPos(), cancellationToken: cts.Token);
     }
 }

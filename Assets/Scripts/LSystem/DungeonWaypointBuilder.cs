@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using System;
 
 /// <summary>
 /// ダンジョンのWaypointを生成するコンポーネント
@@ -14,35 +16,41 @@ public class DungeonWaypointBuilder : MonoBehaviour
     [SerializeField] GameObject _exitWaypointPrefab;
     [Header("生成したWaypointの親とするオブジェクト")]
     [SerializeField] Transform _waypointParent;
+    [Header("生成する出口の数")]
+    [SerializeField] int _exitWaypointQuantity = 1;
 
     internal void BuildPassWaypoint(IEnumerable<Vector3Int> positions)
     {
-        List<GameObject> list = BuildWaypoint(positions, _passWaypointPrefab);
-        list.ForEach(go => go.transform.parent = _waypointParent);
+        foreach (Vector3Int pos in positions)
+        {
+            Instantiate(_passWaypointPrefab, pos, Quaternion.identity, _waypointParent);
+        }
     }
 
     internal void BuildRoomWaypoint(IEnumerable<Vector3Int> positions)
     {
-        List<GameObject> list = BuildWaypoint(positions, _roomWaypointPrefab);
-        list.ForEach(go => go.transform.parent = _waypointParent);
-    }
-
-    internal void BuildExitWaypoint(IEnumerable<Vector3Int> positions)
-    {
-        List<GameObject> list = BuildWaypoint(positions, _exitWaypointPrefab);
-        list.ForEach(go => go.transform.parent = _waypointParent);
-    }
-
-    List<GameObject> BuildWaypoint(IEnumerable<Vector3Int> positions, GameObject prefab)
-    {
-        List<GameObject> list = new List<GameObject>();
-
         foreach (Vector3Int pos in positions)
         {
-            GameObject go = Instantiate(prefab, pos, Quaternion.identity);
-            list.Add(go);
+            Instantiate(_roomWaypointPrefab, pos, Quaternion.identity, _waypointParent);
+        }
+    }
+
+    internal void BuildExitWaypointRandom(IEnumerable<Vector3Int> positions)
+    {
+        if (positions.Count() < _exitWaypointQuantity)
+        {
+            Debug.LogWarning("生成する出口の数が生成できる箇所より多いです");
         }
 
-        return list;
+        int count = 0;
+        foreach (Vector3Int pos in positions.OrderBy(_ => Guid.NewGuid()))
+        {
+            Instantiate(_exitWaypointPrefab, pos, Quaternion.identity, _waypointParent);
+
+            count++;
+            if (count >= _exitWaypointQuantity) break;
+        }
     }
+
+
 }

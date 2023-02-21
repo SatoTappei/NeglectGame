@@ -18,7 +18,7 @@ public class ActorStateMoveToRoom : ActorStateBase
         // このステートに遷移する前に視界の機能を切ってあるので、前フレームから視界が更新されず
         // RoomEntrance種類のオブジェクトが取得できる
         SightableObject inSightObject = _stateMachine.StateControl.GetInSightObject();
-        _stateMachine.StateControl.MoveTo(inSightObject.gameObject.transform.position);
+        _stateMachine.StateControl.MoveTo(inSightObject.transform.position);
 
         // 視界にとらえたものに応じてSequenceを実行したいので再度ここで視界の機能をオンにしている
         _stateMachine.StateControl.ToggleSight(isActive: true);

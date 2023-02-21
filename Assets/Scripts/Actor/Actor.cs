@@ -47,6 +47,8 @@ public class Actor : MonoBehaviour, IStateControl
 
     void IStateControl.MoveToWaypoint() => _actorMoveSystem.MoveToNextWaypoint();
 
+    void IStateControl.MoveToExit() => _actorMoveSystem.MoveToExit();
+
     void IStateControl.MoveTo(Vector3 targetPos) => _actorMoveSystem.MoveTo(targetPos);
 
     float IStateControl.GetAnimationClipLength(string name) => _actorAnimation.GetStateLength(name);

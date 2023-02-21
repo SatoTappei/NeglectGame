@@ -8,6 +8,7 @@ public interface IStateControl
 {
     void PlayAnimation(string name);
     void MoveToWaypoint();
+    void MoveToExit();
     void MoveTo(Vector3 targetPos);
     void ToggleSight(bool isActive);
     float GetAnimationClipLength(string name);

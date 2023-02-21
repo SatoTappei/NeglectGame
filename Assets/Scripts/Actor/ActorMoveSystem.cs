@@ -50,7 +50,7 @@ public class ActorMoveSystem : MonoBehaviour
         _actorPathfindingMove.MoveCancel();
         _currentState = State.Moving;
 
-        Vector3 targetPos = _actorPathfindingWaypoint.GetPassWaypoint();
+        Vector3 targetPos = _actorPathfindingWaypoint.Get(WaypointType.Pass);
         Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
         _actorPathfindingMove.MoveFollowPath(path, () => 
         {
@@ -60,8 +60,18 @@ public class ActorMoveSystem : MonoBehaviour
 
     public void MoveToExit()
     {
-        // 出口に向けて移動する
-        // TODO:移動の際にアニメーションさせる方法
+        _actorPathfindingMove.MoveCancel();
+        _currentState = State.Moving;
+
+        /* 
+         *  次:そもそも出口のWaypointがないので敷く 
+         */
+        //Vector3 targetPos = _actorPathfindingWaypoint.Get(WaypointType.Exit);
+        //Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
+        //_actorPathfindingMove.MoveFollowPath(path, () =>
+        //{
+        //    _currentState = State.Arraival;
+        //});
     }
 
     public void MoveTo(Vector3 targetPos)

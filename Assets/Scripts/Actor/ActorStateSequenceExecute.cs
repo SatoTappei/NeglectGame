@@ -19,8 +19,9 @@ public class ActorStateSequenceExecute : ActorStateBase
 
         if (inSightObject?.SightableType == SightableType.Treasure)
         {
-            // Sequenceの実行
             Debug.Log("宝発見Sequenceを実行");
+            ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Treasure);
+            sequence.Execute(new CancellationTokenSource());
         }
         else if (inSightObject?.SightableType == SightableType.Enemy)
         {
@@ -28,7 +29,8 @@ public class ActorStateSequenceExecute : ActorStateBase
             //      n%の確率で結果が勝ち/負けのステートに遷移
             // Sequenceの実行
 
-            Debug.Log("敵発見Sequenceを実行");
+            ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.BattleWin);
+            sequence.Execute(new CancellationTokenSource());
         }
         else
         {

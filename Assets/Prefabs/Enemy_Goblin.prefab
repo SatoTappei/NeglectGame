@@ -361,6 +361,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7415511448106595824}
   - component: {fileID: 604383532221520010}
+  - component: {fileID: -137339570730523325}
+  - component: {fileID: -4725426811384034920}
   m_Layer: 0
   m_Name: Enemy_Goblin
   m_TagString: Untagged
@@ -405,6 +407,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!135 &-137339570730523325
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5814826099907659747}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-4725426811384034920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5814826099907659747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00c98aa3c49e7a40a8a0b27ff95eaf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sightableType: 2
 --- !u!1 &6054136620196074417
 GameObject:
   m_ObjectHideFlags: 0

@@ -58,11 +58,16 @@ public class ActorSight : MonoBehaviour
 
             UnityEngine.Debug.DrawRay(rayOrigin, rangeInSideDir * distance, Color.red, 0.1f, false);
 
-            if(distance <= _sightRange && angle <= _sightAngle && dontBlocked)
+            if (distance <= _sightRange && angle <= _sightAngle && dontBlocked)
             {
                 _currentInSightObject = rangeInSide.gameObject.GetComponent<SightableObject>();
                 break;
             }
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        //Gizmos.DrawWireSphere(transform.position, _sightRange);
     }
 }

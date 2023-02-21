@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// 文字列に対応したダンジョンの通路を建てるコンポーネント
@@ -46,12 +47,19 @@ public class DungeonPassBuilder : MonoBehaviour
     /// 初期容量は修正候補のマスのコレクションの半分の容量があれば基本的には十分
     /// </summary>
     List<Vector3Int> _waypointList = new (FixPassSetCap/2);
-
+    /// <summary>
+    /// 行き止まりの座標のみを保持するため更に容量が少なくて良い
+    /// </summary>
+    List<Vector3Int> _estimateExitList = new(FixPassSetCap/5);
+    
     internal IReadOnlyDictionary<Vector3Int, DungeonPassMassData> PassMassDic => _passMassDic;
-    internal IReadOnlyCollection<Vector3Int> WaypointList => _waypointList;
+    internal IReadOnlyCollection<Vector3Int> Waypoints => _waypointList;
+    internal IReadOnlyCollection<Vector3Int> EstimateExits => _estimateExitList;
 
     internal void BuildDungeonPass(string str)
     {
+        _estimateExitList.Add(Vector3Int.zero);
+
         // セーブ/ロードのコマンド用
         Stack<CursorParam> saveStack = new (SaveCommandStackCap);
 
@@ -146,6 +154,7 @@ public class DungeonPassBuilder : MonoBehaviour
                     shape = ComponentShape.PassEnd;
 
                     _waypointList.Add(pos);
+                    _estimateExitList.Add(pos);
                     break;
                 // 角
                 case 2:
@@ -203,12 +212,14 @@ public class DungeonPassBuilder : MonoBehaviour
             {
                 // 直線
                 case 2 when roomDir == frontmassData.Dir:
+                    _estimateExitList.Remove(frontPos);
                     rotY = _helper.GetPassStraightRotY(roomDir);
                     prefab = Instantiate(_passPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.Pass;
                     break;
                 // 角
                 case 2:
+                    _estimateExitList.Remove(frontPos);
                     rotY = _helper.GetCornerRotY(roomDir, frontmassData.Dir);
                     prefab = Instantiate(_cornerPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.Corner;

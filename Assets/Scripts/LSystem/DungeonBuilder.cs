@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -30,9 +31,11 @@ public class DungeonBuilder : MonoBehaviour
 
         _dungeonPassBuilder.FixConnectRoomEntrance(roomEntranceDic);
 
-        var passWaypointList = _dungeonPassBuilder.WaypointList;
-        var roomWaypointList = _dungeonRoomBuilder.RoomEntranceDic.Keys;
-        _dungeonWaypointBuilder.BuildPassWaypoint(passWaypointList);
-        _dungeonWaypointBuilder.BuildRoomWaypoint(roomWaypointList);
+        IReadOnlyCollection<Vector3Int> passWaypoints = _dungeonPassBuilder.Waypoints;
+        IEnumerable<Vector3Int> roomWaypoints = _dungeonRoomBuilder.RoomEntranceDic.Keys;
+        IReadOnlyCollection<Vector3Int> estimateExitpositions = _dungeonPassBuilder.EstimateExits;
+        _dungeonWaypointBuilder.BuildPassWaypoint(passWaypoints);
+        _dungeonWaypointBuilder.BuildRoomWaypoint(roomWaypoints);
+        _dungeonWaypointBuilder.BuildExitWaypointRandom(estimateExitpositions);
     }
 }

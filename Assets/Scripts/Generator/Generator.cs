@@ -29,6 +29,8 @@ public class Generator : MonoBehaviour
 
     [Header("生成するプレハブ")]
     [SerializeField] GameObject[] _prefabs;
+    [Header("生成したプレハブを登録する親")]
+    [SerializeField] Transform _parent;
     [Header("生成する間隔")]
     [SerializeField] float _interval = 1.0f;
 
@@ -37,7 +39,7 @@ public class Generator : MonoBehaviour
     /// 外部からキャンセル用のメソッドを呼ぶだけで生成処理をキャンセルできるように
     /// CancellationTokenSourceをこちら側で保持しておく
     /// </summary>
-    CancellationTokenSource _tokenSource;
+    CancellationTokenSource _cts;
     /// <summary>
     /// オブジェクトを生成したタイミングで
     /// 外部からそのオブジェクトを初期化できるように保持しておく
@@ -57,7 +59,7 @@ public class Generator : MonoBehaviour
 
     public async UniTask GenerateRegularlyAsync(CancellationTokenSource tokenSource)
     {
-        _tokenSource = tokenSource;
+        _cts = tokenSource;
 
         try
         {
@@ -67,9 +69,8 @@ public class Generator : MonoBehaviour
                 if (_isGeneratable)
                 {
                     int r = UnityEngine.Random.Range(0, _prefabs.Length);
-
                     // 生成した際の初期化処理を別のコンポーネントに委任する
-                    _lastInstantiatedPrefab.Value  = Instantiate(_prefabs[r]);
+                    _lastInstantiatedPrefab.Value = Instantiate(_prefabs[r], _parent);
                 }
                 await UniTask.Delay(TimeSpan.FromSeconds(_interval), cancellationToken: tokenSource.Token);
             }
@@ -80,10 +81,10 @@ public class Generator : MonoBehaviour
         }
     }
 
-    public void GenerateRegularlyCancel() => _tokenSource?.Cancel();
+    public void GenerateRegularlyCancel() => _cts?.Cancel();
 
     void OnDestroy()
     {
-        _tokenSource?.Cancel();
+        _cts?.Cancel();
     }
 }

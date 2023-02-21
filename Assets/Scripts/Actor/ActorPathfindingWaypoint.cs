@@ -14,9 +14,9 @@ public class ActorPathfindingWaypoint
     }
 
     // TODO:同じウェイポイントを連続で獲得してしまうのを避ける
-    public Vector3 GetPassWaypoint()
+    public Vector3 Get(WaypointType type)
     {
-        List<Vector3> list = _waypointDic[WaypointType.Pass]; 
+        List<Vector3> list = _waypointDic[type]; 
         Vector3 waypoint = list[Random.Range(0, list.Count)];
 
         return waypoint;
