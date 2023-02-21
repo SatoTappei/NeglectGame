@@ -504,7 +504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 4038228652531750984}
-  _moveSpeed: 20
+  _moveSpeed: 5
   _runSpeedMag: 2
 --- !u!114 &-7539302287781479863
 MonoBehaviour:
@@ -550,7 +550,6 @@ MonoBehaviour:
   _sightBlockableLayer:
     serializedVersion: 2
     m_Bits: 128
-  _updateDuration: 0.25
   _sightRange: 5
   _sightAngle: 110
 --- !u!1 &3116145210212608323

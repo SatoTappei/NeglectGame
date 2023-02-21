@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 enum SightableType
 {
-    Waypoint,
+    RoomEntrance,
     Treasure,
     Enemy,
 }

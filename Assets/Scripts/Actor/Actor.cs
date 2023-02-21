@@ -47,15 +47,23 @@ public class Actor : MonoBehaviour, IStateControl
 
     void IStateControl.MoveToWaypoint() => _actorMoveSystem.MoveToNextWaypoint();
 
+    void IStateControl.MoveTo(Vector3 targetPos) => _actorMoveSystem.MoveTo(targetPos);
+
     float IStateControl.GetAnimationClipLength(string name) => _actorAnimation.GetStateLength(name);
 
-    bool IStateControl.IsArrivalWaypoint() => _actorMoveSystem.IsArrivalTargetPos();
+    bool IStateControl.IsArrivalTargetPos() => _actorMoveSystem.IsArrivalTargetPos();
 
     SightableObject IStateControl.GetInSightObject() => _actorSight.CurrentInSightObject;
 
-    void IStateControl.MoveToInSightObject()
+    void IStateControl.ToggleSight(bool isActive)
     {
-        SightableObject inSightObject = _actorSight.CurrentInSightObject;
-        _actorMoveSystem.MoveTo(inSightObject.transform.position);
+        if (isActive)
+        {
+            _actorSight.StartLookInSight();
+        }
+        else
+        {
+            _actorSight.StopLookInSight();
+        }
     }
 }

@@ -29,9 +29,8 @@ public class ActorSight : MonoBehaviour
     internal SightableObject CurrentInSightObject => _currentInSightObject;
 
     public void StartLookInSight() => InvokeRepeating(nameof(LookInSight), 0, UpdateInterval);
-    public void StopLookInSight() { /* Ž‹ŠE‚ÌXV‚ðŽ~‚ß‚éˆ— */ }
+    public void StopLookInSight() => CancelInvoke(nameof(LookInSight));
 
-    /// <summary></summary>
     void LookInSight()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _results, _sightableLayer);

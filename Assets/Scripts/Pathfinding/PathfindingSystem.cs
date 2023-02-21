@@ -11,7 +11,7 @@ public class PathfindingSystem : MonoBehaviour, IPathfinding
     [Header("デバッグ用:移動できない箇所が渡されたときに視覚化する")]
     [SerializeField] GameObject _debugVisualizer;
 
-    Stack<Vector3> IPathfinding.GetPathToWaypoint(Vector3 startPos, Vector3 targetPos)
+    Stack<Vector3> IPathfinding.GetPathToTargetPos(Vector3 startPos, Vector3 targetPos)
     {
         return Pathfinding(startPos, targetPos);
     }
@@ -25,17 +25,11 @@ public class PathfindingSystem : MonoBehaviour, IPathfinding
 
         if (!startNode.IsMovable)
         {
-            Debug.LogWarning("だめなとっから移動します");
-            Instantiate(_debugVisualizer, startPos, Quaternion.identity);
-            UnityEditor.EditorApplication.isPaused = true;
+            Debug.LogWarning("移動不可能な座標が始点に選ばれています: " + startPos);
         }
-
-        if (/*!startNode.IsMovable || */!targetNode.IsMovable)
+        if (!targetNode.IsMovable)
         {
-            Debug.LogError("移動できない座標です: From " + startPos + " To " + targetPos);
-            
-            Instantiate(_debugVisualizer, targetPos, Quaternion.identity);
-
+            Debug.LogError("目標が移動不可能な座標です: " + targetPos);
             return null;
         }
 

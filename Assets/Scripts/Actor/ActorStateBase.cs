@@ -24,8 +24,8 @@ public abstract class ActorStateBase
     {
         if (_stage == Stage.Enter)
         {
-            Enter();
             _stage = Stage.Stay;
+            Enter();
         }
         else if (_stage == Stage.Stay)
         {
@@ -33,8 +33,8 @@ public abstract class ActorStateBase
         }
         else if (_stage == Stage.Exit)
         {
-            Exit();
             _stage = Stage.Enter;
+            Exit();
             return _nextState;
         }
 

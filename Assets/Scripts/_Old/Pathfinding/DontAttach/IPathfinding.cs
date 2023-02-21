@@ -6,5 +6,5 @@ using UnityEngine;
 /// </summary>
 public interface IPathfinding
 {
-    Stack<Vector3> GetPathToWaypoint(Vector3 startPos, Vector3 endPos);
+    Stack<Vector3> GetPathToTargetPos(Vector3 startPos, Vector3 endPos);
 }

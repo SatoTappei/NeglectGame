@@ -6,25 +6,25 @@ using System.Threading;
 /// </summary>
 public class ActorStateSequence
 {
-    ActorSequenceNodeBase[] _sequence;
+    ActorNodeBase[] _sequence;
     int _insertIndex;
 
     public ActorStateSequence(int length)
     {
-        _sequence = new ActorSequenceNodeBase[length];
+        _sequence = new ActorNodeBase[length];
     }
 
-    public void Add(ActorSequenceNodeBase node)
+    public void Add(ActorNodeBase node)
     {
         _sequence[_insertIndex] = node;
         _insertIndex++;
     }
 
-    public async void Play(CancellationTokenSource cts)
+    public async void Execute(CancellationTokenSource cts)
     {
         try
         {
-            foreach (ActorSequenceNodeBase node in _sequence)
+            foreach (ActorNodeBase node in _sequence)
             {
                 await node.PlayAsync(cts);
             }

@@ -2506,7 +2506,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pathfindingGrid: {fileID: 5632890598956847952}
-  _debugVisualizer: {fileID: 7079537059908555760, guid: 8db082d0e0119224ca2ba8657e8efcb0, type: 3}
+  _debugVisualizer: {fileID: 7079537059908555760, guid: 1dddbbd42ca89434fab5026b7c4b0783, type: 3}
 --- !u!4 &5632890598956847951
 Transform:
   m_ObjectHideFlags: 0
