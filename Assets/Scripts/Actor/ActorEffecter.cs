@@ -22,7 +22,7 @@ public class ActorEffecter : MonoBehaviour
         foreach (Collider collider in _results)
         {
             if (collider == null) break;
-            collider.gameObject.GetComponent<IEffectable>().EffectByActor();
+            //collider.gameObject.GetComponent<IEffectable>().EffectByActor();
         }
     }
 }

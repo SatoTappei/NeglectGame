@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 /// <summary>
 /// キャラクターを移動させる機能を制御するコンポーネント
@@ -43,6 +42,8 @@ public class ActorMoveSystem : MonoBehaviour
         _actorPathfindingMove = new (gameObject, _model, _moveSpeed, _runSpeedMag);
     }
 
+    public bool IsWaypointAvailable(Vector3 pos) => _actorPathfindingWaypoint.IsAvailable(pos);
+
     public bool IsArrivalTargetPos() => _currentState == State.Arraival;
 
     public void MoveToNextWaypoint()
@@ -63,15 +64,12 @@ public class ActorMoveSystem : MonoBehaviour
         _actorPathfindingMove.MoveCancel();
         _currentState = State.Moving;
 
-        /* 
-         *  次:そもそも出口のWaypointがないので敷く 
-         */
-        //Vector3 targetPos = _actorPathfindingWaypoint.Get(WaypointType.Exit);
-        //Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        //_actorPathfindingMove.MoveFollowPath(path, () =>
-        //{
-        //    _currentState = State.Arraival;
-        //});
+        Vector3 targetPos = _actorPathfindingWaypoint.Get(WaypointType.Exit);
+        Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
+        _actorPathfindingMove.MoveFollowPath(path, () =>
+        {
+            _currentState = State.Arraival;
+        });
     }
 
     public void MoveTo(Vector3 targetPos)

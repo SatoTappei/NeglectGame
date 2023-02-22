@@ -8,10 +8,7 @@ public class ActorStateExplore : ActorStateBase
     bool _isArraival;
     Tween _tween;
 
-    public ActorStateExplore(ActorStateMachine stateMachine) : base(stateMachine)
-    {
-        
-    }
+    public ActorStateExplore(ActorStateMachine stateMachine) : base(stateMachine) { }
 
     protected override void Enter()
     {
@@ -20,17 +17,16 @@ public class ActorStateExplore : ActorStateBase
 
     protected override void Stay()
     {
-        if (_stateMachine.StateControl.GetInSightObject() != null)
+        if (_stateMachine.StateControl.GetInSightAvailableMovingTarget() != null)
         {
+            _tween?.Kill();
             ChangeState(StateType.InSightSelect);
             return;
         }
 
-        if (_isArraival) return;
-
         // 目的地に到着したら見回すアニメーションの長さ分だけ待つことで
         // アニメーションの終了を待機しての処理を実現している
-        if (_stateMachine.StateControl.IsArrivalTargetPos())
+        if (_stateMachine.StateControl.IsTargetPosArrival() && !_isArraival)
         {
             _isArraival = true;
             _stateMachine.StateControl.PlayAnimation("LookAround");
@@ -40,8 +36,6 @@ public class ActorStateExplore : ActorStateBase
             {
                 ChangeState(StateType.Explore);
             }).SetLink(_stateMachine.gameObject);
-
-            return;
         }
 
         // やる気が一定以下の時

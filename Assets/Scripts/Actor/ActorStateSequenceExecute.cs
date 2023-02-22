@@ -1,27 +1,24 @@
 using System.Threading;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// 各種Sequenceを実行するステートのクラス
 /// </summary>
 public class ActorStateSequenceExecute : ActorStateBase
 {
-    public ActorStateSequenceExecute(ActorStateMachine stateMachine) : base(stateMachine)
-    {
-
-    }
+    public ActorStateSequenceExecute(ActorStateMachine stateMachine) : base(stateMachine) { }
 
     protected override void Enter()
     {
         // このステートに遷移してくる際には視界の機能は切ってあるので
         // Sequence実行時に違うSightableTypeのオブジェクトが渡されることはない
 
-        SightableObject inSightObject = _stateMachine.StateControl.GetInSightObject();
+        SightableObject inSightObject = _stateMachine.StateControl.GetInSightAvailableMovingTarget();
 
         if (inSightObject?.SightableType == SightableType.Treasure)
         {
-            Debug.Log("宝発見Sequenceを実行");
             ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Treasure);
-            sequence.Execute(new CancellationTokenSource());
+            sequence.Execute(_stateMachine.gameObject.GetCancellationTokenOnDestroy());
         }
         else if (inSightObject?.SightableType == SightableType.Enemy)
         {
@@ -30,7 +27,7 @@ public class ActorStateSequenceExecute : ActorStateBase
             // Sequenceの実行
 
             ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.BattleWin);
-            sequence.Execute(new CancellationTokenSource());
+            sequence.Execute(_stateMachine.gameObject.GetCancellationTokenOnDestroy());
         }
         else
         {

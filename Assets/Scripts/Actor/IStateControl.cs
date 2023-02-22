@@ -12,6 +12,6 @@ public interface IStateControl
     void MoveTo(Vector3 targetPos);
     void ToggleSight(bool isActive);
     float GetAnimationClipLength(string name);
-    bool IsArrivalTargetPos();
-    SightableObject GetInSightObject();
+    bool IsTargetPosArrival();
+    SightableObject GetInSightAvailableMovingTarget();
 }

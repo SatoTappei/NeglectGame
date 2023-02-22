@@ -70,7 +70,7 @@ public class Generator : MonoBehaviour
                 {
                     int r = UnityEngine.Random.Range(0, _prefabs.Length);
                     // 生成した際の初期化処理を別のコンポーネントに委任する
-                    _lastInstantiatedPrefab.Value = Instantiate(_prefabs[r], _parent);
+                    _lastInstantiatedPrefab.Value = Instantiate(_prefabs[r]/*, _parent*/);
                 }
                 await UniTask.Delay(TimeSpan.FromSeconds(_interval), cancellationToken: tokenSource.Token);
             }

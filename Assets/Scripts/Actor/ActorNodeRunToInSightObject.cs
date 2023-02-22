@@ -6,16 +6,14 @@ using System.Threading;
 /// </summary>
 public class ActorNodeRunToInSightObject : ActorNodeBase
 {
-    public ActorNodeRunToInSightObject(ActorStateMachine stateMachine, ActorStateSequence sequence)
-        : base(stateMachine, sequence)
-    {
+    public ActorNodeRunToInSightObject(ActorStateMachine stateMachine) : base(stateMachine) { }
 
-    }
-
-    protected override async UniTask ExecuteAsync(CancellationTokenSource cts)
+    protected override async UniTask ExecuteAsync(CancellationToken token)
     {
-        SightableObject inSightObject = _stateMachine.StateControl.GetInSightObject();
+        token.ThrowIfCancellationRequested();
+
+        SightableObject inSightObject = _stateMachine.StateControl.GetInSightAvailableMovingTarget();
         _stateMachine.StateControl.MoveTo(inSightObject.transform.position);
-        await UniTask.WaitUntil(() => _stateMachine.StateControl.IsArrivalTargetPos(), cancellationToken: cts.Token);
+        await UniTask.WaitUntil(() => _stateMachine.StateControl.IsTargetPosArrival(), cancellationToken: token);
     }
 }

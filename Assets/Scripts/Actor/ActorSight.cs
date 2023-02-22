@@ -30,6 +30,7 @@ public class ActorSight : MonoBehaviour
 
     public void StartLookInSight() => InvokeRepeating(nameof(LookInSight), 0, UpdateInterval);
     public void StopLookInSight() => CancelInvoke(nameof(LookInSight));
+    public void ResetLookInSight() => _currentInSightObject = null;
 
     void LookInSight()
     {

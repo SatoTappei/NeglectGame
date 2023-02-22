@@ -20,13 +20,15 @@ public class ActorStateSequence
         _insertIndex++;
     }
 
-    public async void Execute(CancellationTokenSource cts)
+    public async void Execute(CancellationToken token)
     {
         try
         {
+            token.ThrowIfCancellationRequested();
+
             foreach (ActorNodeBase node in _sequence)
             {
-                await node.PlayAsync(cts);
+                await node.PlayAsync(token);
             }
         }
         catch(OperationCanceledException e)

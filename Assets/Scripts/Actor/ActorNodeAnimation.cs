@@ -7,17 +7,26 @@ using System.Threading;
 public class ActorNodeAnimation : ActorNodeBase
 {
     string _animationName;
+    int _iteration;
 
-    public ActorNodeAnimation(ActorStateMachine stateMachine, ActorStateSequence sequence, string animationName)
-        : base(stateMachine, sequence)
+    public ActorNodeAnimation(ActorStateMachine stateMachine,  string animationName, int iteration = 1)
+        : base(stateMachine)
     {
         _animationName = animationName;
+        _iteration = iteration;
     }
 
-    protected override async UniTask ExecuteAsync(CancellationTokenSource cts)
+    protected override async UniTask ExecuteAsync(CancellationToken token)
     {
-        _stateMachine.StateControl.PlayAnimation(_animationName);
-        float delay = _stateMachine.StateControl.GetAnimationClipLength(_animationName);
-        await UniTask.Delay(System.TimeSpan.FromSeconds(delay), cancellationToken: cts.Token);
+        // 指定した回数分同じアニメーションを繰り返す
+        for(int i = 0; i < _iteration; i++)
+        {
+            token.ThrowIfCancellationRequested();
+
+            _stateMachine.StateControl.PlayAnimation(_animationName);
+            Debug.Log((i + 1) + "かいくりかえしたです");
+            float delay = _stateMachine.StateControl.GetAnimationClipLength(_animationName);
+            await UniTask.Delay(System.TimeSpan.FromSeconds(delay), cancellationToken: token);
+        }
     }
 }

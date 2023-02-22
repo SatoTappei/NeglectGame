@@ -30,7 +30,7 @@ public class DungeonPassBuilder : MonoBehaviour
     static readonly int SaveCommandStackCap = 4;
 
     [Header("通路を構成するプレハブ")]
-    [SerializeField] GameObject _passPrefab;
+    [SerializeField] GameObject[] _passPrefabs;
     [SerializeField] GameObject _cornerPrefab;
     [SerializeField] GameObject _tJunctionPrefab;
     [SerializeField] GameObject _crossPrefab;
@@ -113,7 +113,8 @@ public class DungeonPassBuilder : MonoBehaviour
 
             Direction dir = _helper.GetDirection(dirVec);
             float rotY = _helper.GetPassStraightRotY(dir);
-            GameObject go = Instantiate(_passPrefab, pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+            int r = Random.Range(0, _passPrefabs.Length);
+            GameObject go = Instantiate(_passPrefabs[r], pos, Quaternion.Euler(0, rotY, 0), _prefabParent);
             int connect = _helper.GetConnectedFromShape(ComponentShape.Pass);
             
             DungeonPassMassData massData = new (dir, ComponentShape.Pass, go, connect);
@@ -214,7 +215,8 @@ public class DungeonPassBuilder : MonoBehaviour
                 case 2 when roomDir == frontmassData.Dir:
                     _estimateExitList.Remove(frontPos);
                     rotY = _helper.GetPassStraightRotY(roomDir);
-                    prefab = Instantiate(_passPrefab, frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
+                    int r = Random.Range(0, _passPrefabs.Length);
+                    prefab = Instantiate(_passPrefabs[r], frontPos, Quaternion.Euler(0, rotY, 0), _prefabParent);
                     shape = ComponentShape.Pass;
                     break;
                 // 角

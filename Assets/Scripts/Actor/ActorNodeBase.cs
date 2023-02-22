@@ -7,18 +7,16 @@ using System.Threading;
 public abstract class ActorNodeBase
 {
     protected ActorStateMachine _stateMachine;
-    protected ActorStateSequence _sequence;
 
-    public ActorNodeBase(ActorStateMachine stateMachine, ActorStateSequence sequence)
+    public ActorNodeBase(ActorStateMachine stateMachine)
     {
         _stateMachine = stateMachine;
-        _sequence = sequence;
     }
 
-    public async UniTask PlayAsync(CancellationTokenSource cts)
+    public async UniTask PlayAsync(CancellationToken token)
     {
-        await ExecuteAsync(cts);
+        await ExecuteAsync(token);
     }
 
-    protected abstract UniTask ExecuteAsync(CancellationTokenSource cts);
+    protected abstract UniTask ExecuteAsync(CancellationToken token);
 }

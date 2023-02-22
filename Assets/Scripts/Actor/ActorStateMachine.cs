@@ -7,7 +7,7 @@ public enum StateType
 {
     Entry,
     Explore,
-    MoveToRoom,
+    MoveToRoomEntrance,
     InSightSelect,
     SequenceExecute,
     Dead,
@@ -42,14 +42,14 @@ public class ActorStateMachine : MonoBehaviour
 
         ActorStateEntry stateEntry = new(this);
         ActorStateExplore stateExplore = new(this);
-        ActorStateMoveToRoom stateMoveToRoom = new(this);
+        ActorStateMoveToRoomEntrance stateMoveToRoomEntrance = new(this);
         ActorStateInSightSelect stateInSightSelect = new(this);
         ActorStateSequenceExecute stateSequenceExecute = new(this);
         ActorStateDead stateDead = new(this);
 
         _stateDic.Add(StateType.Entry, stateEntry);
         _stateDic.Add(StateType.Explore, stateExplore);
-        _stateDic.Add(StateType.MoveToRoom, stateMoveToRoom);
+        _stateDic.Add(StateType.MoveToRoomEntrance, stateMoveToRoomEntrance);
         _stateDic.Add(StateType.InSightSelect, stateInSightSelect);
         _stateDic.Add(StateType.SequenceExecute, stateSequenceExecute);
         _stateDic.Add(StateType.Dead, stateDead);
@@ -60,11 +60,11 @@ public class ActorStateMachine : MonoBehaviour
         // お宝発見時のSequence
         ActorStateSequence treasureSequence = new(length: 4);
 
-        ActorNodeRunToInSightObject nodeRunToInSightObject = new(this, battleWinSequence);
-        ActorNodeMoveToExit nodeMoveToExit = new(this, battleWinSequence);
-        ActorNodeAnimation nodePanicAnimation = new(this, battleWinSequence, "Panic");
-        ActorNodeAnimation nodeJoyAnimation = new(this, battleWinSequence, "Joy");
-        ActorNodeAnimation nodeAttackAnimation = new(this, battleWinSequence, "Attack");
+        ActorNodeRunToInSightObject nodeRunToInSightObject = new(this);
+        ActorNodeMoveToExit nodeMoveToExit = new(this);
+        ActorNodeAnimation nodePanicAnimation = new(this, "Panic");
+        ActorNodeAnimation nodeJoyAnimation = new(this, "Joy");
+        ActorNodeAnimation nodeAttackAnimation = new(this, "Attack", iteration: 3);
 
         battleWinSequence.Add(nodePanicAnimation);
         battleWinSequence.Add(nodeRunToInSightObject);
@@ -117,41 +117,3 @@ public class ActorStateMachine : MonoBehaviour
         }
     }
 }
-
-
-// うろうろ中に部屋を見つけたら入っていく
-// 一度入った部屋には二度はいらないようにする
-// どうやって部屋を認識するか
-//  ↑部屋かWaypointかをランダムに選択するのは部屋の手前まで来て引き返すので不自然
-
-// やる気が一定以下のSequence
-//  脱出(位置に到着)
-
-// 部屋を発見したときのSequence
-//  対象に向かって移動(位置に到着)
-//  何もなければExploreステートへ
-//  もしくは各Sequenceへ <= 
-
-// 宝箱を発見したときのSequence
-//  見つけたアニメーション(アニメーション終了)
-//  対象に向かってダッシュ(位置に到着)
-//  獲得のアニメーション(アニメーション終了)
-//  出口に戻る(位置に到着)
-
-// 敵を発見したときのSequence(結果が勝ち)
-//  見つけたアニメーション(アニメーション終了)
-//  対象に向かってダッシュ(位置に到着)
-//  戦闘する(勝ち)(アニメーション終了)
-//  出口に戻る(位置に到着)
-
-// 敵を発見したときのSequence(結果が負け)
-//  見つけたアニメーション(アニメーション終了)
-//  対象に向かってダッシュ(位置に到着)
-//  戦闘する(負け)(アニメーション終了)
-//  死亡ステートに遷移
-
-/* 
- * 実際に書くSequenceを実装してみある
- */
-// 各Sequenceで使うノードのクラスを作成した
-//  それぞれにStateMachineとSequenceを渡しているので幅が利くはず
