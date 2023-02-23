@@ -11,11 +11,12 @@ using UnityEngine.Events;
 public class ActorPathfindingMove
 {
     /// <summary>移動開始時にインスタンスのnew、移動のキャンセルには.Cancel()を呼ぶ</summary>
-    CancellationTokenSource _token;
+    CancellationTokenSource _cts;
     /// <summary>transformが使えないので代わりに自身を参照させる</summary>
     GameObject _actor;
     /// <summary>進行方向を向かせるModelオブジェクト</summary>
     Transform _model;
+
     float _moveSpeed;
     float _runSpeedMag;
 
@@ -27,22 +28,22 @@ public class ActorPathfindingMove
         _runSpeedMag = runSpeedMag;
     }
 
-    internal void MoveFollowPath(Stack<Vector3> stack, UnityAction callBack)
+    internal async UniTaskVoid MoveFollowPathAsync(Stack<Vector3> stack, UnityAction callBack)
     {
-        MoveAsync(stack, _moveSpeed, callBack).Forget();
+        _cts = new CancellationTokenSource();
+        await MoveAsync(stack, _moveSpeed, _cts);
+        callBack?.Invoke();
     }
 
-    internal void RunFollowPath(Stack<Vector3> stack, UnityAction callBack)
+    internal async UniTaskVoid RunFollowPathAsync(Stack<Vector3> stack, UnityAction callBack)
     {
-        MoveAsync(stack, _moveSpeed * _runSpeedMag, callBack).Forget();
+        _cts = new CancellationTokenSource();
+        await MoveAsync(stack, _moveSpeed * _runSpeedMag, _cts);
+        callBack?.Invoke();
     }
 
-    internal void MoveCancel() => _token?.Cancel();
-
-    async UniTaskVoid MoveAsync(Stack<Vector3> stack, float speed, UnityAction callBack)
+    async UniTask MoveAsync(Stack<Vector3> stack, float speed, CancellationTokenSource cts)
     {
-        _token = new CancellationTokenSource();
-
         foreach (Vector3 nextPos in stack)
         {
             _model.DOLookAt(nextPos, 0.5f).SetLink(_actor);
@@ -52,15 +53,15 @@ public class ActorPathfindingMove
             {
                 if (_actor == null)
                 {
-                    _token?.Cancel();
+                    cts.Cancel();
                     return;
                 }
 
                 _actor.transform.position = Vector3.MoveTowards(_actor.transform.position, nextPos, Time.deltaTime * speed);
-                await UniTask.Yield(cancellationToken: _token.Token);
+                await UniTask.Yield(cancellationToken: cts.Token);
             }
         }
-
-        callBack?.Invoke();
     }
+
+    internal void MoveCancel() => _cts?.Cancel();
 }

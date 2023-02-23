@@ -2507,7 +2507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _passWaypointPrefab: {fileID: 257592772319012978, guid: a90e943c52f6b1c45a727941f21ea789, type: 3}
-  _roomWaypointPrefab: {fileID: 7079537059908555760, guid: 162eab2e1abafae479328c17bf89a33c, type: 3}
+  _roomWaypointPrefab: {fileID: 4880610646160836894, guid: 908cba94c00e3db4eb3948383b120abb, type: 3}
   _exitWaypointPrefab: {fileID: 5513843999243754119, guid: c4ae76fb9a81c1544bcd5d770b934e1b, type: 3}
   _waypointParent: {fileID: 947083635}
   _exitWaypointQuantity: 2
@@ -2570,7 +2570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb48f68b53c48242bbe80c19d8b2540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _testMassVisualizer: {fileID: 7079537059908555760, guid: 3f32c1cb6549c7f4782bfbbed5d4b574, type: 3}
+  _testMassVisualizer: {fileID: 0}
   _movableLayer:
     serializedVersion: 2
     m_Bits: 64

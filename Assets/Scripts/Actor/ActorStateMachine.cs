@@ -7,8 +7,8 @@ public enum StateType
 {
     Entry,
     Explore,
-    MoveToRoomEntrance,
-    InSightSelect,
+    Select,
+    EnterTheRoom,
     SequenceExecute,
     Dead,
 }
@@ -32,7 +32,6 @@ public class ActorStateMachine : MonoBehaviour
     Dictionary<StateType, ActorStateBase> _stateDic = new(StateDicCapacity);
     Dictionary<SequenceType, ActorStateSequence> _sequenceDic = new(SequenceDicCapacity);
     IStateControl _stateControl;
-    CancellationTokenSource _cts = new CancellationTokenSource();
 
     public IStateControl StateControl => _stateControl;
 
@@ -42,15 +41,15 @@ public class ActorStateMachine : MonoBehaviour
 
         ActorStateEntry stateEntry = new(this);
         ActorStateExplore stateExplore = new(this);
-        ActorStateMoveToRoomEntrance stateMoveToRoomEntrance = new(this);
-        ActorStateInSightSelect stateInSightSelect = new(this);
+        ActorStateSelect stateSelect = new(this);
+        ActorStateEnterTheRoom stateEnterTheRoom = new(this);
         ActorStateSequenceExecute stateSequenceExecute = new(this);
         ActorStateDead stateDead = new(this);
 
         _stateDic.Add(StateType.Entry, stateEntry);
         _stateDic.Add(StateType.Explore, stateExplore);
-        _stateDic.Add(StateType.MoveToRoomEntrance, stateMoveToRoomEntrance);
-        _stateDic.Add(StateType.InSightSelect, stateInSightSelect);
+        _stateDic.Add(StateType.Select, stateSelect);
+        _stateDic.Add(StateType.EnterTheRoom, stateEnterTheRoom);
         _stateDic.Add(StateType.SequenceExecute, stateSequenceExecute);
         _stateDic.Add(StateType.Dead, stateDead);
 
@@ -79,10 +78,7 @@ public class ActorStateMachine : MonoBehaviour
         _sequenceDic.Add(SequenceType.BattleWin, battleWinSequence);
         _sequenceDic.Add(SequenceType.BattleLose, battleLoseSequence);
         _sequenceDic.Add(SequenceType.Treasure, treasureSequence);
-    }
 
-    void Start()
-    {
         _currentState = GetState(StateType.Entry);
     }
 

@@ -32,6 +32,18 @@ public class ActorSight : MonoBehaviour
     public void StopLookInSight() => CancelInvoke(nameof(LookInSight));
     public void ResetLookInSight() => _currentInSightObject = null;
 
+    void Update()
+    {
+        //if (IsInvoking(nameof(LookInSight)))
+        //{
+        //    transform.localScale = Vector3.one * 2;
+        //}
+        //else
+        //{
+        //    transform.localScale = Vector3.one;
+        //}
+    }
+
     void LookInSight()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _results, _sightableLayer);
@@ -48,10 +60,7 @@ public class ActorSight : MonoBehaviour
             float distance = Vector3.Distance(rangeInSidePos, _actorModel.position);
             float angle = Vector3.Angle(_actorModel.forward, rangeInSideDir);
 
-            // TODO:現状は問題ないが、Rayの飛ばし方を直すと良い感じ
-            // モデルの頭上から水平にRayを飛ばして障害物に衝突しなかったらという判定なので
-            // モデルより低い障害物は無視される
-            
+            // モデルの頭上から水平にRayを飛ばしているのでモデルより低い障害物は無視される
             // 対象までRayを飛ばしてヒットしなかったら の判定だと対象が半分以上壁に埋まっているとfalseが返る
             Vector3 rayOrigin = _actorModel.transform.position;
             rayOrigin.y += ActorModelHeight;
@@ -67,8 +76,8 @@ public class ActorSight : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
-    {
-        //Gizmos.DrawWireSphere(transform.position, _sightRange);
-    }
+    //void OnDrawGizmos()
+    //{
+    //    Gizmos.DrawWireSphere(transform.position, _sightRange);
+    //}
 }

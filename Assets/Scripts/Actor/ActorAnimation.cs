@@ -1,8 +1,8 @@
 using DG.Tweening;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEditor.Animations;
 
 /// <summary>
 /// キャラクターをアニメーションさせるコンポーネント

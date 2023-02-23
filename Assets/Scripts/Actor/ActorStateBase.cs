@@ -20,6 +20,10 @@ public abstract class ActorStateBase
         _stage = Stage.Enter;
     }
 
+    /// <summary>
+    /// ChangeState()が呼ばれたフレームではなく、次のフレームでExit()を呼び出し
+    /// その次のフレームから次のステートに切り替わる
+    /// </summary>
     internal ActorStateBase Update()
     {
         if (_stage == Stage.Enter)

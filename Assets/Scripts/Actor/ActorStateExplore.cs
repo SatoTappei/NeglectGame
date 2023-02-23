@@ -19,8 +19,7 @@ public class ActorStateExplore : ActorStateBase
     {
         if (_stateMachine.StateControl.GetInSightAvailableMovingTarget() != null)
         {
-            _tween?.Kill();
-            ChangeState(StateType.InSightSelect);
+            ChangeState(StateType.Select);
             return;
         }
 
@@ -32,10 +31,8 @@ public class ActorStateExplore : ActorStateBase
             _stateMachine.StateControl.PlayAnimation("LookAround");
 
             float delayTime = _stateMachine.StateControl.GetAnimationClipLength("LookAround");
-            _tween = DOVirtual.DelayedCall(delayTime, () =>
-            {
-                ChangeState(StateType.Explore);
-            }).SetLink(_stateMachine.gameObject);
+            _tween = DOVirtual.DelayedCall(delayTime, () => TryChangeState(StateType.Explore))
+                .SetLink(_stateMachine.gameObject);
         }
 
         // やる気が一定以下の時
@@ -45,5 +42,22 @@ public class ActorStateExplore : ActorStateBase
     {
         _isArraival = false;
         _tween?.Kill();
+        _stateMachine.StateControl.MoveCancel();
+    }
+
+    /// <summary>
+    /// 処理順の関係でInSightSelectステートに遷移する処理が呼び出された後にDelayedCall()が
+    /// 呼ばれることもあるため、先に遷移処理が呼ばれていた場合はこの遷移処理をキャンセルする
+    /// </summary>
+    void TryChangeState(StateType type)
+    {
+        if (_stage == Stage.Stay)
+        {
+            ChangeState(type);
+        }
+        else
+        {
+            Debug.LogWarning("既に別のステートに遷移する処理が呼ばれています: " + type);
+        }
     }
 }

@@ -3,26 +3,25 @@ using DG.Tweening;
 /// <summary>
 /// 部屋の入口まで移動するステートのクラス
 /// </summary>
-public class ActorStateMoveToRoomEntrance : ActorStateBase
+public class ActorStateEnterTheRoom : ActorStateBase
 {
     bool _isArraival;
     Tween _tween;
 
-    public ActorStateMoveToRoomEntrance(ActorStateMachine stateMachine) : base(stateMachine) { }
+    public ActorStateEnterTheRoom(ActorStateMachine stateMachine) : base(stateMachine) { }
 
     protected override void Enter()
     {
         // このステートに遷移する前に視界の機能を切ってあるので、前フレームから視界が更新されず
         // RoomEntrance種類のオブジェクトが取得できる
         SightableObject inSightObject = _stateMachine.StateControl.GetInSightAvailableMovingTarget();
-        if(inSightObject.SightableType != SightableType.RoomEntrance)
+        if (inSightObject.SightableType != SightableType.RoomEntrance)
         {
-            Debug.Log("RoomEntrance種類のオブジェクトを取得できませんでした。Exploreステートに遷移します。");
-            ChangeState(StateType.Explore);
+            Debug.LogWarning("RoomEntrance種類のオブジェクトを取得できませんでした。");
             return;
         }
 
-        _stateMachine.StateControl.MoveTo(inSightObject.transform.position);
+        _stateMachine.StateControl.MoveTo(inSightObject);
         //_stateMachine.StateControl.AddAvailableRoomEntrance(inSightObject.transform.position);
 
         // 視界にとらえたものに応じてSequenceを実行したいので再度ここで視界の機能をオンにしている
@@ -61,5 +60,6 @@ public class ActorStateMoveToRoomEntrance : ActorStateBase
     {
         _isArraival = false;
         _tween?.Kill();
+        _stateMachine.StateControl.MoveCancel();
     }
 }

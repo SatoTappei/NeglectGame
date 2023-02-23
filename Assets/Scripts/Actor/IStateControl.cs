@@ -9,8 +9,9 @@ public interface IStateControl
     void PlayAnimation(string name);
     void MoveToWaypoint();
     void MoveToExit();
-    void MoveTo(Vector3 targetPos);
-    void ToggleSight(bool isActive);
+    void MoveTo(SightableObject target);
+    void MoveCancel();
+    //void ToggleSight(bool isActive);
     float GetAnimationClipLength(string name);
     bool IsTargetPosArrival();
     SightableObject GetInSightAvailableMovingTarget();

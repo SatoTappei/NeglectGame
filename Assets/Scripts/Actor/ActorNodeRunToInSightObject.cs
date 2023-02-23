@@ -13,7 +13,7 @@ public class ActorNodeRunToInSightObject : ActorNodeBase
         token.ThrowIfCancellationRequested();
 
         SightableObject inSightObject = _stateMachine.StateControl.GetInSightAvailableMovingTarget();
-        _stateMachine.StateControl.MoveTo(inSightObject.transform.position);
+        _stateMachine.StateControl.MoveTo(inSightObject);
         await UniTask.WaitUntil(() => _stateMachine.StateControl.IsTargetPosArrival(), cancellationToken: token);
     }
 }

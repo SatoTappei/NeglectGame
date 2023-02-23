@@ -42,8 +42,6 @@ public class ActorMoveSystem : MonoBehaviour
         _actorPathfindingMove = new (gameObject, _model, _moveSpeed, _runSpeedMag);
     }
 
-    public bool IsWaypointAvailable(Vector3 pos) => _actorPathfindingWaypoint.IsAvailable(pos);
-
     public bool IsArrivalTargetPos() => _currentState == State.Arraival;
 
     public void MoveToNextWaypoint()
@@ -53,10 +51,10 @@ public class ActorMoveSystem : MonoBehaviour
 
         Vector3 targetPos = _actorPathfindingWaypoint.Get(WaypointType.Pass);
         Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        _actorPathfindingMove.MoveFollowPath(path, () => 
+        _actorPathfindingMove.MoveFollowPathAsync(path, () =>
         {
             _currentState = State.Arraival;
-        });
+        }).Forget();
     }
 
     public void MoveToExit()
@@ -66,10 +64,10 @@ public class ActorMoveSystem : MonoBehaviour
 
         Vector3 targetPos = _actorPathfindingWaypoint.Get(WaypointType.Exit);
         Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        _actorPathfindingMove.MoveFollowPath(path, () =>
+        _actorPathfindingMove.MoveFollowPathAsync(path, () =>
         {
             _currentState = State.Arraival;
-        });
+        }).Forget();
     }
 
     public void MoveTo(Vector3 targetPos)
@@ -78,9 +76,11 @@ public class ActorMoveSystem : MonoBehaviour
         _currentState = State.Moving;
 
         Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        _actorPathfindingMove.MoveFollowPath(path, () => 
+        _actorPathfindingMove.MoveFollowPathAsync(path, () =>
         {
             _currentState = State.Arraival;
-        });
+        }).Forget();
     }
+
+    public void MoveCancel() => _actorPathfindingMove.MoveCancel();
 }
