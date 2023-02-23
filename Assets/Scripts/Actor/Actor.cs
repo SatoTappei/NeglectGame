@@ -78,9 +78,20 @@ public class Actor : MonoBehaviour, IStateControl
 
     void IStateControl.MoveTo(SightableObject target)
     {
-        _actorSight.ResetLookInSight();
         _actorSight.StartLookInSight();
+        MoveTo(target);
+    }
+
+    void IStateControl.MoveToNoSight(SightableObject target)
+    {
+        MoveTo(target);
+    }
+
+    void MoveTo(SightableObject target)
+    {
+        _actorSight.ResetLookInSight();
         _actorMoveSystem.MoveTo(target.transform.position);
+        _actorInSightFilter.AddUnAvailableMovingTarget(target);
         _actorAnimation.PlayAnim("Run");
     }
 
@@ -112,16 +123,4 @@ public class Actor : MonoBehaviour, IStateControl
             return null;
         }
     }
-
-    //void IStateControl.ToggleSight(bool isActive)
-    //{
-    //    if (isActive)
-    //    {
-    //        _actorSight.StartLookInSight();
-    //    }
-    //    else
-    //    {
-    //        _actorSight.StopLookInSight();
-    //    }
-    //}
 }

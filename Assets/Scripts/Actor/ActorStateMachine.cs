@@ -59,7 +59,7 @@ public class ActorStateMachine : MonoBehaviour
         // ‚¨•ó”­Œ©Žž‚ÌSequence
         ActorStateSequence treasureSequence = new(length: 4);
 
-        ActorNodeRunToInSightObject nodeRunToInSightObject = new(this);
+        ActorNodeMovingToTarget nodeRunToInSightObject = new(this);
         ActorNodeMoveToExit nodeMoveToExit = new(this);
         ActorNodeAnimation nodePanicAnimation = new(this, "Panic");
         ActorNodeAnimation nodeJoyAnimation = new(this, "Joy");

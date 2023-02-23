@@ -35,6 +35,12 @@ public class ActorInSightFilter
         }
     }
 
+    public void AddUnAvailableMovingTarget(SightableObject inSightObject)
+    {
+        List<Vector3> list = _unAvailableMovingTargetDic[inSightObject.SightableType];
+        list.Add(inSightObject.transform.position);
+    }
+
     // TODO:必要に応じて部屋の出入り口以外に対しても同様の処理が出来るように直す
     //      今のところ部屋の出入り口のみチェックを行えればよいので処理をラップしただけになっている
     //public bool IsAvailable(Vector3 pos)
