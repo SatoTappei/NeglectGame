@@ -76,7 +76,7 @@ public class ActorMoveSystem : MonoBehaviour
         _currentState = State.Moving;
 
         Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        _actorPathfindingMove.MoveFollowPathAsync(path, () =>
+        _actorPathfindingMove.RunFollowPathAsync(path, () =>
         {
             _currentState = State.Arraival;
         }).Forget();

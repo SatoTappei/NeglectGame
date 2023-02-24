@@ -1584,6 +1584,7 @@ GameObject:
   - component: {fileID: -3073945408902330954}
   - component: {fileID: -5877550896894328571}
   - component: {fileID: -8612895462754867019}
+  - component: {fileID: 9168177098149328450}
   m_Layer: 0
   m_Name: Actor_Hero
   m_TagString: Untagged
@@ -1624,6 +1625,7 @@ MonoBehaviour:
   _actorAnimation: {fileID: -5877550896894328571}
   _actorSight: {fileID: -8612895462754867019}
   _actorEffecter: {fileID: 0}
+  _actorDisappearPerformance: {fileID: 3615018795354809707, guid: 68f5e0de1d21ee64d929742257110a40, type: 3}
 --- !u!114 &-1613357774641133722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1700,6 +1702,20 @@ MonoBehaviour:
     m_Bits: 128
   _sightRange: 10
   _sightAngle: 110
+--- !u!114 &9168177098149328450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6540620725961212598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5621d581b36f52741b6ebb92ff6dc1a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _goalPerformancePrefab: {fileID: 7125009776303078083, guid: c3100b68adcfda04c90abfe432b17f71, type: 3}
+  _deadPerformancePrefab: {fileID: 5337509658344242847, guid: 4179e12c91924dc4bbe12e85ae488099, type: 3}
 --- !u!1 &6573661602532900134
 GameObject:
   m_ObjectHideFlags: 0

@@ -205,6 +205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _generator: {fileID: 30291595}
+  _waypointManager: {fileID: 81955032}
 --- !u!1 &81955031
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ebcdc9ad6c27814d81815510e41e603, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wayPointParent: {fileID: 947083635}
+  _waypointParent: {fileID: 947083635}
 --- !u!4 &81955033
 Transform:
   m_ObjectHideFlags: 0

@@ -451,6 +451,7 @@ GameObject:
   - component: {fileID: -7539302287781479863}
   - component: {fileID: 2210753388920499395}
   - component: {fileID: -1022716777929814142}
+  - component: {fileID: 3615018795354809707}
   m_Layer: 0
   m_Name: Actor_Boy
   m_TagString: Untagged
@@ -491,6 +492,7 @@ MonoBehaviour:
   _actorAnimation: {fileID: 2210753388920499395}
   _actorSight: {fileID: -1022716777929814142}
   _actorEffecter: {fileID: 0}
+  _actorDisappearPerformance: {fileID: 3615018795354809707}
 --- !u!114 &8285164219684680550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -567,6 +569,20 @@ MonoBehaviour:
     m_Bits: 128
   _sightRange: 10
   _sightAngle: 110
+--- !u!114 &3615018795354809707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2670713393931791704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5621d581b36f52741b6ebb92ff6dc1a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _goalPerformancePrefab: {fileID: 7125009776303078083, guid: c3100b68adcfda04c90abfe432b17f71, type: 3}
+  _deadPerformancePrefab: {fileID: 3116972417662467273, guid: 7aa13a4fa001e7348b2a7d1807a21113, type: 3}
 --- !u!1 &3116145210212608323
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,8 +10,14 @@ public class Actor : MonoBehaviour, IStateControl
     [SerializeField] ActorAnimation _actorAnimation;
     [SerializeField] ActorSight _actorSight;
     [SerializeField] ActorEffecter _actorEffecter;
+    [SerializeField] ActorDisappearPerformance _actorDisappearPerformance;
 
     ActorInSightFilter _actorInSightFilter;
+
+    /* 
+     *  視界の実装がおかしいのできちんとした視界になるように直す
+     *  自身が生成されたゴールに戻るように直す
+     */
 
     void Awake()
     {
@@ -23,20 +29,21 @@ public class Actor : MonoBehaviour, IStateControl
         _actorSight.StartLookInSight();
     }
 
-    void IStateControl.PlayAnimation(string name) => _actorAnimation.PlayAnim(name);
-
-    void IStateControl.PlayGoalEffect()
+    void OnDisable()
     {
-        // 喜びのアニメーション
-        // エフェクト再生
-        // Destroy
+
     }
 
-    void IStateControl.PlayDeadEffect()
+    void IStateControl.PlayAnimation(string name) => _actorAnimation.PlayAnim(name);
+
+    void IStateControl.PlayGoalPerformance()
     {
-        // 血が噴き出る
-        // ラグドールがぐにゃん
-        // Destroy
+        _actorDisappearPerformance.PlayGoalPerformance();
+    }
+
+    void IStateControl.PlayDeadPerformance()
+    {
+        _actorDisappearPerformance.PlayDeadPerformance();
     }
 
     void IStateControl.MoveToWaypoint()

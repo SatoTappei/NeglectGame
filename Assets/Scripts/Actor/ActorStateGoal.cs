@@ -7,6 +7,6 @@ public class ActorStateGoal : ActorStateBase
 
     protected override void Enter()
     {
-        _stateMachine.StateControl.PlayGoalEffect();
+        _stateMachine.StateControl.PlayGoalPerformance();
     }
 }

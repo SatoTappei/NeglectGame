@@ -7,6 +7,6 @@ public class ActorStateDead : ActorStateBase
 
     protected override void Enter()
     {
-        _stateMachine.StateControl.PlayDeadEffect();
+        _stateMachine.StateControl.PlayDeadPerformance();
     }
 }

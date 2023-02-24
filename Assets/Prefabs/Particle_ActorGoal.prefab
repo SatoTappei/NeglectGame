@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7125009776303078093}
   - component: {fileID: 7125009776303078082}
   m_Layer: 0
-  m_Name: Effect_ActorGoal
+  m_Name: Particle_ActorGoal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
