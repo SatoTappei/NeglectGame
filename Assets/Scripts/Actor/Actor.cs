@@ -16,7 +16,6 @@ public class Actor : MonoBehaviour, IStateControl
 
     /* 
      *  視界の実装がおかしいのできちんとした視界になるように直す
-     *  自身が生成されたゴールに戻るように直す
      */
 
     void Awake()
@@ -24,14 +23,28 @@ public class Actor : MonoBehaviour, IStateControl
         _actorInSightFilter = new();
     }
 
+    /* 
+     *  Awake()とOnEnable()の後、Start()の直前に外部で位置を初期化している 
+     */
+
     void Start()
     {
+        _actorAnimation.Init();
+        _actorMoveSystem.Init();
+        _actorStateMachine.Init();
+
+        // Updateとは別のタイミング、周期で呼ばれる
         _actorSight.StartLookInSight();
+    }
+
+    void Update()
+    {
+        _actorStateMachine.Execute();
     }
 
     void OnDisable()
     {
-
+        // 非表示になる = 死んだかゴールしたかなので 終わりの処理を書く
     }
 
     void IStateControl.PlayAnimation(string name) => _actorAnimation.PlayAnim(name);

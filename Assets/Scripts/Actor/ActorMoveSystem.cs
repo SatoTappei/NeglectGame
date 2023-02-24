@@ -32,13 +32,13 @@ public class ActorMoveSystem : MonoBehaviour
 
     State _currentState = State.NoTarget;
 
-    void Awake()
+    public void Init()
     {
         // TODO:‘¼‚ÌŒÂŠ‚Å‚àæ“¾ˆ—‚ª‚ ‚Á‚½‚çˆË‘¶ŠÖŒW‚Ì‰ğÁ‚ğ•Ê‚ÌŠ‚ÉˆÚ‚·
         _pathfinding = GameObject.FindGameObjectWithTag(PathfindingTag).GetComponent<IPathfinding>();
         _waypointManage = GameObject.FindGameObjectWithTag(WaypointTag).GetComponent<IWaypointManage>();
 
-        _actorPathfindingWaypoint = new (_waypointManage.WaypointDic);
+        _actorPathfindingWaypoint = new(_waypointManage.WaypointDic, transform.position);
         _actorPathfindingMove = new (gameObject, _model, _moveSpeed, _runSpeedMag);
     }
 
@@ -62,7 +62,7 @@ public class ActorMoveSystem : MonoBehaviour
         _actorPathfindingMove.MoveCancel();
         _currentState = State.Moving;
 
-        Vector3 targetPos = _actorPathfindingWaypoint.Get(WaypointType.Exit);
+        Vector3 targetPos = _actorPathfindingWaypoint.ExitPos;
         Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
         _actorPathfindingMove.MoveFollowPathAsync(path, () =>
         {

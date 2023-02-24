@@ -32,18 +32,6 @@ public class ActorSight : MonoBehaviour
     public void StopLookInSight() => CancelInvoke(nameof(LookInSight));
     public void ResetLookInSight() => _currentInSightObject = null;
 
-    void Update()
-    {
-        //if (IsInvoking(nameof(LookInSight)))
-        //{
-        //    transform.localScale = Vector3.one * 2;
-        //}
-        //else
-        //{
-        //    transform.localScale = Vector3.one;
-        //}
-    }
-
     void LookInSight()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _results, _sightableLayer);

@@ -35,7 +35,7 @@ public class ActorStateMachine : MonoBehaviour
 
     public IStateControl StateControl => _stateControl;
 
-    void Awake()
+    public void Init()
     {
         _stateControl = GetComponent<IStateControl>();
 
@@ -54,8 +54,6 @@ public class ActorStateMachine : MonoBehaviour
         _stateDic.Add(StateType.SequenceExecute, stateSequenceExecute);
         _stateDic.Add(StateType.Goal, stateGoal);
         _stateDic.Add(StateType.Dead, stateDead);
-
-        // Sequence‚ÌÅŒã‚É”CˆÓ‚ÌƒXƒe[ƒg‚É‘JˆÚ‚Å‚«‚é‚æ‚¤‚É‚µ‚½‚¢
 
         // “G”­Œ©‚ÌSequence
         ActorStateSequence battleWinSequence = new(length: 4);
@@ -86,7 +84,7 @@ public class ActorStateMachine : MonoBehaviour
         _currentState = GetState(StateType.Entry);
     }
 
-    void Update()
+    public void Execute()
     {
         _currentState = _currentState.Update();
     }

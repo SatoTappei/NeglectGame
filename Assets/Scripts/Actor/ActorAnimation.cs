@@ -42,12 +42,7 @@ public class ActorAnimation : MonoBehaviour
     /// <summary>外部からステート名を指定してアニメーションを再生させるのに使用する</summary>
     Dictionary<string, StateData> _stateDataDic = new Dictionary<string, StateData>(StateDataDicCap);
 
-    void Awake()
-    {
-        Init();
-    }
-
-    void Init()
+    public void Init()
     {
         foreach (StateData data in _stateDatas)
         {
