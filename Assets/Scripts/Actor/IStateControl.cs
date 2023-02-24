@@ -5,6 +5,8 @@
 public interface IStateControl
 {
     void PlayAnimation(string name);
+    void PlayGoalEffect();
+    void PlayDeadEffect();
     void MoveToWaypoint();
     void MoveToExit();
     void MoveToNoSight(SightableObject target);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 public enum StateType
@@ -10,6 +9,7 @@ public enum StateType
     Select,
     EnterTheRoom,
     SequenceExecute,
+    Goal,
     Dead,
 }
 
@@ -44,6 +44,7 @@ public class ActorStateMachine : MonoBehaviour
         ActorStateSelect stateSelect = new(this);
         ActorStateEnterTheRoom stateEnterTheRoom = new(this);
         ActorStateSequenceExecute stateSequenceExecute = new(this);
+        ActorStateGoal stateGoal = new(this);
         ActorStateDead stateDead = new(this);
 
         _stateDic.Add(StateType.Entry, stateEntry);
@@ -51,7 +52,10 @@ public class ActorStateMachine : MonoBehaviour
         _stateDic.Add(StateType.Select, stateSelect);
         _stateDic.Add(StateType.EnterTheRoom, stateEnterTheRoom);
         _stateDic.Add(StateType.SequenceExecute, stateSequenceExecute);
+        _stateDic.Add(StateType.Goal, stateGoal);
         _stateDic.Add(StateType.Dead, stateDead);
+
+        // SequenceÇÃç≈å„Ç…îCà”ÇÃÉXÉeÅ[ÉgÇ…ëJà⁄Ç≈Ç´ÇÈÇÊÇ§Ç…ÇµÇΩÇ¢
 
         // ìGî≠å©éûÇÃSequence
         ActorStateSequence battleWinSequence = new(length: 4);

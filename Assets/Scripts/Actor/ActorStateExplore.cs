@@ -44,20 +44,4 @@ public class ActorStateExplore : ActorStateBase
         _tween?.Kill();
         _stateMachine.StateControl.MoveCancel();
     }
-
-    /// <summary>
-    /// 処理順の関係でInSightSelectステートに遷移する処理が呼び出された後にDelayedCall()が
-    /// 呼ばれることもあるため、先に遷移処理が呼ばれていた場合はこの遷移処理をキャンセルする
-    /// </summary>
-    void TryChangeState(StateType type)
-    {
-        if (_stage == Stage.Stay)
-        {
-            ChangeState(type);
-        }
-        else
-        {
-            Debug.LogWarning("既に別のステートに遷移する処理が呼ばれています: " + type);
-        }
-    }
 }

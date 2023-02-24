@@ -23,42 +23,21 @@ public class Actor : MonoBehaviour, IStateControl
         _actorSight.StartLookInSight();
     }
 
-    void Update()
+    void IStateControl.PlayAnimation(string name) => _actorAnimation.PlayAnim(name);
+
+    void IStateControl.PlayGoalEffect()
     {
-        //_actorSight.Execute();
-        //_actorStateMachine.Execute();
+        // 喜びのアニメーション
+        // エフェクト再生
+        // Destroy
     }
 
-    /* 
-     *  最優先:プレイヤーのステートマシン作り直し 
-     */
-
-    // Sightで全てのSightableObjectを発見
-    // 毎フレームSightableObjectがnullじゃないか監視
-    // null以外だったらselectに遷移
-    // SightableObjectごとに処理を分ける
-    // 移動/Sequence
-
-    // 通路のWaypointはランダムな何回でも同じ個所に移動する。ただし、同じ個所に2連続では移動しない
-    // 一度発見したTreasure/Enemy/RoomEntranceは二度と発見しない。
-    // 
-    // 視界の機能がOnになっているのはExploreとMoveToEntrance状態、それ以外ではoff
-
-    // Treasure/Enemy/RoomEntranceはSightから取得される
-    // MoveSystem側で管理しているもの Pass/RoomEntrance/Exit
-    // ここにSight側の物を管理させるのは良くない。
-    // 仲介役が欲しい
-    // Sightで発見 => 仲介役が移動可能か判定 => Actorのインタフェース経由ですてとましんに渡す
-    // ↑ｲﾏｺｺ
-
-    // Sightで発見したオブジェクトは移動と同時にnullにするべき、そうすることでステートの切り替えで悩まない
-    // 何かを発見した場合は視界機能をoffにしてしまう
-    // 移動を開始したと同時に再び視界機能をonにするべき？
-
-    // ほしい:MoveToNoSightable()…移動中も視界の機能を使わない = Sequence用の移動メソッド
-    // 
-
-    void IStateControl.PlayAnimation(string name) => _actorAnimation.PlayAnim(name);
+    void IStateControl.PlayDeadEffect()
+    {
+        // 血が噴き出る
+        // ラグドールがぐにゃん
+        // Destroy
+    }
 
     void IStateControl.MoveToWaypoint()
     {

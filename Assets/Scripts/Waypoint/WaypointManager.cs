@@ -11,7 +11,7 @@ public class WaypointManager : MonoBehaviour, IWaypointManage
     static readonly int DicCapacity = Enum.GetValues(typeof(WaypointType)).Length;
 
     [Header("Waypointが子として登録されているオブジェクト")]
-    [SerializeField] Transform _wayPointParent;
+    [SerializeField] Transform _waypointParent;
 
     Dictionary<WaypointType, List<Vector3>> _waypointDic = new(DicCapacity);
 
@@ -25,7 +25,7 @@ public class WaypointManager : MonoBehaviour, IWaypointManage
     /// </summary>
     public void RegisterWaypoint()
     {
-        foreach(Transform child in _wayPointParent)
+        foreach(Transform child in _waypointParent)
         {
             if(child.TryGetComponent(out WaypointTag component))
             {
@@ -45,5 +45,7 @@ public class WaypointManager : MonoBehaviour, IWaypointManage
             }
         }
     }
+
+    public List<Vector3> GetWaypointListWithWaypointType(WaypointType type) => _waypointDic[type];
 }
 

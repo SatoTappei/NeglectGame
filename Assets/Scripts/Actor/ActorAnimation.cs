@@ -2,32 +2,45 @@ using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEditor.Animations;
+using System;
 
 /// <summary>
 /// キャラクターをアニメーションさせるコンポーネント
 /// </summary>
 public class ActorAnimation : MonoBehaviour
 {
+    /// <summary>Animatorの総ステート数</summary>
+    static readonly int StateDataDicCap = 7;
+
     /// <summary>
-    /// ステート名に対応したAnimationClipの長さを取得するための構造体
+    /// ステート名に対応したアニメーションを再生するためのクラス
     /// </summary>
-    struct StateData
+    [Serializable]
+    class StateData
     {
-        public StateData(string stateName, float clipLength)
+        [SerializeField] string _name;
+        [SerializeField] AnimationClip _clip;
+
+        int _hash;
+        float _length;
+
+        public void Init(Dictionary<string, StateData> dic)
         {
-            Hash = Animator.StringToHash(stateName);
-            Length = clipLength;
+            _hash = Animator.StringToHash(_name);
+            _length = _clip.length;
+
+            dic.Add(_name, this);
         }
 
-        public int Hash { get; }
-        public float Length { get; }
+        public int Hash => _hash;
+        public float Length => _length;
     }
 
     [SerializeField] Animator _anim;
+    [SerializeField] StateData[] _stateDatas;
 
     /// <summary>外部からステート名を指定してアニメーションを再生させるのに使用する</summary>
-    Dictionary<string, StateData> _stateDataDic;
+    Dictionary<string, StateData> _stateDataDic = new Dictionary<string, StateData>(StateDataDicCap);
 
     void Awake()
     {
@@ -36,15 +49,9 @@ public class ActorAnimation : MonoBehaviour
 
     void Init()
     {
-        // ステート名でAnimationClipの長さを取得できないので専用の構造体と辞書を用意
-        AnimatorController controller = _anim.runtimeAnimatorController as AnimatorController;
-        AnimationClip[] clips = controller.animationClips;
-        ChildAnimatorState[] states = controller.layers[0].stateMachine.states;
-
-        _stateDataDic = new Dictionary<string, StateData>(clips.Length);
-        for (int i = 0; i < clips.Length; i++)
+        foreach (StateData data in _stateDatas)
         {
-            _stateDataDic.Add(states[i].state.name, new StateData(states[i].state.name, clips[i].length));
+            data.Init(_stateDataDic);
         }
     }
 

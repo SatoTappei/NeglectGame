@@ -22,10 +22,6 @@ public class ActorStateEnterTheRoom : ActorStateBase
         }
 
         _stateMachine.StateControl.MoveTo(inSightObject);
-        //_stateMachine.StateControl.AddAvailableRoomEntrance(inSightObject.transform.position);
-
-        // 視界にとらえたものに応じてSequenceを実行したいので再度ここで視界の機能をオンにしている
-        //_stateMachine.StateControl.ToggleSight(isActive: true);
     }
 
     protected override void Stay()
@@ -49,7 +45,7 @@ public class ActorStateEnterTheRoom : ActorStateBase
             float delayTime = _stateMachine.StateControl.GetAnimationClipLength("LookAround");
             _tween = DOVirtual.DelayedCall(delayTime, () =>
             {
-                ChangeState(StateType.Explore);
+                TryChangeState(StateType.Explore);
             }).SetLink(_stateMachine.gameObject);
         }
 

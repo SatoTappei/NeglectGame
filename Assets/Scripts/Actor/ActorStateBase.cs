@@ -54,4 +54,19 @@ public abstract class ActorStateBase
         _nextState = _stateMachine.GetState(stateType);
         _stage = Stage.Exit;
     }
+
+    /// <summary>先に遷移処理が呼ばれていた場合はこの遷移処理をキャンセルする</summary>
+    protected bool TryChangeState(StateType type)
+    {
+        if (_stage == Stage.Stay)
+        {
+            ChangeState(type);
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning("既に別のステートに遷移する処理が呼ばれています: " + type);
+            return false;
+        }
+    }
 }

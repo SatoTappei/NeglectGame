@@ -17,7 +17,10 @@ public class ActorStateSequenceExecute : ActorStateBase
         if (inSightObject?.SightableType == SightableType.Treasure)
         {
             ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Treasure);
-            sequence.Execute(_stateMachine.gameObject.GetCancellationTokenOnDestroy());
+            sequence.ExecuteAsync(_stateMachine.gameObject.GetCancellationTokenOnDestroy(), () => 
+            {
+                TryChangeState(StateType.Goal);
+            }).Forget();
         }
         else if (inSightObject?.SightableType == SightableType.Enemy)
         {
@@ -26,7 +29,10 @@ public class ActorStateSequenceExecute : ActorStateBase
             // Sequence‚ÌŽÀs
 
             ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.BattleWin);
-            sequence.Execute(_stateMachine.gameObject.GetCancellationTokenOnDestroy());
+            sequence.ExecuteAsync(_stateMachine.gameObject.GetCancellationTokenOnDestroy(), () => 
+            {
+                TryChangeState(StateType.Dead);
+            }).Forget();
         }
         else
         {

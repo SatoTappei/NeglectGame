@@ -1,5 +1,7 @@
 using System;
 using System.Threading;
+using Cysharp.Threading.Tasks;
+using UnityEngine.Events;
 
 /// <summary>
 /// 各ノードを順に実行するクラス
@@ -20,7 +22,7 @@ public class ActorStateSequence
         _insertIndex++;
     }
 
-    public async void Execute(CancellationToken token)
+    public async UniTask ExecuteAsync(CancellationToken token, UnityAction callback)
     {
         try
         {
@@ -30,12 +32,12 @@ public class ActorStateSequence
             {
                 await node.PlayAsync(token);
             }
+
+            callback?.Invoke();
         }
         catch(OperationCanceledException e)
         {
             Debug.Log("Sequenceの処理がキャンセルされました: " + e.Message);
         }
-
-        Debug.Log("Sequence終了");
     }
 }

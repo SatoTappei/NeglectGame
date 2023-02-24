@@ -531,6 +531,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _anim: {fileID: 6233166953580672306}
+  _stateDatas:
+  - _name: Move
+    _clip: {fileID: 7400000, guid: 610c19449ad4509419f03dac41d66450, type: 2}
+  - _name: Run
+    _clip: {fileID: 7400000, guid: 5fe2f26107fd91f46994973232124120, type: 2}
+  - _name: Panic
+    _clip: {fileID: -203655887218126122, guid: 45e5cf7e66e913b4dae01e9cb5ccd14d, type: 3}
+  - _name: Attack
+    _clip: {fileID: 7400000, guid: 957420b6008a50a49862caa4bca98feb, type: 2}
+  - _name: Joy
+    _clip: {fileID: -203655887218126122, guid: 06047ec0444129347ae6e2e9b7bb1424, type: 3}
+  - _name: Entry
+    _clip: {fileID: -203655887218126122, guid: 6d493d54abde1b841a7540eb3ba39c97, type: 3}
+  - _name: LookAround
+    _clip: {fileID: -203655887218126122, guid: 35beac8babec1d04a859c34428d7537c, type: 3}
 --- !u!114 &-1022716777929814142
 MonoBehaviour:
   m_ObjectHideFlags: 0
