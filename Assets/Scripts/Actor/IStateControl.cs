@@ -14,5 +14,6 @@ public interface IStateControl
     void MoveCancel();
     float GetAnimationClipLength(string name);
     bool IsTargetPosArrival();
+    bool IsBelowHpThreshold();
     SightableObject GetInSightAvailableMovingTarget();
 }

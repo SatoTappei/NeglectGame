@@ -26,14 +26,14 @@ public class ActorStateEnterTheRoom : ActorStateBase
 
     protected override void Stay()
     {
-        //// 部屋の入口を見つけた場合に遷移を行うと無限ループに陥る可能性があるので弾く
-        //SightableObject inSightObject = _stateMachine.StateControl.GetInSightObject();
-        //if (inSightObject?.SightableType == SightableType.Treasure ||
-        //    inSightObject?.SightableType == SightableType.Enemy)
-        //{
-        //    ChangeState(StateType.InSightSelect);
-        //    return;
-        //}
+        // 部屋の入口を見つけた場合に遷移を行うと無限ループに陥る可能性があるので弾く
+        SightableObject inSightObject = _stateMachine.StateControl.GetInSightAvailableMovingTarget();
+        if (inSightObject?.SightableType == SightableType.Treasure ||
+            inSightObject?.SightableType == SightableType.Enemy)
+        {
+            ChangeState(StateType.Select);
+            return;
+        }
 
         // 目的地に到着したら見回すアニメーションの長さ分だけ待つことで
         // アニメーションの終了を待機しての処理を実現している

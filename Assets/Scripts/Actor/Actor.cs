@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// キャラクターの各コンポーネントを制御するコンポーネント
@@ -11,15 +12,9 @@ public class Actor : MonoBehaviour, IStateControl
     [SerializeField] ActorSight _actorSight;
     [SerializeField] ActorEffecter _actorEffecter;
     [SerializeField] ActorDisappearPerformance _actorDisappearPerformance;
+    [SerializeField] ActorHpModel _actorHpModel;
 
     ActorInSightFilter _actorInSightFilter;
-
-    /* 
-     *  視界の実装がおかしいのできちんとした視界になるように直す
-     *  ラグドールがぶっ飛んで血が出るようにする
-     *  ダンジョンに物を置く
-     *  体力が0以下になったら死ぬようにする
-     */
 
     void Awake()
     {
@@ -35,9 +30,11 @@ public class Actor : MonoBehaviour, IStateControl
         _actorAnimation.Init();
         _actorMoveSystem.Init();
         _actorStateMachine.Init();
+        _actorHpModel.Init();
 
         // Updateとは別のタイミング、周期で呼ばれる
         _actorSight.StartLookInSight();
+        _actorHpModel.StartDecreaseHpPerSecond();
     }
 
     void Update()
@@ -52,6 +49,7 @@ public class Actor : MonoBehaviour, IStateControl
         _actorDisappearPerformance.PlayGoalPerformance();
         _actorMoveSystem.MoveCancel();
         _actorSight.StopLookInSight();
+        _actorHpModel.StopDecreaseHpPerSecond();
     }
 
     void IStateControl.PlayDeadPerformance()
@@ -59,6 +57,7 @@ public class Actor : MonoBehaviour, IStateControl
         _actorDisappearPerformance.PlayDeadPerformance();
         _actorMoveSystem.MoveCancel();
         _actorSight.StopLookInSight();
+        _actorHpModel.StopDecreaseHpPerSecond();
     }
 
     void IStateControl.MoveToWaypoint()
@@ -102,13 +101,16 @@ public class Actor : MonoBehaviour, IStateControl
 
     bool IStateControl.IsTargetPosArrival() => _actorMoveSystem.IsArrivalTargetPos();
 
+    bool IStateControl.IsBelowHpThreshold() => _actorHpModel.IsBelowHpThreshold();
+
     SightableObject IStateControl.GetInSightAvailableMovingTarget()
     {
-        SightableObject inSightObject = _actorSight.CurrentInSightObject;
-        if (inSightObject != null)
+        Queue<SightableObject> inSightObjectQueue = _actorSight.InSightObjectQueue;
+
+        if (inSightObjectQueue.Count > 0)
         {
             // 移動先として使えるオブジェクトが渡された場合、移動し始めるまで視界の機能を止めておく
-            SightableObject target = _actorInSightFilter.FilteringAvailableMoving(inSightObject);
+            SightableObject target = _actorInSightFilter.FilteringAvailableMoving(inSightObjectQueue);
             if (target != null)
             {
                 _actorSight.StopLookInSight();

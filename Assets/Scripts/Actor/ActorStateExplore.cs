@@ -17,9 +17,15 @@ public class ActorStateExplore : ActorStateBase
 
     protected override void Stay()
     {
+        if (_stateMachine.StateControl.IsBelowHpThreshold())
+        {
+            TryChangeState(StateType.SequenceExecute);
+            return;
+        }
+
         if (_stateMachine.StateControl.GetInSightAvailableMovingTarget() != null)
         {
-            ChangeState(StateType.Select);
+            TryChangeState(StateType.Select);
             return;
         }
 
@@ -34,8 +40,6 @@ public class ActorStateExplore : ActorStateBase
             _tween = DOVirtual.DelayedCall(delayTime, () => TryChangeState(StateType.Explore))
                 .SetLink(_stateMachine.gameObject);
         }
-
-        // ‚â‚é‹C‚ªˆê’èˆÈ‰º‚ÌŽž
     }
 
     protected override void Exit()

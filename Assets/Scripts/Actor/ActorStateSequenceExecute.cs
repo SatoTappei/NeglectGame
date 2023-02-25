@@ -15,12 +15,22 @@ public class ActorStateSequenceExecute : ActorStateBase
 
     protected override void Enter()
     {
+        _cts = new CancellationTokenSource();
+
+        if (_stateMachine.StateControl.IsBelowHpThreshold())
+        {
+            ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Exit);
+            sequence.ExecuteAsync(_cts, () =>
+            {
+                Debug.Log("体力がもうだめぽ");
+                TryChangeState(StateType.Goal);
+            }).Forget();
+            return;
+        }
+
         // このステートに遷移してくる際には視界の機能は切ってあるので
         // Sequence実行時に違うSightableTypeのオブジェクトが渡されることはない
         SightableObject inSightObject = _stateMachine.StateControl.GetInSightAvailableMovingTarget();
-
-        _cts = new CancellationTokenSource();
-
         if (inSightObject?.SightableType == SightableType.Treasure)
         {
             ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Treasure);

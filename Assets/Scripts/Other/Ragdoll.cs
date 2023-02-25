@@ -7,6 +7,7 @@ using DG.Tweening;
 public class Ragdoll : MonoBehaviour
 {
     static readonly float Delay = 3.0f;
+    static readonly float LifeTime = 10.0f;
 
     [SerializeField] Rigidbody _rb;
     [Header("‰Á‚¦‚é—Í‚Ì‹­‚³")]
@@ -28,6 +29,8 @@ public class Ragdoll : MonoBehaviour
             {
                 rb.isKinematic = true;
             }
-        });
+
+            Destroy(gameObject, LifeTime);
+        }).SetLink(gameObject);
     }
 }

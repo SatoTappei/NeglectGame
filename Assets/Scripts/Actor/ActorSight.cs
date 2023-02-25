@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -9,7 +10,7 @@ public class ActorSight : MonoBehaviour
     static readonly float UpdateInterval = 0.25f;
 
     /// <summary>視界に映る周囲のオブジェクト数に応じて設定する</summary>
-    static readonly int ResultsLength = 4;
+    static readonly int InSightCap = 4;
     /// <summary>頭上からRayを飛ばすためにキャラクターのモデルの高さに応じて設定する</summary>
     static readonly float ActorModelHeight = 1.5f;
 
@@ -23,18 +24,24 @@ public class ActorSight : MonoBehaviour
     [SerializeField] float _sightRange = 5.0f;
     [SerializeField] float _sightAngle = 60.0f;
 
-    Collider[] _results = new Collider[ResultsLength];
-    SightableObject _currentInSightObject;
+    Collider[] _results = new Collider[InSightCap];
+    Queue<SightableObject> _inSightObjectQueue = new(InSightCap);
 
-    internal SightableObject CurrentInSightObject => _currentInSightObject;
+    internal Queue<SightableObject> InSightObjectQueue => _inSightObjectQueue;
 
     public void StartLookInSight() => InvokeRepeating(nameof(LookInSight), 0, UpdateInterval);
     public void StopLookInSight() => CancelInvoke(nameof(LookInSight));
-    public void ResetLookInSight() => _currentInSightObject = null;
+    public void ResetLookInSight() => _inSightObjectQueue.Clear();
 
     void LookInSight()
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _results, _sightableLayer);
+
+        // キャラの前方への視界のRay
+        Vector3 r = _actorModel.transform.position;
+        r.y += ActorModelHeight;
+        Vector3 f = _actorModel.transform.forward;
+        UnityEngine.Debug.DrawRay(r, f * _sightRange, Color.blue, 0.1f, false);
 
         // 複数のオブジェクトを見つけた場合は最初の1つが返る
         foreach (Collider rangeInSide in _results)
@@ -54,12 +61,9 @@ public class ActorSight : MonoBehaviour
             rayOrigin.y += ActorModelHeight;
             bool dontBlocked = !Physics.Raycast(rayOrigin, rangeInSideDir, distance, _sightBlockableLayer);
 
-            UnityEngine.Debug.DrawRay(rayOrigin, rangeInSideDir * distance, Color.red, 0.1f, false);
-
             if (distance <= _sightRange && angle <= _sightAngle && dontBlocked)
             {
-                _currentInSightObject = rangeInSide.gameObject.GetComponent<SightableObject>();
-                break;
+                _inSightObjectQueue.Enqueue(rangeInSide.GetComponent<SightableObject>());
             }
         }
     }

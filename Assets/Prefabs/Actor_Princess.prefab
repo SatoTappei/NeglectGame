@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: -6988626446146838499}
   - component: {fileID: 170183322904586823}
   - component: {fileID: -716122264684685358}
+  - component: {fileID: -189330844018580072}
   m_Layer: 0
   m_Name: Actor_Princess
   m_TagString: Untagged
@@ -341,6 +342,7 @@ MonoBehaviour:
   _actorSight: {fileID: 170183322904586823}
   _actorEffecter: {fileID: 0}
   _actorDisappearPerformance: {fileID: -716122264684685358}
+  _actorHpModel: {fileID: -189330844018580072}
 --- !u!114 &-6157919514075864504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -431,6 +433,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _goalPerformancePrefab: {fileID: 7125009776303078083, guid: c3100b68adcfda04c90abfe432b17f71, type: 3}
   _deadPerformancePrefab: {fileID: 5851854025821250768, guid: 2cca8871601c2cd4082dfc9d04483bc0, type: 3}
+--- !u!114 &-189330844018580072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908045884462929550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5a0f0ab469f634c9de0fd89d00ca15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHp: 100
+  _decreaseQuantity: 5
+  _decreaseDuration: 0.5
+  _hpThreshold: 50
 --- !u!1 &976946184240705824
 GameObject:
   m_ObjectHideFlags: 0

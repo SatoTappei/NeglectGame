@@ -18,6 +18,7 @@ public enum SequenceType
     Treasure,
     BattleWin,
     BattleLose,
+    Exit,
 }
 
 /// <summary>
@@ -60,6 +61,8 @@ public class ActorStateMachine : MonoBehaviour
         ActorStateSequence sequenceBattleLose = new(length: 3);
         // Ç®ïÛî≠å©éûÇÃSequence
         ActorStateSequence sequenceTreasure = new(length: 4);
+        // ëÃóÕÇ™Ëáílà»â∫Ç…Ç»Ç¡ÇΩèÍçáÇ…íEèoÇ∑ÇÈSequence;
+        ActorStateSequence sequenceExit = new(length: 1);
 
         ActorNodeMovingToTarget nodeRunToInSightObject = new(this);
         ActorNodeMoveToExit nodeMoveToExit = new(this);
@@ -81,9 +84,12 @@ public class ActorStateMachine : MonoBehaviour
         sequenceTreasure.Add(nodeJoyAnimation);
         sequenceTreasure.Add(nodeMoveToExit);
 
+        sequenceExit.Add(nodeMoveToExit);
+
         _sequenceDic.Add(SequenceType.BattleWin, sequenceBattleWin);
         _sequenceDic.Add(SequenceType.BattleLose, sequenceBattleLose);
         _sequenceDic.Add(SequenceType.Treasure, sequenceTreasure);
+        _sequenceDic.Add(SequenceType.Exit, sequenceExit);
 
         _currentState = GetState(StateType.Entry);
     }
