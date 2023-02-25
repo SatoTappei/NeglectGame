@@ -22,15 +22,15 @@ public class ActorStateSequence
         _insertIndex++;
     }
 
-    public async UniTask ExecuteAsync(CancellationToken token, UnityAction callback)
+    public async UniTask ExecuteAsync(CancellationTokenSource cts, UnityAction callback)
     {
         try
         {
-            token.ThrowIfCancellationRequested();
+            cts.Token.ThrowIfCancellationRequested();
 
             foreach (ActorNodeBase node in _sequence)
             {
-                await node.PlayAsync(token);
+                await node.PlayAsync(cts);
             }
 
             callback?.Invoke();

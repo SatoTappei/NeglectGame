@@ -13,10 +13,11 @@ public abstract class ActorNodeBase
         _stateMachine = stateMachine;
     }
 
-    public async UniTask PlayAsync(CancellationToken token)
+    public async UniTask PlayAsync(CancellationTokenSource cts)
     {
-        await ExecuteAsync(token);
+        cts.Token.ThrowIfCancellationRequested();
+        await ExecuteAsync(cts);
     }
 
-    protected abstract UniTask ExecuteAsync(CancellationToken token);
+    protected abstract UniTask ExecuteAsync(CancellationTokenSource cts);
 }

@@ -56,10 +56,10 @@ public class ActorStateMachine : MonoBehaviour
         _stateDic.Add(StateType.Dead, stateDead);
 
         // “G”­Œ©Žž‚ÌSequence
-        ActorStateSequence battleWinSequence = new(length: 4);
-        ActorStateSequence battleLoseSequence = new(length: 4);
+        ActorStateSequence sequenceBattleWin = new(length: 4);
+        ActorStateSequence sequenceBattleLose = new(length: 3);
         // ‚¨•ó”­Œ©Žž‚ÌSequence
-        ActorStateSequence treasureSequence = new(length: 4);
+        ActorStateSequence sequenceTreasure = new(length: 4);
 
         ActorNodeMovingToTarget nodeRunToInSightObject = new(this);
         ActorNodeMoveToExit nodeMoveToExit = new(this);
@@ -67,19 +67,23 @@ public class ActorStateMachine : MonoBehaviour
         ActorNodeAnimation nodeJoyAnimation = new(this, "Joy");
         ActorNodeAnimation nodeAttackAnimation = new(this, "Attack", iteration: 3);
 
-        battleWinSequence.Add(nodePanicAnimation);
-        battleWinSequence.Add(nodeRunToInSightObject);
-        battleWinSequence.Add(nodeAttackAnimation);
-        battleWinSequence.Add(nodeMoveToExit);
+        sequenceBattleWin.Add(nodePanicAnimation);
+        sequenceBattleWin.Add(nodeRunToInSightObject);
+        sequenceBattleWin.Add(nodeAttackAnimation);
+        sequenceBattleWin.Add(nodeMoveToExit);
 
-        treasureSequence.Add(nodePanicAnimation);
-        treasureSequence.Add(nodeRunToInSightObject);
-        treasureSequence.Add(nodeJoyAnimation);
-        treasureSequence.Add(nodeMoveToExit);
+        sequenceBattleLose.Add(nodePanicAnimation);
+        sequenceBattleLose.Add(nodeRunToInSightObject);
+        sequenceBattleLose.Add(nodeAttackAnimation);
 
-        _sequenceDic.Add(SequenceType.BattleWin, battleWinSequence);
-        _sequenceDic.Add(SequenceType.BattleLose, battleLoseSequence);
-        _sequenceDic.Add(SequenceType.Treasure, treasureSequence);
+        sequenceTreasure.Add(nodePanicAnimation);
+        sequenceTreasure.Add(nodeRunToInSightObject);
+        sequenceTreasure.Add(nodeJoyAnimation);
+        sequenceTreasure.Add(nodeMoveToExit);
+
+        _sequenceDic.Add(SequenceType.BattleWin, sequenceBattleWin);
+        _sequenceDic.Add(SequenceType.BattleLose, sequenceBattleLose);
+        _sequenceDic.Add(SequenceType.Treasure, sequenceTreasure);
 
         _currentState = GetState(StateType.Entry);
     }

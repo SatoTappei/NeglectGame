@@ -2507,7 +2507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 806653dd8ec5d994081e7d2565536568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _passWaypointPrefab: {fileID: 257592772319012978, guid: a90e943c52f6b1c45a727941f21ea789, type: 3}
+  _passWaypointPrefab: {fileID: 7079537059908555760, guid: 8db082d0e0119224ca2ba8657e8efcb0, type: 3}
   _roomWaypointPrefab: {fileID: 4880610646160836894, guid: 908cba94c00e3db4eb3948383b120abb, type: 3}
   _exitWaypointPrefab: {fileID: 5513843999243754119, guid: c4ae76fb9a81c1544bcd5d770b934e1b, type: 3}
   _waypointParent: {fileID: 947083635}

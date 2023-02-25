@@ -893,6 +893,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2097248330460483290}
   - component: {fileID: 8327419589519762336}
+  - component: {fileID: -2722519509054695163}
   m_Layer: 0
   m_Name: RagDoll_Boy
   m_TagString: Untagged
@@ -937,6 +938,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-2722519509054695163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3116972417662467273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e72f249d14a31f64c8acd503ad6c2a08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rb: {fileID: 2801467634717959840}
+  _power: 200
+  _rbs:
+  - {fileID: 8197218858288325664}
+  - {fileID: 2801467634717959840}
+  - {fileID: 8405836336311777628}
+  - {fileID: 3136619270423427564}
+  - {fileID: 7811517680053039731}
+  - {fileID: 1701786166178569112}
+  - {fileID: 8760252345050288250}
+  - {fileID: 7660301961981795023}
+  - {fileID: 5161576832624521625}
+  - {fileID: 4229266146310029143}
+  - {fileID: 1507798421000825534}
 --- !u!1 &3433867272663679396
 GameObject:
   m_ObjectHideFlags: 0

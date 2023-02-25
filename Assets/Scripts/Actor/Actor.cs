@@ -16,6 +16,9 @@ public class Actor : MonoBehaviour, IStateControl
 
     /* 
      *  視界の実装がおかしいのできちんとした視界になるように直す
+     *  ラグドールがぶっ飛んで血が出るようにする
+     *  ダンジョンに物を置く
+     *  体力が0以下になったら死ぬようにする
      */
 
     void Awake()
@@ -42,21 +45,20 @@ public class Actor : MonoBehaviour, IStateControl
         _actorStateMachine.Execute();
     }
 
-    void OnDisable()
-    {
-        // 非表示になる = 死んだかゴールしたかなので 終わりの処理を書く
-    }
-
     void IStateControl.PlayAnimation(string name) => _actorAnimation.PlayAnim(name);
 
     void IStateControl.PlayGoalPerformance()
     {
         _actorDisappearPerformance.PlayGoalPerformance();
+        _actorMoveSystem.MoveCancel();
+        _actorSight.StopLookInSight();
     }
 
     void IStateControl.PlayDeadPerformance()
     {
         _actorDisappearPerformance.PlayDeadPerformance();
+        _actorMoveSystem.MoveCancel();
+        _actorSight.StopLookInSight();
     }
 
     void IStateControl.MoveToWaypoint()

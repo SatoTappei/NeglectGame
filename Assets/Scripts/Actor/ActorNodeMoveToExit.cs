@@ -8,11 +8,12 @@ public class ActorNodeMoveToExit : ActorNodeBase
 {
     public ActorNodeMoveToExit(ActorStateMachine stateMachine) : base(stateMachine) { }
 
-    protected override async UniTask ExecuteAsync(CancellationToken token)
+    protected override async UniTask ExecuteAsync(CancellationTokenSource cts)
     {
-        token.ThrowIfCancellationRequested();
+        cts.Token.ThrowIfCancellationRequested();
 
         _stateMachine.StateControl.MoveToExit();
-        await UniTask.WaitUntil(() => _stateMachine.StateControl.IsTargetPosArrival(), cancellationToken: token);
+        await UniTask.WaitUntil(() => _stateMachine.StateControl.IsTargetPosArrival(), 
+            cancellationToken: cts.Token);
     }
 }

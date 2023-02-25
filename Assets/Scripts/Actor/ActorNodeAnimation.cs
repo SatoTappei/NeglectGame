@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using System;
 
 /// <summary>
 /// ActorStateSequenceクラスで使用するアニメーションの再生を行うノード
@@ -16,17 +17,17 @@ public class ActorNodeAnimation : ActorNodeBase
         _iteration = iteration;
     }
 
-    protected override async UniTask ExecuteAsync(CancellationToken token)
+    protected override async UniTask ExecuteAsync(CancellationTokenSource cts)
     {
         // 指定した回数分同じアニメーションを繰り返す
         for(int i = 0; i < _iteration; i++)
         {
-            token.ThrowIfCancellationRequested();
+            cts.Token.ThrowIfCancellationRequested();
 
             _stateMachine.StateControl.PlayAnimation(_animationName);
             Debug.Log((i + 1) + "かいくりかえしたです");
             float delay = _stateMachine.StateControl.GetAnimationClipLength(_animationName);
-            await UniTask.Delay(System.TimeSpan.FromSeconds(delay), cancellationToken: token);
+            await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: cts.Token);
         }
     }
 }

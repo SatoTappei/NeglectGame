@@ -40,35 +40,4 @@ public class ActorInSightFilter
         List<Vector3> list = _unAvailableMovingTargetDic[inSightObject.SightableType];
         list.Add(inSightObject.transform.position);
     }
-
-    // TODO:必要に応じて部屋の出入り口以外に対しても同様の処理が出来るように直す
-    //      今のところ部屋の出入り口のみチェックを行えればよいので処理をラップしただけになっている
-    //public bool IsAvailable(Vector3 pos)
-    //{
-    //    return !_unAvailabledRoomEntranceList.Contains(pos);
-    //}
-
-    //public void AddUnAvailableRoomEntrance(Vector3 pos)
-    //{
-    //    if (_unAvailabledRoomEntranceList.Contains(pos)) return;
-
-    //    // 部屋の出入り口以外の座標が渡されてくる可能性があるので
-    //    // その座標が部屋の出入り口のリストに含まれているかチェックする
-    //    bool isRoomEntrance = _waypointDic[WaypointType.Room].Contains(pos);
-    //    if (isRoomEntrance)
-    //    {
-    //        if (_unAvailabledRoomEntranceList.Count == _waypointDic[WaypointType.Room].Count - 1)
-    //        {
-    //            _unAvailabledRoomEntranceList.Clear();
-    //        }
-
-    //        _unAvailabledRoomEntranceList.Add(pos);
-    //        return;
-    //    }
-    //    else
-    //    {
-    //        Debug.LogWarning("部屋の出入り口以外の座標を部屋の入口として調べようとしています: " + pos);
-    //        return;
-    //    }
-    //}
 }

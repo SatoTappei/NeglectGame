@@ -2179,6 +2179,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7453087825137047235}
   - component: {fileID: 712883903714671545}
+  - component: {fileID: -2259792590159855706}
   m_Layer: 0
   m_Name: RagDoll_Princess
   m_TagString: Untagged
@@ -2223,6 +2224,37 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-2259792590159855706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5851854025821250768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e72f249d14a31f64c8acd503ad6c2a08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rb: {fileID: 6243666087626375695}
+  _power: 200
+  _rbs:
+  - {fileID: 6747328159878579567}
+  - {fileID: 6342034739290534018}
+  - {fileID: 6243666087626375695}
+  - {fileID: 5158939725427795627}
+  - {fileID: 926987967457466216}
+  - {fileID: 7069868818671013898}
+  - {fileID: 4686713753372999683}
+  - {fileID: 4935540228311863641}
+  - {fileID: 4545336988668756891}
+  - {fileID: 7374214965808763109}
+  - {fileID: 3968819374207995744}
+  - {fileID: 95093011865201106}
+  - {fileID: 237768225999265689}
+  - {fileID: 7860007708952769601}
+  - {fileID: 3382875438539573564}
+  - {fileID: 6577905832063060668}
 --- !u!1 &6009582476231206026
 GameObject:
   m_ObjectHideFlags: 0

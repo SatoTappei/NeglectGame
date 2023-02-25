@@ -12,13 +12,13 @@ public class ActorDisappearPerformance : MonoBehaviour
 
     public void PlayGoalPerformance()
     {
-        Instantiate(_goalPerformancePrefab);
-        Destroy(gameObject);
+        transform.localScale = Vector3.zero;
+        Instantiate(_goalPerformancePrefab, transform.position, Quaternion.identity);
     }
 
     public void PlayDeadPerformance()
     {
-        Instantiate(_deadPerformancePrefab);
-        Destroy(gameObject);
+        transform.localScale = Vector3.zero;
+        Instantiate(_deadPerformancePrefab, transform.position, Quaternion.identity);
     }
 }

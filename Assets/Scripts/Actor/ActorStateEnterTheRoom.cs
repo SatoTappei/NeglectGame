@@ -43,10 +43,8 @@ public class ActorStateEnterTheRoom : ActorStateBase
             _stateMachine.StateControl.PlayAnimation("LookAround");
 
             float delayTime = _stateMachine.StateControl.GetAnimationClipLength("LookAround");
-            _tween = DOVirtual.DelayedCall(delayTime, () =>
-            {
-                TryChangeState(StateType.Explore);
-            }).SetLink(_stateMachine.gameObject);
+            _tween = DOVirtual.DelayedCall(delayTime, () => TryChangeState(StateType.Explore))
+                .SetLink(_stateMachine.gameObject);
         }
 
         // ‚â‚é‹C‚ªˆê’èˆÈ‰º‚ÌŽž
