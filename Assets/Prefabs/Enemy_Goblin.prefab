@@ -363,6 +363,7 @@ GameObject:
   - component: {fileID: 604383532221520010}
   - component: {fileID: -137339570730523325}
   - component: {fileID: -4725426811384034920}
+  - component: {fileID: -7211713287653190566}
   m_Layer: 0
   m_Name: Enemy_Goblin
   m_TagString: Untagged
@@ -433,6 +434,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sightableType: 2
+--- !u!114 &-7211713287653190566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5814826099907659747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f1ba03b90581a44a534eca68207009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anim: {fileID: 0}
+  _sightableObject: {fileID: -4725426811384034920}
+  _playingAnimationTime: 4
+  _visibleAgainTime: 8
 --- !u!1 &6054136620196074417
 GameObject:
   m_ObjectHideFlags: 0

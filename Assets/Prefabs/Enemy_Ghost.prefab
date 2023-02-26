@@ -524,6 +524,7 @@ GameObject:
   - component: {fileID: 2499574317430562758}
   - component: {fileID: 5251282281255381637}
   - component: {fileID: 4736240955763569166}
+  - component: {fileID: 3544268444410060919}
   m_Layer: 0
   m_Name: Enemy_Ghost
   m_TagString: Untagged
@@ -594,3 +595,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sightableType: 2
+--- !u!114 &3544268444410060919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8818364181890793647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f1ba03b90581a44a534eca68207009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anim: {fileID: 0}
+  _sightableObject: {fileID: 4736240955763569166}
+  _playingAnimationTime: 4
+  _visibleAgainTime: 8

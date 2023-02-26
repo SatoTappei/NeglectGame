@@ -22,7 +22,6 @@ public class ActorStateSequenceExecute : ActorStateBase
             ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Exit);
             sequence.ExecuteAsync(_cts, () =>
             {
-                Debug.Log("‘Ì—Í‚ª‚à‚¤‚¾‚ß‚Û");
                 TryChangeState(StateType.Goal);
             }).Forget();
             return;

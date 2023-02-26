@@ -25,6 +25,12 @@ public class Actor : MonoBehaviour, IStateControl
      *  Awake()とOnEnable()の後、Start()の直前に外部で位置を初期化している 
      */
 
+    /* 
+     *  次のタスク 
+     *  敵の攻撃アニメーションを作って実際に戦闘している風に見せる
+     *  視界のバグは未だに直らず
+     */
+
     void Start()
     {
         _actorAnimation.Init();
@@ -109,10 +115,10 @@ public class Actor : MonoBehaviour, IStateControl
 
         if (inSightObjectQueue.Count > 0)
         {
-            // 移動先として使えるオブジェクトが渡された場合、移動し始めるまで視界の機能を止めておく
-            SightableObject target = _actorInSightFilter.FilteringAvailableMoving(inSightObjectQueue);
+            SightableObject target = _actorInSightFilter.SelectMovingTarget(inSightObjectQueue);
             if (target != null)
             {
+                // 移動先として使えるオブジェクトが渡された場合、移動し始めるまで視界の機能を止めておく
                 _actorSight.StopLookInSight();
                 return target;
             }

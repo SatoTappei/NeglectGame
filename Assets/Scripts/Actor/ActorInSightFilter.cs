@@ -21,36 +21,23 @@ public class ActorInSightFilter
         }
     }
 
-    /// <returns>inSightObject もしくは null</returns>
-    public SightableObject FilteringAvailableMoving(SightableObject inSightObject)
-    {
-        List<Vector3> list = _unAvailableMovingTargetDic[inSightObject.SightableType];
-        if (list.Contains(inSightObject.transform.position))
-        {
-            return null;
-        }
-        else
-        {
-            return inSightObject;
-        }
-    }
-
-    public SightableObject FilteringAvailableMoving(IEnumerable<SightableObject> inSightObjects)
+    public SightableObject SelectMovingTarget(IEnumerable<SightableObject> inSightObjects)
     {
         foreach (SightableObject inSightObject in inSightObjects)
         {
-            // 部屋の入口だったら1度しか視界に捉えないように
-            // それ以外の場合は何度でも可能
             if (inSightObject.SightableType == SightableType.RoomEntrance)
             {
+                // 部屋の入口だったら1度しか視界に捉えないようにする
                 List<Vector3> list = _unAvailableMovingTargetDic[SightableType.RoomEntrance];
                 if (!list.Contains(inSightObject.transform.position))
                 {
+                    inSightObject.ExecuteOnSelectedMovingTarget();
                     return inSightObject;
                 }
             }
             else
             {
+                inSightObject.ExecuteOnSelectedMovingTarget();
                 return inSightObject;
             }
         }

@@ -15,14 +15,14 @@ public class ActorEffecter : MonoBehaviour
 
     Collider[] _results = new Collider[ResultsLength];
 
-    internal void EffectAround()
+    internal void EffectAround(string message)
     {
         Physics.OverlapSphereNonAlloc(transform.position, _effectRadius, _results, _effectLayer);
 
         foreach (Collider collider in _results)
         {
             if (collider == null) break;
-            //collider.gameObject.GetComponent<IEffectable>().EffectByActor();
+            collider.gameObject.GetComponent<IEffectable>().Effect(message);
         }
     }
 }

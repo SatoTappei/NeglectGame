@@ -63,7 +63,9 @@ public class ActorSight : MonoBehaviour
 
             if (distance <= _sightRange && angle <= _sightAngle && dontBlocked)
             {
+                //SightableObject inSightObject = rangeInSide.GetComponent<SightableObject>();
                 _inSightObjectQueue.Enqueue(rangeInSide.GetComponent<SightableObject>());
+                //inSightObject.OnUpdateActorInSight?.Invoke();
             }
         }
     }

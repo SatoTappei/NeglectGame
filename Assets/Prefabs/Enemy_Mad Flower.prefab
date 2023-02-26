@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 975924583355767278}
   - component: {fileID: -362052105249053234}
   - component: {fileID: 5135465210131812034}
+  - component: {fileID: 8095436642996039556}
   m_Layer: 0
   m_Name: Enemy_Mad Flower
   m_TagString: Untagged
@@ -209,6 +210,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sightableType: 2
+--- !u!114 &8095436642996039556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6150355946208986759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f1ba03b90581a44a534eca68207009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anim: {fileID: 0}
+  _sightableObject: {fileID: 5135465210131812034}
+  _playingAnimationTime: 4
+  _visibleAgainTime: 8
 --- !u!1 &6301999764887504823
 GameObject:
   m_ObjectHideFlags: 0

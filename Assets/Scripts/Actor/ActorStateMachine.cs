@@ -64,7 +64,7 @@ public class ActorStateMachine : MonoBehaviour
         // ëÃóÕÇ™Ëáílà»â∫Ç…Ç»Ç¡ÇΩèÍçáÇ…íEèoÇ∑ÇÈSequence;
         ActorStateSequence sequenceExit = new(length: 1);
 
-        ActorNodeMovingToTarget nodeRunToInSightObject = new(this);
+        ActorNodeMoveToTarget nodeRunToInSightObject = new(this);
         ActorNodeMoveToExit nodeMoveToExit = new(this);
         ActorNodeAnimation nodePanicAnimation = new(this, "Panic");
         ActorNodeAnimation nodeJoyAnimation = new(this, "Joy");

@@ -4,9 +4,9 @@ using System.Threading;
 /// <summary>
 /// 視界に捉えたオブジェクトの位置への移動を行うノード
 /// </summary>
-public class ActorNodeMovingToTarget : ActorNodeBase
+public class ActorNodeMoveToTarget : ActorNodeBase
 {
-    public ActorNodeMovingToTarget(ActorStateMachine stateMachine) : base(stateMachine) { }
+    public ActorNodeMoveToTarget(ActorStateMachine stateMachine) : base(stateMachine) { }
 
     protected override async UniTask ExecuteAsync(CancellationTokenSource cts)
     {
