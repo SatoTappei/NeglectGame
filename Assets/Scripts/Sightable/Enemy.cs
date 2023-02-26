@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour, IEffectable
 {
     [SerializeField] Animator _anim;
     [SerializeField] SightableObject _sightableObject;
+    [Header("キャラクターの視線のRayがヒットするコライダー")]
+    [SerializeField] Collider _rayHitCollider;
     [Header("攻撃アニメーションを再生する時間")]
     [SerializeField] float _playingAnimationTime = 4.0f;
     [Header("キャラクターが再び視認できるようになるまでの時間")]
@@ -29,7 +31,7 @@ public class Enemy : MonoBehaviour, IEffectable
 
     void InactiveCollider()
     {
-        Debug.Log("移動先として選ばれた");
+        gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
     }
 
     ///// <summary>視認可能かどうかの切り替えはActor側のRayによる取得で行う</summary>

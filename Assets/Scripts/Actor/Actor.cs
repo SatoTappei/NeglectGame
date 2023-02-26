@@ -28,6 +28,7 @@ public class Actor : MonoBehaviour, IStateControl
     /* 
      *  次のタスク 
      *  敵の攻撃アニメーションを作って実際に戦闘している風に見せる
+     *  触れられるものは見えるので宝/敵はSightableObjectと継承関係に出来ないか検討する
      *  視界のバグは未だに直らず
      */
 
