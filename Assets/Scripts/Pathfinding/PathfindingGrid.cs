@@ -20,7 +20,8 @@ public class PathfindingGrid : MonoBehaviour
     }
 
     // 変更すると直径が1ではなくなるので、色々な不具合が出るかもしれない
-    readonly float NodeRadius = 0.5f;
+    static readonly float NodeRadius = 0.5f;
+    static readonly float NodeDiameter = NodeRadius * 2;
 
     [Header("デバッグ用:マスの位置を視覚化するためプレハブ")]
     [SerializeField] GameObject _testMassVisualizer;
@@ -31,7 +32,7 @@ public class PathfindingGrid : MonoBehaviour
     [SerializeField] int _gridWidth;
     [SerializeField] int _gridDepth;
     [Header("地形とそのコストのデータ")]
-    [SerializeField] TerrainData[] _terrainDataArr;
+    [SerializeField] TerrainData[] _terrainDatas;
 
     Dictionary<string, int> _terrainDataDic;
     // TODO:マルチスレッドで処理する場合は並列で同じ変数を使うことになってしまう？ので対処する
@@ -42,11 +43,11 @@ public class PathfindingGrid : MonoBehaviour
 
     void Awake()
     {
-        _terrainDataDic = new Dictionary<string, int>(_terrainDataArr.Length);
+        _terrainDataDic = new Dictionary<string, int>(_terrainDatas.Length);
         // 周囲8マスを格納するので初期容量は8固定
         _neighbourNodeSet = new HashSet<Node>(8);
 
-        foreach (TerrainData data in _terrainDataArr)
+        foreach (TerrainData data in _terrainDatas)
         {
             _terrainDataDic.Add(data.Tag, data.Cost);
         }
@@ -72,21 +73,19 @@ public class PathfindingGrid : MonoBehaviour
     {
         Vector3 pos = transform.position;
         // グリッドの中心 - グリッドの半分の長さ + ノードn個分 + ノードの半径(ノードの中央を基準にしたい)
-        pos.x += -_gridWidth / 2 + x * NodeDiameter() + NodeRadius;
-        pos.z += -_gridDepth / 2 + z * NodeDiameter() + NodeRadius;
+        pos.x += -_gridWidth / 2 + x * NodeDiameter + NodeRadius;
+        pos.z += -_gridDepth / 2 + z * NodeDiameter + NodeRadius;
 
         return pos;
     }
 
-    float NodeDiameter() => NodeRadius * 2;
-
     /// <summary>球状の当たり判定を出して障害物のレイヤーにヒットしなかったら移動できるのでtrueを返す</summary>
     bool IsMovableNode(Vector3 pos)
     {
-        bool b1 = !Physics.CheckSphere(pos, NodeRadius, _unmovableLayer);
-        bool b2 = Physics.CheckSphere(pos, NodeRadius, _movableLayer);
+        bool dontObstacle = !Physics.CheckSphere(pos, NodeRadius, _unmovableLayer);
+        bool IsFloor = Physics.CheckSphere(pos, NodeRadius, _movableLayer);
 
-        if (b1&&b2)
+        if (dontObstacle && IsFloor)
         {
             // デバッグ用、マスの位置を視覚化する
             if (_testMassVisualizer)
@@ -95,7 +94,7 @@ public class PathfindingGrid : MonoBehaviour
             }
         }
 
-        return b1 && b2;
+        return dontObstacle && IsFloor;
     }
 
     int GetPenaltyCost(bool isMovable, Vector3 pos)

@@ -19,11 +19,6 @@ public class ActorStateSequenceExecute : ActorStateBase
 
         if (_stateMachine.StateControl.IsBelowHpThreshold())
         {
-            //ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Exit);
-            //sequence.ExecuteAsync(_cts, () =>
-            //{
-            //    TryChangeState(StateType.Goal);
-            //}).Forget();
             ExecuteSequence(SequenceType.Exit, StateType.Goal);
             return;
         }
@@ -33,37 +28,21 @@ public class ActorStateSequenceExecute : ActorStateBase
         SightableObject inSightObject = _stateMachine.StateControl.GetInSightAvailableMovingTarget();
         if (inSightObject?.SightableType == SightableType.Treasure)
         {
-            //ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Treasure);
-            //sequence.ExecuteAsync(_cts, () => 
-            //{
-            //    TryChangeState(StateType.Goal);
-            //}).Forget();
             ExecuteSequence(SequenceType.Treasure, StateType.Goal);
         }
         else if (inSightObject?.SightableType == SightableType.Enemy)
         {
             if(Random.value < BattleWinPercent)
             {
-                //ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.BattleWin);
-                //sequence.ExecuteAsync(_cts, () =>
-                //{
-                //    TryChangeState(StateType.Goal);
-                //}).Forget();
                 ExecuteSequence(SequenceType.BattleWin, StateType.Dead);
             }
             else
             {
                 ExecuteSequence(SequenceType.BattleLose, StateType.Dead);
-                //ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.BattleLose);
-                //sequence.ExecuteAsync(_cts, () =>
-                //{
-                //    TryChangeState(StateType.Dead);
-                //}).Forget();
             }
         }
         else
         {
-            // ‰½‚à‹ŠE‚É–³‚¢‚Ì‚ÅExplore‚É–ß‚é
             Debug.LogWarning("–¢’è‹`‚Ì—ñ‹“Œ^‚Å‚·B");
         }
     }

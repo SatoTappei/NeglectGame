@@ -12,8 +12,6 @@ public class ActorStateEnterTheRoom : ActorStateBase
 
     protected override void Enter()
     {
-        // このステートに遷移する前に視界の機能を切ってあるので、前フレームから視界が更新されず
-        // RoomEntrance種類のオブジェクトが取得できる
         SightableObject inSightObject = _stateMachine.StateControl.GetInSightAvailableMovingTarget();
         if (inSightObject.SightableType != SightableType.RoomEntrance)
         {
@@ -35,8 +33,6 @@ public class ActorStateEnterTheRoom : ActorStateBase
             return;
         }
 
-        // 目的地に到着したら見回すアニメーションの長さ分だけ待つことで
-        // アニメーションの終了を待機しての処理を実現している
         if (_stateMachine.StateControl.IsTargetPosArrival() && !_isArraival)
         {
             _isArraival = true;
