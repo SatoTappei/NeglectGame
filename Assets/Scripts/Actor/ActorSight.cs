@@ -8,7 +8,6 @@ public class ActorSight : MonoBehaviour
 {
     /// <summary>視界の更新間隔、間隔を広くすると視界のパラメータによっては認識しなくなる</summary>
     static readonly float UpdateInterval = 0.25f;
-
     /// <summary>視界に映る周囲のオブジェクト数に応じて設定する</summary>
     static readonly int InSightCap = 4;
     /// <summary>頭上からRayを飛ばすためにキャラクターのモデルの高さに応じて設定する</summary>
@@ -37,11 +36,12 @@ public class ActorSight : MonoBehaviour
     {
         Physics.OverlapSphereNonAlloc(transform.position, _sightRange, _results, _sightableLayer);
 
-        // キャラの前方への視界のRay
+        // デバッグ用:キャラの前方への視界のRay
         Vector3 r = _actorModel.transform.position;
         r.y += ActorModelHeight;
         Vector3 f = _actorModel.transform.forward;
         UnityEngine.Debug.DrawRay(r, f * _sightRange, Color.blue, 0.1f, false);
+        // キャラの前方への視界のRayここまで
 
         // 複数のオブジェクトを見つけた場合は最初の1つが返る
         foreach (Collider rangeInSide in _results)
@@ -63,9 +63,7 @@ public class ActorSight : MonoBehaviour
 
             if (distance <= _sightRange && angle <= _sightAngle && dontBlocked)
             {
-                //SightableObject inSightObject = rangeInSide.GetComponent<SightableObject>();
                 _inSightObjectQueue.Enqueue(rangeInSide.GetComponent<SightableObject>());
-                //inSightObject.OnUpdateActorInSight?.Invoke();
             }
         }
     }

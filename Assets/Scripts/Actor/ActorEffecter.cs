@@ -9,7 +9,7 @@ public class ActorEffecter : MonoBehaviour
     static readonly int ResultsLength = 4;
 
     [Header("操作可能な範囲")]
-    [SerializeField] float _effectRadius = 5;
+    [SerializeField] float _effectRadius = 5.0f;
     [Header("視界に映るオブジェクトのレイヤー")]
     [SerializeField] LayerMask _effectLayer = 8;
 

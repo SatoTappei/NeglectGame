@@ -109,32 +109,6 @@ public class Actor : MonoBehaviour, IStateControl
         {
             return null;
         }
-
-        //if (inSightObjectQueue.Count > 0)
-        //{
-        //    SightableObject target = _actorInSightFilter.SelectMovingTarget(inSightObjectQueue);
-        //    if (target != null)
-        //    {
-        //        if (target.IsAvailable(this))
-        //        {
-        //            // 移動先として使えるオブジェクトが渡された場合、移動し始めるまで視界の機能を止めておく
-        //            _actorSight.StopLookInSight();
-        //            return target;
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
-        //else
-        //{
-        //    return null;
-        //}
     }
 
 

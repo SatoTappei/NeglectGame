@@ -19,11 +19,12 @@ public class ActorStateSequenceExecute : ActorStateBase
 
         if (_stateMachine.StateControl.IsBelowHpThreshold())
         {
-            ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Exit);
-            sequence.ExecuteAsync(_cts, () =>
-            {
-                TryChangeState(StateType.Goal);
-            }).Forget();
+            //ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Exit);
+            //sequence.ExecuteAsync(_cts, () =>
+            //{
+            //    TryChangeState(StateType.Goal);
+            //}).Forget();
+            ExecuteSequence(SequenceType.Exit, StateType.Goal);
             return;
         }
 
@@ -32,29 +33,32 @@ public class ActorStateSequenceExecute : ActorStateBase
         SightableObject inSightObject = _stateMachine.StateControl.GetInSightAvailableMovingTarget();
         if (inSightObject?.SightableType == SightableType.Treasure)
         {
-            ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Treasure);
-            sequence.ExecuteAsync(_cts, () => 
-            {
-                TryChangeState(StateType.Goal);
-            }).Forget();
+            //ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.Treasure);
+            //sequence.ExecuteAsync(_cts, () => 
+            //{
+            //    TryChangeState(StateType.Goal);
+            //}).Forget();
+            ExecuteSequence(SequenceType.Treasure, StateType.Goal);
         }
         else if (inSightObject?.SightableType == SightableType.Enemy)
         {
             if(Random.value < BattleWinPercent)
             {
-                ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.BattleWin);
-                sequence.ExecuteAsync(_cts, () =>
-                {
-                    TryChangeState(StateType.Goal);
-                }).Forget();
+                //ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.BattleWin);
+                //sequence.ExecuteAsync(_cts, () =>
+                //{
+                //    TryChangeState(StateType.Goal);
+                //}).Forget();
+                ExecuteSequence(SequenceType.BattleWin, StateType.Dead);
             }
             else
             {
-                ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.BattleLose);
-                sequence.ExecuteAsync(_cts, () =>
-                {
-                    TryChangeState(StateType.Dead);
-                }).Forget();
+                ExecuteSequence(SequenceType.BattleLose, StateType.Dead);
+                //ActorStateSequence sequence = _stateMachine.GetSequence(SequenceType.BattleLose);
+                //sequence.ExecuteAsync(_cts, () =>
+                //{
+                //    TryChangeState(StateType.Dead);
+                //}).Forget();
             }
         }
         else
@@ -73,5 +77,11 @@ public class ActorStateSequenceExecute : ActorStateBase
     {
         // このステートから遷移する = Sequence中になんかしらのイベントが発生してSequence中断
         _cts?.Cancel();
+    }
+
+    void ExecuteSequence(SequenceType sequenceType, StateType transitionStateType)
+    {
+        ActorStateSequence sequence = _stateMachine.GetSequence(sequenceType);
+        sequence.ExecuteAsync(_cts, () => TryChangeState(transitionStateType)).Forget();
     }
 }
