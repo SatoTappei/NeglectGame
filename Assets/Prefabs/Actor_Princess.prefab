@@ -342,7 +342,7 @@ MonoBehaviour:
   _actorAnimation: {fileID: -6988626446146838499}
   _actorSight: {fileID: 170183322904586823}
   _actorEffecter: {fileID: 9021699817093085888}
-  _actorDisappearPerformance: {fileID: -716122264684685358}
+  _actorPerformance: {fileID: -716122264684685358}
   _actorHpModel: {fileID: -189330844018580072}
 --- !u!114 &-6157919514075864504
 MonoBehaviour:

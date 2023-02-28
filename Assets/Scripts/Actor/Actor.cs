@@ -94,33 +94,48 @@ public class Actor : MonoBehaviour, IStateControl
     SightableObject IStateControl.GetInSightAvailableMovingTarget()
     {
         Queue<SightableObject> inSightObjectQueue = _actorSight.InSightObjectQueue;
+        if (inSightObjectQueue.Count == 0) return null;
+        
+        SightableObject target = _actorInSightFilter.SelectMovingTarget(inSightObjectQueue);
+        if (target == null) return null;
 
-        if (inSightObjectQueue.Count > 0)
+        if (target.IsAvailable(this))
         {
-            SightableObject target = _actorInSightFilter.SelectMovingTarget(inSightObjectQueue);
-            if (target != null)
-            {
-                if (target.IsAvailable(this))
-                {
-                    // 移動先として使えるオブジェクトが渡された場合、移動し始めるまで視界の機能を止めておく
-                    _actorSight.StopLookInSight();
-                    return target;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
+            // 移動先として使えるオブジェクトが渡された場合、移動し始めるまで視界の機能を止めておく
+            _actorSight.StopLookInSight();
+            return target;
         }
         else
         {
             return null;
         }
+
+        //if (inSightObjectQueue.Count > 0)
+        //{
+        //    SightableObject target = _actorInSightFilter.SelectMovingTarget(inSightObjectQueue);
+        //    if (target != null)
+        //    {
+        //        if (target.IsAvailable(this))
+        //        {
+        //            // 移動先として使えるオブジェクトが渡された場合、移動し始めるまで視界の機能を止めておく
+        //            _actorSight.StopLookInSight();
+        //            return target;
+        //        }
+        //        else
+        //        {
+        //            return null;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
+        //else
+        //{
+        //    return null;
+        //}
     }
 
-    
+
 }
