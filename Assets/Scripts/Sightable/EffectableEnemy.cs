@@ -11,6 +11,8 @@ public class EffectableEnemy : SightableObject, IEffectable
     static readonly int _idleAnimHash = Animator.StringToHash("Idle");
     static readonly int _attackAnimHash = Animator.StringToHash("Attack");
 
+    [Header("湧いた時に再生されるParticle")]
+    [SerializeField] GameObject _popParticle;
     [Header("Attack/Idleの2つのステートを持つアニコン")]
     [SerializeField] Animator _anim;
     [Header("攻撃アニメーションを再生する時間")]
@@ -18,7 +20,22 @@ public class EffectableEnemy : SightableObject, IEffectable
     [Header("キャラクターが再び視認できるようになるまでの時間")]
     [SerializeField] float _visibleAgainTime = 8.0f;
 
+    GameObject _particle;
     Actor _effectedActor;
+
+    void OnEnable()
+    {
+        if (_particle == null)
+        {
+            _particle = Instantiate(_popParticle, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            _particle.SetActive(true);
+        }
+
+        _effectedActor = null;
+    }
 
     public override bool IsAvailable(Actor actor)
     {
@@ -57,8 +74,10 @@ public class EffectableEnemy : SightableObject, IEffectable
     {
         token.ThrowIfCancellationRequested();
         await BattleAnimationAsync(token);
-
-        Destroy(gameObject);
+        
+        gameObject.SetActive(false);
+        await UniTask.Delay(TimeSpan.FromSeconds(_visibleAgainTime), cancellationToken: token);
+        gameObject.SetActive(true);
     }
 
     async UniTaskVoid BattleLoseAsync(CancellationToken token)
@@ -67,7 +86,7 @@ public class EffectableEnemy : SightableObject, IEffectable
         await BattleAnimationAsync(token);
 
         float delay = Mathf.Max(0, _visibleAgainTime - _playingAnimationTime);
-        await UniTask.Delay(TimeSpan.FromSeconds(delay));
+        await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
 
         _effectedActor = null;
     }

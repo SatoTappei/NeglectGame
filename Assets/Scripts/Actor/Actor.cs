@@ -30,7 +30,6 @@ public class Actor : MonoBehaviour, IStateControl
      *  次のタスク 
      *  ダンジョン内の全ての部屋を見回っても何もない場合は帰るようにする
      *  敵とお宝のリポップ
-     *  ダンジョンを見回せるようなカメラ
      */
 
     void Start()
