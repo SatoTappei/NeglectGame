@@ -28,17 +28,35 @@ public class ActorPathfindingMove
         _runSpeedMag = runSpeedMag;
     }
 
-    internal async UniTaskVoid MoveFollowPathAsync(Stack<Vector3> stack, UnityAction callBack)
+    internal /*async UniTaskVoid MoveFollowPathAsync*/void MoveFollowPath(Stack<Vector3> stack, UnityAction callBack 
+        )
     {
         _cts = new CancellationTokenSource();
-        await MoveAsync(stack, _moveSpeed, _cts);
-        callBack?.Invoke();
+        FollowPathAsync(stack, _moveSpeed, callBack, _cts).Forget();
+        //_cts.Token.ThrowIfCancellationRequested();
+        //_cts = cts;
+        //await MoveAsync(stack, _moveSpeed, _cts);
+        //callBack?.Invoke();
+
     }
 
-    internal async UniTaskVoid RunFollowPathAsync(Stack<Vector3> stack, UnityAction callBack)
+    internal /*async UniTaskVoid RunFollowPathAsync*/void RunFollowPath(Stack<Vector3> stack, UnityAction callBack 
+        )
     {
         _cts = new CancellationTokenSource();
-        await MoveAsync(stack, _moveSpeed * _runSpeedMag, _cts);
+        FollowPathAsync(stack, _moveSpeed * _runSpeedMag, callBack, _cts).Forget();
+        //_cts.Token.ThrowIfCancellationRequested();
+        //_cts = cts;
+        //await MoveAsync(stack, _moveSpeed * _runSpeedMag, _cts);
+        //callBack?.Invoke();
+    }
+
+    async UniTaskVoid FollowPathAsync(Stack<Vector3> stack, float speed, UnityAction callBack,
+        CancellationTokenSource cts)
+    {
+        _cts.Token.ThrowIfCancellationRequested();
+        _cts = cts;
+        await MoveAsync(stack, speed, _cts);
         callBack?.Invoke();
     }
 
@@ -57,7 +75,8 @@ public class ActorPathfindingMove
                     return;
                 }
 
-                _actor.transform.position = Vector3.MoveTowards(_actor.transform.position, nextPos, Time.deltaTime * speed);
+                _actor.transform.position = Vector3.MoveTowards(_actor.transform.position, nextPos, 
+                    Time.deltaTime * speed);
                 await UniTask.Yield(cancellationToken: cts.Token);
             }
         }

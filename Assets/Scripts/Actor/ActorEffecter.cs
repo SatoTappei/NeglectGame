@@ -18,11 +18,13 @@ public class ActorEffecter : MonoBehaviour
     internal void EffectAround(string message)
     {
         Physics.OverlapSphereNonAlloc(transform.position, _effectRadius, _results, _effectLayer);
-
         foreach (Collider collider in _results)
         {
             if (collider == null) break;
-            collider.gameObject.GetComponent<IEffectable>().Effect(message);
+            if (collider.gameObject.TryGetComponent(out IEffectable effectable))
+            {
+                effectable.Effect(message);
+            }
         }
     }
 }

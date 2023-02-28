@@ -27,9 +27,8 @@ public class Actor : MonoBehaviour, IStateControl
 
     /* 
      *  次のタスク 
-     *  敵の攻撃アニメーションを作って実際に戦闘している風に見せる
-     *  触れられるものは見えるので宝/敵はSightableObjectと継承関係に出来ないか検討する
-     *  視界のバグは未だに直らず
+     *  ダンジョン内の全ての部屋を見回っても何もない場合は帰るようにする
+     *  敵とお宝のリポップ
      */
 
     void Start()
@@ -89,7 +88,7 @@ public class Actor : MonoBehaviour, IStateControl
         MoveTo(target);
     }
 
-    void IStateControl.MoveToNoSight(SightableObject target)
+    void IStateControl.MoveToInactiveLookInSight(SightableObject target)
     {
         MoveTo(target);
     }
@@ -103,6 +102,8 @@ public class Actor : MonoBehaviour, IStateControl
     }
 
     void IStateControl.MoveCancel() => _actorMoveSystem.MoveCancel();
+
+    void IStateControl.AffectAroundEffectableObject(string message) => _actorEffecter.EffectAround(message);
 
     float IStateControl.GetAnimationClipLength(string name) => _actorAnimation.GetStateLength(name);
 
@@ -119,9 +120,16 @@ public class Actor : MonoBehaviour, IStateControl
             SightableObject target = _actorInSightFilter.SelectMovingTarget(inSightObjectQueue);
             if (target != null)
             {
-                // 移動先として使えるオブジェクトが渡された場合、移動し始めるまで視界の機能を止めておく
-                _actorSight.StopLookInSight();
-                return target;
+                if (target.IsAvailable(this))
+                {
+                    // 移動先として使えるオブジェクトが渡された場合、移動し始めるまで視界の機能を止めておく
+                    _actorSight.StopLookInSight();
+                    return target;
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {

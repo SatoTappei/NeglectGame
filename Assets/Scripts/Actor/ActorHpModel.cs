@@ -32,6 +32,5 @@ public class ActorHpModel : MonoBehaviour
     internal void DecreaseHp(int quantity)
     {
         _currentHp = Mathf.Clamp(_currentHp -= quantity, 0, _maxHp);
-        Debug.Log("åªç›:" + _currentHp);
     }   
 }

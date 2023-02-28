@@ -57,30 +57,35 @@ public class ActorStateMachine : MonoBehaviour
         _stateDic.Add(StateType.Dead, stateDead);
 
         // ìGî≠å©éûÇÃSequence
-        ActorStateSequence sequenceBattleWin = new(length: 4);
-        ActorStateSequence sequenceBattleLose = new(length: 3);
+        ActorStateSequence sequenceBattleWin = new(length: 5);
+        ActorStateSequence sequenceBattleLose = new(length: 4);
         // Ç®ïÛî≠å©éûÇÃSequence
-        ActorStateSequence sequenceTreasure = new(length: 4);
+        ActorStateSequence sequenceTreasure = new(length: 5);
         // ëÃóÕÇ™Ëáílà»â∫Ç…Ç»Ç¡ÇΩèÍçáÇ…íEèoÇ∑ÇÈSequence;
         ActorStateSequence sequenceExit = new(length: 1);
 
-        ActorNodeMoveToTarget nodeRunToInSightObject = new(this);
+        ActorNodeAffect nodeAffectActorWin = new(this, "ActorWin");
+        ActorNodeAffect nodeAffectActorLose = new(this, "ActorLose");
+        ActorNodeMoveToTarget nodeMoveToTarget = new(this);
         ActorNodeMoveToExit nodeMoveToExit = new(this);
         ActorNodeAnimation nodePanicAnimation = new(this, "Panic");
         ActorNodeAnimation nodeJoyAnimation = new(this, "Joy");
         ActorNodeAnimation nodeAttackAnimation = new(this, "Attack", iteration: 3);
 
         sequenceBattleWin.Add(nodePanicAnimation);
-        sequenceBattleWin.Add(nodeRunToInSightObject);
+        sequenceBattleWin.Add(nodeMoveToTarget);
+        sequenceBattleWin.Add(nodeAffectActorWin);
         sequenceBattleWin.Add(nodeAttackAnimation);
         sequenceBattleWin.Add(nodeMoveToExit);
 
         sequenceBattleLose.Add(nodePanicAnimation);
-        sequenceBattleLose.Add(nodeRunToInSightObject);
+        sequenceBattleLose.Add(nodeMoveToTarget);
+        sequenceBattleLose.Add(nodeAffectActorLose);
         sequenceBattleLose.Add(nodeAttackAnimation);
 
         sequenceTreasure.Add(nodePanicAnimation);
-        sequenceTreasure.Add(nodeRunToInSightObject);
+        sequenceTreasure.Add(nodeMoveToTarget);
+        sequenceTreasure.Add(nodeAffectActorWin);
         sequenceTreasure.Add(nodeJoyAnimation);
         sequenceTreasure.Add(nodeMoveToExit);
 

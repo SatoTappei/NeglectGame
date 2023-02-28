@@ -9,7 +9,7 @@ using UnityEngine.Events;
 public class ActorStateSequence
 {
     ActorNodeBase[] _sequence;
-    int _insertIndex;
+    int _addIndex;
 
     public ActorStateSequence(int length)
     {
@@ -18,26 +18,19 @@ public class ActorStateSequence
 
     public void Add(ActorNodeBase node)
     {
-        _sequence[_insertIndex] = node;
-        _insertIndex++;
+        _sequence[_addIndex] = node;
+        _addIndex++;
     }
 
     public async UniTask ExecuteAsync(CancellationTokenSource cts, UnityAction callback)
     {
-        try
-        {
-            cts.Token.ThrowIfCancellationRequested();
+        cts.Token.ThrowIfCancellationRequested();
 
-            foreach (ActorNodeBase node in _sequence)
-            {
-                await node.PlayAsync(cts);
-            }
-
-            callback?.Invoke();
-        }
-        catch(OperationCanceledException e)
+        foreach (ActorNodeBase node in _sequence)
         {
-            Debug.Log("SequenceÇÃèàóùÇ™ÉLÉÉÉìÉZÉãÇ≥ÇÍÇ‹ÇµÇΩ: " + e.Message);
+            await node.PlayAsync(cts);
         }
+
+        callback?.Invoke();
     }
 }

@@ -1584,6 +1584,7 @@ GameObject:
   - component: {fileID: -3073945408902330954}
   - component: {fileID: -5877550896894328571}
   - component: {fileID: -8612895462754867019}
+  - component: {fileID: -2716983940602796543}
   - component: {fileID: 9168177098149328450}
   - component: {fileID: 6172865319239556958}
   m_Layer: 0
@@ -1625,7 +1626,7 @@ MonoBehaviour:
   _actorStateMachine: {fileID: -3073945408902330954}
   _actorAnimation: {fileID: -5877550896894328571}
   _actorSight: {fileID: -8612895462754867019}
-  _actorEffecter: {fileID: 0}
+  _actorEffecter: {fileID: -2716983940602796543}
   _actorDisappearPerformance: {fileID: 9168177098149328450}
   _actorHpModel: {fileID: 6172865319239556958}
 --- !u!114 &-1613357774641133722
@@ -1704,6 +1705,22 @@ MonoBehaviour:
     m_Bits: 128
   _sightRange: 10
   _sightAngle: 110
+--- !u!114 &-2716983940602796543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6540620725961212598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d0df87c7f4f88543bf91d77cd1c03ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _effectRadius: 5
+  _effectLayer:
+    serializedVersion: 2
+    m_Bits: 264
 --- !u!114 &9168177098149328450
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -109,7 +109,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1738969930300265740}
-  m_LocalRotation: {x: 0, y: 0.000000058747236, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.000000079669604, z: -0, w: 1}
   m_LocalPosition: {x: 0.16701156, y: 0.22674653, z: -0.00082336424}
   m_LocalScale: {x: 1.0000002, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -177,7 +177,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6783049955685577328}
   - component: {fileID: 5281331988412223837}
-  - component: {fileID: -5170520088307732377}
+  - component: {fileID: -1590909897820759643}
   m_Layer: 0
   m_Name: Treasure_Chest
   m_TagString: Untagged
@@ -214,7 +214,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-5170520088307732377
+--- !u!114 &-1590909897820759643
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -223,7 +223,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 6783049955685577329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b00c98aa3c49e7a40a8a0b27ff95eaf6, type: 3}
+  m_Script: {fileID: 11500000, guid: 4deefbb1732605f4490b2a8028cbced2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _sightableType: 1
+  _chestCover: {fileID: 1744278936117974472}

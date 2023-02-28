@@ -37,6 +37,7 @@ public class ActorAnimation : MonoBehaviour
     }
 
     [SerializeField] Animator _anim;
+    [Header("ステートに紐づいたアニメーション")]
     [SerializeField] StateData[] _stateDatas;
 
     /// <summary>外部からステート名を指定してアニメーションを再生させるのに使用する</summary>

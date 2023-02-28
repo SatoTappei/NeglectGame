@@ -9,9 +9,10 @@ public interface IStateControl
     void PlayDeadPerformance();
     void MoveToWaypoint();
     void MoveToExit();
-    void MoveToNoSight(SightableObject target);
+    void MoveToInactiveLookInSight(SightableObject target);
     void MoveTo(SightableObject target);
     void MoveCancel();
+    void AffectAroundEffectableObject(string message);
     float GetAnimationClipLength(string name);
     bool IsTargetPosArrival();
     bool IsBelowHpThreshold();

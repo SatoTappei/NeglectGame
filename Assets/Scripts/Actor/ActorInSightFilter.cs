@@ -31,13 +31,11 @@ public class ActorInSightFilter
                 List<Vector3> list = _unAvailableMovingTargetDic[SightableType.RoomEntrance];
                 if (!list.Contains(inSightObject.transform.position))
                 {
-                    inSightObject.ExecuteOnSelectedMovingTarget();
                     return inSightObject;
                 }
             }
             else
             {
-                inSightObject.ExecuteOnSelectedMovingTarget();
                 return inSightObject;
             }
         }

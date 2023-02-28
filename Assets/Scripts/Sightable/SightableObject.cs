@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// キャラクターの視界に入った際にオブジェクトの種類を判定するための列挙型
@@ -20,7 +19,6 @@ public class SightableObject : MonoBehaviour
     [Header("オブジェクトの判別に使う種類")]
     [SerializeField] SightableType _sightableType;
 
-    public event UnityAction OnSelectedMovingTarget;
     internal SightableType SightableType => _sightableType;
 
     void Awake()
@@ -31,5 +29,6 @@ public class SightableObject : MonoBehaviour
         collider.isTrigger = true;
     }
 
-    public void ExecuteOnSelectedMovingTarget() => OnSelectedMovingTarget?.Invoke();
+    /// <summary>キャラクターの視界に映る想定での運用なのでActor型を引数に取る</summary>
+    public virtual bool IsAvailable(Actor _) => true;
 }

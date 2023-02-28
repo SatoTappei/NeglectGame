@@ -25,7 +25,6 @@ public class ActorNodeAnimation : ActorNodeBase
             cts.Token.ThrowIfCancellationRequested();
 
             _stateMachine.StateControl.PlayAnimation(_animationName);
-            Debug.Log((i + 1) + "‚©‚¢‚­‚è‚©‚¦‚µ‚½‚Å‚·");
             float delay = _stateMachine.StateControl.GetAnimationClipLength(_animationName);
             await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: cts.Token);
         }

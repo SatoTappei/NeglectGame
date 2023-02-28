@@ -51,10 +51,10 @@ public class ActorMoveSystem : MonoBehaviour
 
         Vector3 targetPos = _actorPathfindingWaypoint.Get(WaypointType.Pass);
         Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        _actorPathfindingMove.MoveFollowPathAsync(path, () =>
+        _actorPathfindingMove.MoveFollowPath/*Async*/(path, () =>
         {
             _currentState = State.Arraival;
-        }).Forget();
+        })/*.Forget()*/;
     }
 
     public void MoveToExit()
@@ -64,10 +64,10 @@ public class ActorMoveSystem : MonoBehaviour
 
         Vector3 targetPos = _actorPathfindingWaypoint.ExitPos;
         Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        _actorPathfindingMove.MoveFollowPathAsync(path, () =>
+        _actorPathfindingMove.MoveFollowPath/*Async*/(path, () =>
         {
             _currentState = State.Arraival;
-        }).Forget();
+        })/*.Forget()*/;
     }
 
     public void MoveTo(Vector3 targetPos)
@@ -76,10 +76,10 @@ public class ActorMoveSystem : MonoBehaviour
         _currentState = State.Moving;
 
         Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        _actorPathfindingMove.RunFollowPathAsync(path, () =>
+        _actorPathfindingMove.RunFollowPath/*Async*/(path, () =>
         {
             _currentState = State.Arraival;
-        }).Forget();
+        })/*.Forget()*/;
     }
 
     public void MoveCancel() => _actorPathfindingMove.MoveCancel();

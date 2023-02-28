@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class ActorStateSequenceExecute : ActorStateBase
 {
-    static readonly float BattleWinPercent = 0.7f;
+    static readonly float BattleWinPercent = 0.1f;
 
     public ActorStateSequenceExecute(ActorStateMachine stateMachine) : base(stateMachine) { }
 
