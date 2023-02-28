@@ -28,40 +28,32 @@ public class ActorPathfindingMove
         _runSpeedMag = runSpeedMag;
     }
 
-    internal /*async UniTaskVoid MoveFollowPathAsync*/void MoveFollowPath(Stack<Vector3> stack, UnityAction callBack 
-        )
+    internal void MoveFollowPath(Stack<Vector3> stack, UnityAction callBack)
     {
         _cts = new CancellationTokenSource();
-        FollowPathAsync(stack, _moveSpeed, callBack, _cts).Forget();
-        //_cts.Token.ThrowIfCancellationRequested();
-        //_cts = cts;
-        //await MoveAsync(stack, _moveSpeed, _cts);
-        //callBack?.Invoke();
-
+        MoveFollowPathAsync(stack, _moveSpeed, callBack, _cts).Forget();
     }
 
-    internal /*async UniTaskVoid RunFollowPathAsync*/void RunFollowPath(Stack<Vector3> stack, UnityAction callBack 
-        )
+    internal void RunFollowPath(Stack<Vector3> stack, UnityAction callBack)
     {
         _cts = new CancellationTokenSource();
-        FollowPathAsync(stack, _moveSpeed * _runSpeedMag, callBack, _cts).Forget();
-        //_cts.Token.ThrowIfCancellationRequested();
-        //_cts = cts;
-        //await MoveAsync(stack, _moveSpeed * _runSpeedMag, _cts);
-        //callBack?.Invoke();
+        MoveFollowPathAsync(stack, _moveSpeed * _runSpeedMag, callBack, _cts).Forget();
     }
 
-    async UniTaskVoid FollowPathAsync(Stack<Vector3> stack, float speed, UnityAction callBack,
+    async UniTaskVoid MoveFollowPathAsync(Stack<Vector3> stack, float speed, UnityAction callBack, 
         CancellationTokenSource cts)
     {
         _cts.Token.ThrowIfCancellationRequested();
         _cts = cts;
+
         await MoveAsync(stack, speed, _cts);
         callBack?.Invoke();
     }
 
     async UniTask MoveAsync(Stack<Vector3> stack, float speed, CancellationTokenSource cts)
     {
+        cts.Token.ThrowIfCancellationRequested();
+
         foreach (Vector3 nextPos in stack)
         {
             _model.DOLookAt(nextPos, 0.5f).SetLink(_actor);

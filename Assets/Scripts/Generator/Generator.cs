@@ -62,7 +62,7 @@ public class Generator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             int r = UnityEngine.Random.Range(0, _prefabs.Length);
-            _lastInstantiatedPrefab.Value = Instantiate(_prefabs[r]/*, _parent*/);
+            _lastInstantiatedPrefab.Value = Instantiate(_prefabs[r], _parent);
         }
     }
 

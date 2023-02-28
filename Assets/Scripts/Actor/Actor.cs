@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 /// <summary>
 /// キャラクターの各コンポーネントを制御するコンポーネント
@@ -11,7 +12,7 @@ public class Actor : MonoBehaviour, IStateControl
     [SerializeField] ActorAnimation _actorAnimation;
     [SerializeField] ActorSight _actorSight;
     [SerializeField] ActorEffecter _actorEffecter;
-    [SerializeField] ActorDisappearPerformance _actorDisappearPerformance;
+    [SerializeField] ActorPerformance _actorPerformance;
     [SerializeField] ActorHpModel _actorHpModel;
 
     ActorInSightFilter _actorInSightFilter;
@@ -50,50 +51,35 @@ public class Actor : MonoBehaviour, IStateControl
 
     void IStateControl.PlayAnimation(string name) => _actorAnimation.PlayAnim(name);
 
-    void IStateControl.PlayGoalPerformance()
+    void IStateControl.PlayGoalPerformance() => PlayPerformance(_actorPerformance.PlayGoalPerformance);
+    void IStateControl.PlayDeadPerformance() => PlayPerformance(_actorPerformance.PlayDeadPerformance);
+    void IStateControl.MoveToWaypoint() => MoveTo(_actorMoveSystem.MoveToNextWaypoint);
+    void IStateControl.MoveToExit() => MoveTo(_actorMoveSystem.MoveToExit);
+    void IStateControl.RunToInactiveLookInSight(SightableObject target) => RunTo(target);
+    void IStateControl.RunTo(SightableObject target)
     {
-        _actorDisappearPerformance.PlayGoalPerformance();
+        _actorSight.StartLookInSight();
+        RunTo(target);
+    }
+    void IStateControl.MoveCancel() => _actorMoveSystem.MoveCancel();
+
+    void PlayPerformance(UnityAction performance)
+    {
+        performance();
         _actorMoveSystem.MoveCancel();
         _actorSight.StopLookInSight();
         _actorHpModel.StopDecreaseHpPerSecond();
     }
 
-    void IStateControl.PlayDeadPerformance()
-    {
-        _actorDisappearPerformance.PlayDeadPerformance();
-        _actorMoveSystem.MoveCancel();
-        _actorSight.StopLookInSight();
-        _actorHpModel.StopDecreaseHpPerSecond();
-    }
-
-    void IStateControl.MoveToWaypoint()
+    void MoveTo(UnityAction moveTo)
     {
         _actorSight.ResetLookInSight();
         _actorSight.StartLookInSight();
-        _actorMoveSystem.MoveToNextWaypoint();
+        moveTo();
         _actorAnimation.PlayAnim("Move");
     }
 
-    void IStateControl.MoveToExit()
-    {
-        _actorSight.ResetLookInSight();
-        _actorSight.StartLookInSight();
-        _actorMoveSystem.MoveToExit();
-        _actorAnimation.PlayAnim("Move");
-    }
-
-    void IStateControl.MoveTo(SightableObject target)
-    {
-        _actorSight.StartLookInSight();
-        MoveTo(target);
-    }
-
-    void IStateControl.MoveToInactiveLookInSight(SightableObject target)
-    {
-        MoveTo(target);
-    }
-
-    void MoveTo(SightableObject target)
+    void RunTo(SightableObject target)
     {
         _actorSight.ResetLookInSight();
         _actorMoveSystem.MoveTo(target.transform.position);
@@ -101,16 +87,10 @@ public class Actor : MonoBehaviour, IStateControl
         _actorAnimation.PlayAnim("Run");
     }
 
-    void IStateControl.MoveCancel() => _actorMoveSystem.MoveCancel();
-
     void IStateControl.AffectAroundEffectableObject(string message) => _actorEffecter.EffectAround(message);
-
     float IStateControl.GetAnimationClipLength(string name) => _actorAnimation.GetStateLength(name);
-
     bool IStateControl.IsTargetPosArrival() => _actorMoveSystem.IsArrivalTargetPos();
-
     bool IStateControl.IsBelowHpThreshold() => _actorHpModel.IsBelowHpThreshold();
-
     SightableObject IStateControl.GetInSightAvailableMovingTarget()
     {
         Queue<SightableObject> inSightObjectQueue = _actorSight.InSightObjectQueue;
@@ -141,4 +121,6 @@ public class Actor : MonoBehaviour, IStateControl
             return null;
         }
     }
+
+    
 }

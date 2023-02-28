@@ -9,8 +9,8 @@ public interface IStateControl
     void PlayDeadPerformance();
     void MoveToWaypoint();
     void MoveToExit();
-    void MoveToInactiveLookInSight(SightableObject target);
-    void MoveTo(SightableObject target);
+    void RunToInactiveLookInSight(SightableObject target);
+    void RunTo(SightableObject target);
     void MoveCancel();
     void AffectAroundEffectableObject(string message);
     float GetAnimationClipLength(string name);

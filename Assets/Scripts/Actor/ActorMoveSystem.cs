@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// キャラクターを移動させる機能を制御するコンポーネント
@@ -46,40 +47,28 @@ public class ActorMoveSystem : MonoBehaviour
 
     public void MoveToNextWaypoint()
     {
-        _actorPathfindingMove.MoveCancel();
-        _currentState = State.Moving;
-
         Vector3 targetPos = _actorPathfindingWaypoint.Get(WaypointType.Pass);
-        Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        _actorPathfindingMove.MoveFollowPath/*Async*/(path, () =>
-        {
-            _currentState = State.Arraival;
-        })/*.Forget()*/;
+        Move(_actorPathfindingMove.MoveFollowPath, targetPos);
     }
 
     public void MoveToExit()
     {
-        _actorPathfindingMove.MoveCancel();
-        _currentState = State.Moving;
-
         Vector3 targetPos = _actorPathfindingWaypoint.ExitPos;
-        Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        _actorPathfindingMove.MoveFollowPath/*Async*/(path, () =>
-        {
-            _currentState = State.Arraival;
-        })/*.Forget()*/;
+        Move(_actorPathfindingMove.MoveFollowPath, targetPos);
     }
 
     public void MoveTo(Vector3 targetPos)
+    {
+        Move(_actorPathfindingMove.RunFollowPath, targetPos);
+    }
+
+    void Move(UnityAction<Stack<Vector3>, UnityAction> moveMethod, Vector3 targetPos)
     {
         _actorPathfindingMove.MoveCancel();
         _currentState = State.Moving;
 
         Stack<Vector3> path = _pathfinding.GetPathToTargetPos(transform.position, targetPos);
-        _actorPathfindingMove.RunFollowPath/*Async*/(path, () =>
-        {
-            _currentState = State.Arraival;
-        })/*.Forget()*/;
+        moveMethod(path, () => _currentState = State.Arraival);
     }
 
     public void MoveCancel() => _actorPathfindingMove.MoveCancel();

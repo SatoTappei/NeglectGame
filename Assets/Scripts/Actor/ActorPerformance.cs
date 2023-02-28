@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// キャラクターが消滅する際の演出のコンポーネント
 /// </summary>
-public class ActorDisappearPerformance : MonoBehaviour
+public class ActorPerformance : MonoBehaviour
 {
     [Header("ゴール到達演出として出現するプレハブ")]
     [SerializeField] GameObject _goalPerformancePrefab;

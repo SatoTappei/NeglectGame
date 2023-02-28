@@ -21,7 +21,7 @@ public class ActorStateEnterTheRoom : ActorStateBase
             return;
         }
 
-        _stateMachine.StateControl.MoveTo(inSightObject);
+        _stateMachine.StateControl.RunTo(inSightObject);
     }
 
     protected override void Stay()
