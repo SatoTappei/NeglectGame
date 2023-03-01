@@ -20,9 +20,13 @@ public class ActorStatusUI : MonoBehaviour
         
     }
 
-    public void Init()
+    public void Init(Sprite sprite, int maxHp)
     {
+        _icon.sprite = sprite;
 
+        string maxHpStr = maxHp.ToString();
+        _hpLabelText.text = "/ " + maxHpStr;
+        _hpValueText.text = maxHpStr;
     }
 
     public void SetHp(int value) => _hpValueText.text = value.ToString();

@@ -32,8 +32,16 @@ public class GenerateObserver : MonoBehaviour
 
             ActorStatusUI actorStatusUI = _actorStatusUIManager.GetUnUsedUI();
 
-            IReadOnlyReactiveProperty<int> currentHp = instance.GetComponent<ActorHpModel>().CurrentHp;
+            //Sprite icon = actorRxMediator.ActorStatusSO.Icon;
+            //int hp = actorRxMediator.CurrentHp.Value;
+            //actorStatusUI.Init(icon, hp);
+            ActorStatusSO status = instance.GetComponent<Actor>().ActorStatus;
+            actorStatusUI.Init(status.Icon, status.MaxHp);
+
+            IReadOnlyReactiveProperty<int> currentHp = instance.GetComponent<ActorHpControl>().CurrentHp;
             currentHp.Subscribe(i => actorStatusUI.SetHp(i)).AddTo(instance);
+
+            //actorRxMediator.CurrentHp.Subscribe(i => actorStatusUI.SetHp(i)).AddTo(instance);
         });
     }
 }

@@ -489,6 +489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ee5fff7e426f4141ac44019ea54a7d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _actorStatusSO: {fileID: 11400000, guid: 2ead648f666ec124594f86de0aac9025, type: 2}
   _actorMoveSystem: {fileID: 8285164219684680550}
   _actorStateMachine: {fileID: -7539302287781479863}
   _actorAnimation: {fileID: 2210753388920499395}
@@ -614,7 +615,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5a0f0ab469f634c9de0fd89d00ca15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHp: 100
   _decreaseQuantity: 1
   _decreaseDuration: 0.5
   _hpThreshold: 50

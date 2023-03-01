@@ -26,9 +26,6 @@ public class ActorStatusUIManager : MonoBehaviour
 
     void Start()
     {
-        // ƒLƒƒƒ‰‚Ì¶¬‚É‡‚í‚¹‚ÄUI‚ğ¶¬‚·‚é
-        // Šçƒpƒlƒ‹
-        // ‘Ì—Í
 
     }
 

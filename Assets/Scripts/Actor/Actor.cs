@@ -7,15 +7,18 @@ using UnityEngine.Events;
 /// </summary>
 public class Actor : MonoBehaviour, IStateControl
 {
+    [SerializeField] ActorStatusSO _actorStatusSO;
     [SerializeField] ActorMoveSystem _actorMoveSystem;
     [SerializeField] ActorStateMachine _actorStateMachine;
     [SerializeField] ActorAnimation _actorAnimation;
     [SerializeField] ActorSight _actorSight;
     [SerializeField] ActorEffecter _actorEffecter;
     [SerializeField] ActorPerformance _actorPerformance;
-    [SerializeField] ActorHpModel _actorHpModel;
+    [SerializeField] ActorHpControl _actorHpModel;
 
     ActorInSightFilter _actorInSightFilter;
+
+    public ActorStatusSO ActorStatus => _actorStatusSO;
 
     void Awake()
     {
@@ -29,7 +32,6 @@ public class Actor : MonoBehaviour, IStateControl
     /* 
      *  次のタスク 
      *  ダンジョン内の全ての部屋を見回っても何もない場合は帰るようにする
-     *  敵とお宝のリポップ
      */
 
     void Start()
@@ -37,7 +39,7 @@ public class Actor : MonoBehaviour, IStateControl
         _actorAnimation.Init();
         _actorMoveSystem.Init();
         _actorStateMachine.Init();
-        _actorHpModel.Init();
+        _actorHpModel.Init(_actorStatusSO.MaxHp);
 
         // Updateとは別のタイミング、周期で呼ばれる
         _actorSight.StartLookInSight();

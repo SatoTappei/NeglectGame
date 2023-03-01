@@ -4,10 +4,8 @@ using UniRx;
 /// <summary>
 /// キャラクターのHPを制御するコンポーネント
 /// </summary>
-public class ActorHpModel : MonoBehaviour
+public class ActorHpControl : MonoBehaviour
 {
-    [Header("体力の最大値")]
-    [SerializeField] int _maxHp = 100;
     [Header("体力の減少量(秒)")]
     [SerializeField] int _decreaseQuantity = 1;
     [Header("体力の減少間隔")]
@@ -15,12 +13,15 @@ public class ActorHpModel : MonoBehaviour
     [Header("体力が少ないと判定される閾値")]
     [SerializeField] int _hpThreshold = 50;
 
+    int _maxHp;
     ReactiveProperty<int> _currentHp = new();
+    
     public IReadOnlyReactiveProperty<int> CurrentHp => _currentHp;
 
-    public void Init()
+    public void Init(int maxHp)
     {
-        _currentHp.Value = _maxHp;
+        _maxHp = maxHp;
+        _currentHp.Value = maxHp;
     }
 
     internal void StartDecreaseHpPerSecond() => InvokeRepeating(nameof(DecreaseHpPerSecond), 0, _decreaseDuration);
