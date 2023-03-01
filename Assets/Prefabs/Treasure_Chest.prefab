@@ -228,6 +228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sightableType: 1
   _popParticleParticle: {fileID: 7125009776303078083, guid: d11f20829975b2c4ea2f2234afe1b1dc, type: 3}
+  _openedParticlePrefab: {fileID: 7125009776303078083, guid: 4cbabcd0ba5c4fe47955bfff352f74e0, type: 3}
   _chestCover: {fileID: 1744278936117974472}
   _lifeTime: 3
   _repopInterval: 8

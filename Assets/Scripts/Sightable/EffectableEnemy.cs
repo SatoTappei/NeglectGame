@@ -54,7 +54,6 @@ public class EffectableEnemy : EffectableObjectBase
         await BattleAnimationAsync(token);
 
         _defeatedParticle.SetActive(true);
-        Debug.Log("ñkéOìcèüÇ¡ÇΩ");
 
         gameObject.SetActive(false);
         await UniTask.Delay(TimeSpan.FromSeconds(_visibleAgainTime), cancellationToken: token);
