@@ -433,7 +433,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sightableType: 2
-  _popParticle: {fileID: 7125009776303078083, guid: d11f20829975b2c4ea2f2234afe1b1dc, type: 3}
+  _popParticleParticle: {fileID: 7125009776303078083, guid: d11f20829975b2c4ea2f2234afe1b1dc, type: 3}
+  _defeatedParticlePrefab: {fileID: 7125009776303078083, guid: 15c6edaa56c658a4db93abf422fb2c86, type: 3}
   _anim: {fileID: 604383532221520010}
   _playingAnimationTime: 4
   _visibleAgainTime: 8

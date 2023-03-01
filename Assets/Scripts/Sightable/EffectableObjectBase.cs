@@ -5,19 +5,29 @@ using UnityEngine;
 /// </summary>
 public abstract class EffectableObjectBase : SightableObject, IEffectable
 {
-    [Header("—N‚¢‚½Žž‚ÉÄ¶‚³‚ê‚éParticle")]
-    [SerializeField] GameObject _popParticle;
+    static readonly string ParticlePoolTag = "ParticlePool";
 
-    GameObject _particle;
+    [Header("—N‚¢‚½Žž‚ÉÄ¶‚³‚ê‚éParticle")]
+    [SerializeField] GameObject _popParticleParticle;
+    
+    Transform _particlePool;
+    GameObject _popParticle;
     Actor _effectedActor;
+
+    protected Transform ParticlePool => _particlePool;
 
     void OnEnable()
     {
-        _particle ??= Instantiate(_popParticle, transform.position, Quaternion.identity);
+        _particlePool = GameObject.FindGameObjectWithTag(ParticlePoolTag).transform;
 
-        _particle.SetActive(true);
+        _popParticle ??= Instantiate(_popParticleParticle, transform.position, Quaternion.identity, _particlePool);
+        _popParticle.SetActive(true);
         ResetEffectedActor();
+
+        InitOnEnable();
     }
+
+    protected virtual void InitOnEnable() { }
 
     protected void ResetEffectedActor() => _effectedActor = null;
 
