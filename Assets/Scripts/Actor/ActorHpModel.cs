@@ -1,4 +1,5 @@
 using UnityEngine;
+using UniRx;
 
 /// <summary>
 /// キャラクターのHPを制御するコンポーネント
@@ -14,22 +15,23 @@ public class ActorHpModel : MonoBehaviour
     [Header("体力が少ないと判定される閾値")]
     [SerializeField] int _hpThreshold = 50;
 
-    int _currentHp;
+    ReactiveProperty<int> _currentHp = new();
+    public IReadOnlyReactiveProperty<int> CurrentHp => _currentHp;
 
     public void Init()
     {
-        _currentHp = _maxHp;
+        _currentHp.Value = _maxHp;
     }
 
     internal void StartDecreaseHpPerSecond() => InvokeRepeating(nameof(DecreaseHpPerSecond), 0, _decreaseDuration);
     internal void StopDecreaseHpPerSecond() => CancelInvoke(nameof(DecreaseHpPerSecond));
-    internal bool IsBelowHpThreshold() => _currentHp < _hpThreshold;
-    internal bool IsHpEqualZero() => _currentHp <= 0;
+    internal bool IsBelowHpThreshold() => _currentHp.Value < _hpThreshold;
+    internal bool IsHpEqualZero() => _currentHp.Value <= 0;
 
     void DecreaseHpPerSecond() => DecreaseHp(_decreaseQuantity);
 
     internal void DecreaseHp(int quantity)
     {
-        _currentHp = Mathf.Clamp(_currentHp -= quantity, 0, _maxHp);
+        _currentHp.Value = Mathf.Clamp(_currentHp.Value -= quantity, 0, _maxHp);
     }   
 }

@@ -14,6 +14,7 @@ public class ActorPathfindingMove
     CancellationTokenSource _cts;
     /// <summary>transformが使えないので代わりに自身を参照させる</summary>
     GameObject _actor;
+    Transform _actorTransform;
     /// <summary>進行方向を向かせるModelオブジェクト</summary>
     Transform _model;
 
@@ -23,6 +24,7 @@ public class ActorPathfindingMove
     public ActorPathfindingMove(GameObject actor, Transform model, float moveSpeed, float runSpeedMag)
     {
         _actor = actor;
+        _actorTransform = actor.transform;
         _model = model;
         _moveSpeed = moveSpeed;
         _runSpeedMag = runSpeedMag;
@@ -59,7 +61,7 @@ public class ActorPathfindingMove
             _model.DOLookAt(nextPos, 0.5f).SetLink(_actor);
 
             // GameObjectが破棄されたときにnullが出るのでnullチェックが必要
-            while (_actor != null && _actor.transform.position != nextPos)
+            while (_actor != null && _actorTransform.position != nextPos)
             {
                 if (_actor == null)
                 {
@@ -67,7 +69,7 @@ public class ActorPathfindingMove
                     return;
                 }
 
-                _actor.transform.position = Vector3.MoveTowards(_actor.transform.position, nextPos, 
+                _actorTransform.position = Vector3.MoveTowards(_actorTransform.position, nextPos, 
                     Time.deltaTime * speed);
                 await UniTask.Yield(cancellationToken: cts.Token);
             }

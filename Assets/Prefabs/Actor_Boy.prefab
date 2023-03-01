@@ -615,7 +615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHp: 100
-  _decreaseQuantity: 0
+  _decreaseQuantity: 1
   _decreaseDuration: 0.5
   _hpThreshold: 50
 --- !u!1 &3116145210212608323

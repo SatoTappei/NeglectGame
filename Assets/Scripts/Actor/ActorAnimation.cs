@@ -40,6 +40,7 @@ public class ActorAnimation : MonoBehaviour
     [Header("ステートに紐づいたアニメーション")]
     [SerializeField] StateData[] _stateDatas;
 
+    Transform _animTransform;
     /// <summary>外部からステート名を指定してアニメーションを再生させるのに使用する</summary>
     Dictionary<string, StateData> _stateDataDic = new Dictionary<string, StateData>(StateDataDicCap);
 
@@ -49,6 +50,8 @@ public class ActorAnimation : MonoBehaviour
         {
             data.Init(_stateDataDic);
         }
+
+        _animTransform = _anim.gameObject.transform;
     }
 
     public float GetStateLength(string stateName)
@@ -81,7 +84,7 @@ public class ActorAnimation : MonoBehaviour
         if (_stateDataDic.TryGetValue(stateName, out StateData stateData))
         {
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(_anim.gameObject.transform.DOLocalMove(Vector3.zero, 0.15f))
+            sequence.Append(_animTransform.DOLocalMove(Vector3.zero, 0.15f))
                     .AppendCallback(() =>
                     {
                         _anim.Play(stateData.Hash);
