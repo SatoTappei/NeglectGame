@@ -382,7 +382,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5633658939234661849}
   - component: {fileID: 4593594875855105333}
-  - component: {fileID: 4228120710817433394}
   m_Layer: 6
   m_Name: Dungeon_Room_53
   m_TagString: Untagged
@@ -426,21 +425,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8da3f4086e7613b4fa7bce0e303a2c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4228120710817433394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5636894998908565421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d8baa71aa8a4e84bb0aa485668371c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prefab: {fileID: 6783049955685577329, guid: 0e944b5857d213241afb8dd28f496988, type: 3}
-  _generatePos: {x: 0, y: 0, z: -5.2}
-  _rotY: 180
 --- !u!1 &6769529163064405683
 GameObject:
   m_ObjectHideFlags: 0
