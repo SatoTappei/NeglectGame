@@ -11,6 +11,7 @@ public class InGameStream : MonoBehaviour
     [SerializeField] PathfindingGrid _pathfindingGrid;
     [SerializeField] WaypointManager _waypointManager;
     [SerializeField] DungeonBuilder _dungeonBuilder;
+    [SerializeField] TrapManager _trapManager;
     [SerializeField] InGameTimer _inGameTimer;
     [SerializeField] Generator _generator;
 
@@ -62,6 +63,8 @@ public class InGameStream : MonoBehaviour
         // インゲームのタイマーのスタートと同時に敵の生成を行うGeneratorも起動する
         // Generatorは独自の間隔で生成している
         //_generator.GenerateRegularlyAsync(new CancellationTokenSource()).Forget();
+
+        _trapManager.Init();
 
         // インゲームのタイマーの開始はメソッドの呼び出しで行うが
         // 値の加算はMessagePipeを用いたメッセージングで行う

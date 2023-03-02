@@ -24,7 +24,7 @@ public class GenerateObserver : MonoBehaviour
             int r = Random.Range(0, list.Count);
             instance.transform.position = list[r];
 
-            // TODO:怒涛の参照取得をどうにかする
+            // TODO:怒涛の参照取得＆規定数を超えてUIを表示させようとするとエラー
             ActorStatusHolder statusHolder = instance.GetComponent<ActorStatusHolder>();
             ActorStatusUI statusUI = _actorStatusUIManager.GetNewActiveUI(statusHolder.Icon, statusHolder.MaxHp);
 

@@ -9,6 +9,7 @@ TagManager:
   - WaypointSystem
   - PathfindingSystem
   - ParticlePool
+  - TrapSettableFloor
   layers:
   - Default
   - TransparentFX
