@@ -3,7 +3,8 @@
 /// </summary>
 public class ActorStateSelect : ActorStateBase
 {
-    public ActorStateSelect(ActorStateMachine stateMachine) : base(stateMachine) { }
+    public ActorStateSelect(ActorStateMachine stateMachine, StateType type)
+        : base(stateMachine, type) { }
 
     protected override void Enter()
     {

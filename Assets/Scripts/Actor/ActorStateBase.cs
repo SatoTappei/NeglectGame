@@ -14,11 +14,14 @@ public abstract class ActorStateBase
     protected ActorStateBase _nextState;
     protected ActorStateMachine _stateMachine;
 
-    internal ActorStateBase(ActorStateMachine stateMachine)
+    internal ActorStateBase(ActorStateMachine stateMachine, StateType type)
     {
         _stateMachine = stateMachine;
         _stage = Stage.Enter;
+        Type = type;
     }
+
+    public StateType Type { get; }
 
     /// <summary>
     /// ChangeState()が呼ばれたフレームではなく、次のフレームでExit()を呼び出し

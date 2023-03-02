@@ -18,11 +18,13 @@ public class Actor : MonoBehaviour, IStateControl
 
     ActorInSightFilter _actorInSightFilter;
 
+    /// <summary>SOはGetComponent出来ないのでActor経由での取得用のプロパティを用意</summary>
     public ActorStatusSO ActorStatus => _actorStatusSO;
 
     void Awake()
     {
         _actorInSightFilter = new();
+        _actorStateMachine.Init();
     }
 
     /* 
@@ -32,13 +34,15 @@ public class Actor : MonoBehaviour, IStateControl
     /* 
      *  次のタスク 
      *  ダンジョン内の全ての部屋を見回っても何もない場合は帰るようにする
+     *  UIへのセットは出来たが、死亡時にUIが引っ込んでほしい
+     *  台詞表示機能とは別でおｋ
+     *  
      */
 
     void Start()
     {
         _actorAnimation.Init();
         _actorMoveSystem.Init();
-        _actorStateMachine.Init();
         _actorHpModel.Init(_actorStatusSO.MaxHp);
 
         // Updateとは別のタイミング、周期で呼ばれる
@@ -70,6 +74,7 @@ public class Actor : MonoBehaviour, IStateControl
         performance();
         _actorMoveSystem.MoveCancel();
         _actorSight.StopLookInSight();
+        _actorHpModel.DecreaseHp(999);
         _actorHpModel.StopDecreaseHpPerSecond();
     }
 

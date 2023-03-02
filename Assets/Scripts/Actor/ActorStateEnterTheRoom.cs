@@ -8,7 +8,8 @@ public class ActorStateEnterTheRoom : ActorStateBase
     bool _isArraival;
     Tween _tween;
 
-    public ActorStateEnterTheRoom(ActorStateMachine stateMachine) : base(stateMachine) { }
+    public ActorStateEnterTheRoom(ActorStateMachine stateMachine, StateType type)
+        : base(stateMachine, type) { }
 
     protected override void Enter()
     {

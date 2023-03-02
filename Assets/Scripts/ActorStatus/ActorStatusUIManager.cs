@@ -17,16 +17,11 @@ public class ActorStatusUIManager : MonoBehaviour
     Vector3 InitUIPos => new Vector3(-300, 200, 0);
 
     Queue<ActorStatusUI> _unUsedqueue = new(InstantiateMax);
-    Queue<ActorStatusUI> _usedqueue = new(InstantiateMax);
+    List<ActorStatusUI> _usedList = new(InstantiateMax);
 
     void Awake()
     {
         Init();
-    }
-
-    void Start()
-    {
-
     }
 
     public void Init()
@@ -36,16 +31,20 @@ public class ActorStatusUIManager : MonoBehaviour
             Vector3 pos = InitUIPos;
             pos.y = pos.y * i + InstantiateOffsetY;
             ActorStatusUI instance = Instantiate(_prefab, pos, Quaternion.identity, _parent);
+            instance.Init(this);
+
             _unUsedqueue.Enqueue(instance);
         }
     }
 
-    void Update()
+    /// <summary>外部からこのメソッドを呼ぶことでUIへの表示を行う</summary>
+    public ActorStatusUI GetNewActiveUI(Sprite icon, int maxHp)
     {
-        if (Input.GetKeyDown(KeyCode.U) || Input.GetKeyDown(KeyCode.I))
-        {
+        ActorStatusUI ui = GetUnUsedUI();
+        ui.SetValueAll(icon, maxHp);
+        ui.Play();
 
-        }
+        return ui;
     }
 
     public ActorStatusUI GetUnUsedUI()
@@ -58,9 +57,14 @@ public class ActorStatusUIManager : MonoBehaviour
         else
         {
             ActorStatusUI ui = _unUsedqueue.Dequeue();
-            _usedqueue.Enqueue(ui);
+            _usedList.Add(ui);
             return ui;
         }
+    }
 
+    public void ReturnUI(ActorStatusUI ui)
+    {
+        _usedList.Remove(ui);
+        _unUsedqueue.Enqueue(ui);
     }
 }

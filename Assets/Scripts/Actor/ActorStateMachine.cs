@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public enum StateType
 {
@@ -29,24 +30,25 @@ public class ActorStateMachine : MonoBehaviour
     static readonly int StateDicCapacity = Enum.GetValues(typeof(StateType)).Length;
     static readonly int SequenceDicCapacity = Enum.GetValues(typeof(SequenceType)).Length;
 
-    ActorStateBase _currentState;
+    ReactiveProperty<ActorStateBase> _currentState = new();
     Dictionary<StateType, ActorStateBase> _stateDic = new(StateDicCapacity);
     Dictionary<SequenceType, ActorStateSequence> _sequenceDic = new(SequenceDicCapacity);
     IStateControl _stateControl;
 
     public IStateControl StateControl => _stateControl;
+    public IReadOnlyReactiveProperty<ActorStateBase> CurrentState => _currentState;
 
     public void Init()
     {
         _stateControl = GetComponent<IStateControl>();
 
-        ActorStateEntry stateEntry = new(this);
-        ActorStateExplore stateExplore = new(this);
-        ActorStateSelect stateSelect = new(this);
-        ActorStateEnterTheRoom stateEnterTheRoom = new(this);
-        ActorStateSequenceExecute stateSequenceExecute = new(this);
-        ActorStateGoal stateGoal = new(this);
-        ActorStateDead stateDead = new(this);
+        ActorStateEntry stateEntry = new(this, StateType.Entry);
+        ActorStateExplore stateExplore = new(this, StateType.Explore);
+        ActorStateSelect stateSelect = new(this, StateType.Select);
+        ActorStateEnterTheRoom stateEnterTheRoom = new(this, StateType.EnterTheRoom);
+        ActorStateSequenceExecute stateSequenceExecute = new(this, StateType.SequenceExecute);
+        ActorStateGoal stateGoal = new(this, StateType.Goal);
+        ActorStateDead stateDead = new(this, StateType.Dead);
 
         _stateDic.Add(StateType.Entry, stateEntry);
         _stateDic.Add(StateType.Explore, stateExplore);
@@ -96,12 +98,12 @@ public class ActorStateMachine : MonoBehaviour
         _sequenceDic.Add(SequenceType.Treasure, sequenceTreasure);
         _sequenceDic.Add(SequenceType.Exit, sequenceExit);
 
-        _currentState = GetState(StateType.Entry);
+        _currentState.Value = GetState(StateType.Entry);
     }
 
     public void Execute()
     {
-        _currentState = _currentState.Update();
+        _currentState.Value = _currentState.Value.Update();
     }
 
     internal ActorStateBase GetState(StateType type)

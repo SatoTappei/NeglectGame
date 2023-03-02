@@ -3,7 +3,8 @@
 /// </summary>
 public class ActorStateGoal : ActorStateBase
 {
-    public ActorStateGoal(ActorStateMachine stateMachine) : base(stateMachine) { }
+    public ActorStateGoal(ActorStateMachine stateMachine, StateType type)
+        : base(stateMachine, type) { }
 
     protected override void Enter()
     {

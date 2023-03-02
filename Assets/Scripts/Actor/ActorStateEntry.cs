@@ -7,7 +7,8 @@ public class ActorStateEntry : ActorStateBase
 {
     Tween _tween;
 
-    public ActorStateEntry(ActorStateMachine stateMachine) : base(stateMachine) { }
+    public ActorStateEntry(ActorStateMachine stateMachine, StateType type)
+        : base(stateMachine, type) { }
 
     protected override void Enter()
     {

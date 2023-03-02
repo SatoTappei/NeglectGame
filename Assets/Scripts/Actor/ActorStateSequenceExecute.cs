@@ -9,7 +9,8 @@ public class ActorStateSequenceExecute : ActorStateBase
 {
     static readonly float BattleWinPercent = 0.9f;
 
-    public ActorStateSequenceExecute(ActorStateMachine stateMachine) : base(stateMachine) { }
+    public ActorStateSequenceExecute(ActorStateMachine stateMachine, StateType type)
+        : base(stateMachine, type) { }
 
     CancellationTokenSource _cts;
 
