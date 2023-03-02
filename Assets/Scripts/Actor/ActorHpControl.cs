@@ -18,7 +18,7 @@ public class ActorHpControl : MonoBehaviour
     
     public IReadOnlyReactiveProperty<int> CurrentHp => _currentHp;
 
-    public void Init(int maxHp)
+    public void InitOnStart(int maxHp)
     {
         _maxHp = maxHp;
         _currentHp.Value = maxHp;

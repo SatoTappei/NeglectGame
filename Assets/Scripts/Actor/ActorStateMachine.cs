@@ -38,7 +38,7 @@ public class ActorStateMachine : MonoBehaviour
     public IStateControl StateControl => _stateControl;
     public IReadOnlyReactiveProperty<ActorStateBase> CurrentState => _currentState;
 
-    public void Init()
+    public void InitOnAwake()
     {
         _stateControl = GetComponent<IStateControl>();
 

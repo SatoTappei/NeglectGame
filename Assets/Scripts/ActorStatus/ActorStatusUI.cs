@@ -7,7 +7,7 @@ using DG.Tweening;
 /// </summary>
 public class ActorStatusUI : MonoBehaviour
 {
-    static readonly float MovingDistance = 500.0f;
+    static readonly float MovingDistance = 200.0f;
     static readonly float MovingDuration = 0.25f;
 
     [SerializeField] Image _icon;

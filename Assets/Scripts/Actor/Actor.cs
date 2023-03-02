@@ -7,7 +7,7 @@ using UnityEngine.Events;
 /// </summary>
 public class Actor : MonoBehaviour, IStateControl
 {
-    [SerializeField] ActorStatusSO _actorStatusSO;
+    [SerializeField] ActorStatusHolder _actorStatusHolder;
     [SerializeField] ActorMoveSystem _actorMoveSystem;
     [SerializeField] ActorStateMachine _actorStateMachine;
     [SerializeField] ActorAnimation _actorAnimation;
@@ -18,13 +18,10 @@ public class Actor : MonoBehaviour, IStateControl
 
     ActorInSightFilter _actorInSightFilter;
 
-    /// <summary>SOはGetComponent出来ないのでActor経由での取得用のプロパティを用意</summary>
-    public ActorStatusSO ActorStatus => _actorStatusSO;
-
     void Awake()
     {
         _actorInSightFilter = new();
-        _actorStateMachine.Init();
+        _actorStateMachine.InitOnAwake();
     }
 
     /* 
@@ -35,15 +32,16 @@ public class Actor : MonoBehaviour, IStateControl
      *  次のタスク 
      *  ダンジョン内の全ての部屋を見回っても何もない場合は帰るようにする
      *  UIへのセットは出来たが、死亡時にUIが引っ込んでほしい
+     *  Init系メソッドの呼び出し箇所を明示した名前に変える InitOnAwake()など
      *  台詞表示機能とは別でおｋ
      *  
      */
 
     void Start()
     {
-        _actorAnimation.Init();
-        _actorMoveSystem.Init();
-        _actorHpModel.Init(_actorStatusSO.MaxHp);
+        _actorAnimation.InitOnStart();
+        _actorMoveSystem.InitOnStart();
+        _actorHpModel.InitOnStart(_actorStatusHolder.MaxHp);
 
         // Updateとは別のタイミング、周期で呼ばれる
         _actorSight.StartLookInSight();

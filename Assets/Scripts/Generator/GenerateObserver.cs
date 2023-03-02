@@ -1,5 +1,5 @@
-using UniRx;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 /// <summary>
@@ -24,31 +24,19 @@ public class GenerateObserver : MonoBehaviour
             int r = Random.Range(0, list.Count);
             instance.transform.position = list[r];
 
-            // 現在はActorにSOを持たせているが、ActorStatusとの仲介役を作ってそっちに持たせる
-            // そうすることでActorのSOへのプロパティを消す
-            // ManagerとUIどっちも操作しているのであんま良くない？
+            // TODO:怒涛の参照取得をどうにかする
+            ActorStatusHolder statusHolder = instance.GetComponent<ActorStatusHolder>();
+            ActorStatusUI statusUI = _actorStatusUIManager.GetNewActiveUI(statusHolder.Icon, statusHolder.MaxHp);
 
-            // こっちはキャラクター側からの取得、UI側はどこから来たか知らなくてよい
-            ActorStatusSO status = instance.GetComponent<Actor>().ActorStatus;
-            // こっちはUI側への値を渡す、UI側はどこから来たか知らなくてよい
-            ActorStatusUI statusUI = _actorStatusUIManager.GetNewActiveUI(status.Icon, status.MaxHp);
-
-            var state = instance.GetComponent<ActorStateMachine>().CurrentState;
-
-            // HPControlの値をUIに割り当てる、これもお互いを知らなくてよい
             IReadOnlyReactiveProperty<int> currentHp = instance.GetComponent<ActorHpControl>().CurrentHp;
             System.IDisposable disposable = currentHp.Subscribe(i => statusUI.SetHp(i)).AddTo(instance);
 
-            state.Where(s => s.Type == StateType.Goal || s.Type == StateType.Dead).Subscribe(_ => 
+            var currentState = instance.GetComponent<ActorStateMachine>().CurrentState;
+            currentState.Where(s => s.Type == StateType.Goal || s.Type == StateType.Dead).Subscribe(_ => 
             {
                 disposable.Dispose();
                 statusUI.Release();
             }).AddTo(instance);
-
-            //currentHp.Where(i => i <= 0).Skip(1).Subscribe(_ => statusUI.Release()).AddTo(instance);
-
-            // 現在は↑のサブスクが解除されていないのでおかしな挙動になる
-            // どうにかキャラ側の任意のタイミングで処理を消せるようにする
         });
     }
 }

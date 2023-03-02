@@ -33,7 +33,7 @@ public class ActorMoveSystem : MonoBehaviour
 
     State _currentState = State.NoTarget;
 
-    public void Init()
+    public void InitOnStart()
     {
         // TODO:‘¼‚ÌŒÂŠ‚Å‚àæ“¾ˆ—‚ª‚ ‚Á‚½‚çˆË‘¶ŠÖŒW‚Ì‰ğÁ‚ğ•Ê‚ÌŠ‚ÉˆÚ‚·
         _pathfinding = GameObject.FindGameObjectWithTag(PathfindingTag).GetComponent<IPathfinding>();
