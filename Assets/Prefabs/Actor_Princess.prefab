@@ -479,7 +479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _decreaseQuantity: 1
-  _decreaseDuration: 0.5
+  _decreaseDuration: 1
   _hpThreshold: 50
 --- !u!1 &976946184240705824
 GameObject:
