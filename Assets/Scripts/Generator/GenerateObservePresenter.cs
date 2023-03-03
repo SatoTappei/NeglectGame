@@ -6,12 +6,13 @@ using UnityEngine;
 /// Generatorで生成したオブジェクトを生成したタイミングで
 /// 参照したいコンポーネントを使って初期化を肩代わりする
 /// </summary>
-public class GenerateObserver : MonoBehaviour
+public class GenerateObservePresenter : MonoBehaviour
 {
     [SerializeField] Generator _generator;
     [Header("参照したい処理を持つコンポーネントへの参照")]
     [SerializeField] WaypointManager _waypointManager;
     [SerializeField] ActorStatusUIManager _actorStatusUIManager;
+    [SerializeField] ActorMonitor _actorMonitor;
 
     void Awake()
     {
@@ -32,11 +33,15 @@ public class GenerateObserver : MonoBehaviour
             System.IDisposable disposable = currentHp.Subscribe(i => statusUI.SetHp(i)).AddTo(instance);
 
             var currentState = instance.GetComponent<ActorStateMachine>().CurrentState;
-            currentState.Where(s => s.Type == StateType.Goal || s.Type == StateType.Dead).Subscribe(_ => 
-            {
-                disposable.Dispose();
-                statusUI.Release();
-            }).AddTo(instance);
+            currentState.Where(state => state.Type == StateType.Goal || state.Type == StateType.Dead)
+                .Subscribe(state => 
+                {
+                    disposable.Dispose();
+                    statusUI.Release();
+
+                    _actorMonitor.DetectGoalOrDeadState(state.Type);
+
+                }).AddTo(instance);
         });
     }
 }

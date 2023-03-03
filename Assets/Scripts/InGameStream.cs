@@ -9,6 +9,7 @@ using UnityEngine;
 public class InGameStream : MonoBehaviour
 {
     [SerializeField] TitleUIControl _titleUIControl;
+    [SerializeField] ResultUIControl _resultUIControl;
     [SerializeField] PathfindingGrid _pathfindingGrid;
     [SerializeField] WaypointManager _waypointManager;
     [SerializeField] DungeonBuilder _dungeonBuilder;
@@ -24,30 +25,6 @@ public class InGameStream : MonoBehaviour
     async UniTaskVoid Stream(CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
-        // カメラはクォータービューで固定
-
-        // タイトル画面
-        // ボタンをクリックでスタート
-        // ステージ生成演出
-        // フェードしてボタンとロゴが消える
-        // 演出終了後にタイマースタート
-        // n秒間隔で冒険者がダンジョンにやってくる
-        //  階段の位置に冒険者を生成
-        //  冒険者はダンジョンをうろうろする
-        // プレイヤーは3種類の罠のうちどれかを選んで好きなところに罠を置ける
-        // 罠は冒険者にダメージを与える
-        // n秒経ったらゲームオーバー
-
-        // リザルト
-        // 何人の冒険者を葬ったか
-
-        // タイトルに戻る
-
-        // 必要なUI
-        // 左上:タイマー
-        // 右上:葬った冒険者の数(スコア)
-        // 右下:罠用のボタン3つ
-        // 右:各冒険者のステータスアイコン5つ
 
         // ダンジョン生成時にアニメーションさせるのでCapacityを増やして警告を消す
         // 処理負荷が問題になった場合はアニメーションをやめること
@@ -78,6 +55,8 @@ public class InGameStream : MonoBehaviour
 
         // インゲームのタイマーの開始はメソッドの呼び出しで行うが
         // 値の加算はMessagePipeを用いたメッセージングで行う
-        await _inGameTimer.StartAsync(this.GetCancellationTokenOnDestroy());
+        await _inGameTimer.StartAsync(token);
+
+        await _resultUIControl.AnimationAsync(token);
     }
 }
