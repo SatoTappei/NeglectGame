@@ -13,7 +13,7 @@ public class HeaderUIAnimation : MonoBehaviour
     {
         token.ThrowIfCancellationRequested();
 
-        _headerRoot.DOMoveY(0, AnimDuration).SetLink(gameObject);
+        _headerRoot.DOMoveY(1080, AnimDuration).SetLink(gameObject);
 
         await UniTask.Delay(System.TimeSpan.FromSeconds(AnimDuration), cancellationToken: token);
     }
