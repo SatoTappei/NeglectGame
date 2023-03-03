@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 public class InGameStream : MonoBehaviour
 {
+    [SerializeField] TitleUIControl _titleUIControl;
     [SerializeField] PathfindingGrid _pathfindingGrid;
     [SerializeField] WaypointManager _waypointManager;
     [SerializeField] DungeonBuilder _dungeonBuilder;
@@ -15,8 +16,14 @@ public class InGameStream : MonoBehaviour
     [SerializeField] InGameTimer _inGameTimer;
     [SerializeField] Generator _generator;
 
-    async void Start()
+    void Start()
     {
+        Stream(this.GetCancellationTokenOnDestroy()).Forget();
+    }
+
+    async UniTaskVoid Stream(CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
         // カメラはクォータービューで固定
 
         // タイトル画面
@@ -46,6 +53,9 @@ public class InGameStream : MonoBehaviour
         // 処理負荷が問題になった場合はアニメーションをやめること
         DOTween.SetTweensCapacity(500, 50);
 
+        // タイトル画面から遷移するのを待つ
+        await _titleUIControl.TitleStateAsync(token);
+
         // キャラクターを生成するのにダンジョンの地形情報が必要なので
         // 先にダンジョンを生成する必要がある。
         _dungeonBuilder.Build();
@@ -69,6 +79,5 @@ public class InGameStream : MonoBehaviour
         // インゲームのタイマーの開始はメソッドの呼び出しで行うが
         // 値の加算はMessagePipeを用いたメッセージングで行う
         await _inGameTimer.StartAsync(this.GetCancellationTokenOnDestroy());
-
     }
 }

@@ -50,7 +50,7 @@ public class EffectableTreasure : EffectableObjectBase
         gameObject.SetActive(false);
         await UniTask.Delay(TimeSpan.FromSeconds(_repopInterval));
         gameObject.SetActive(true);
-        Debug.Log("‚à‚Ç‚µ");
+
         _chestCover.DOLocalRotate(new Vector3(0, 0, 0), 0).SetLink(gameObject);
     }
 }
