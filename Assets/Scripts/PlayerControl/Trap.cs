@@ -9,6 +9,9 @@ public class Trap : MonoBehaviour
 {
     static readonly string ParticlePoolTag = "ParticlePool";
 
+    [Header("ダメージ量")]
+    [SerializeField] int _damage;
+    [Header("Particleのプレハブ")]
     [SerializeField] GameObject _particlePrefab;
 
     GameObject _particle;
@@ -21,24 +24,14 @@ public class Trap : MonoBehaviour
         _particle.SetActive(false);
     }
 
-    void Update()
-    {
-        /* 現在の処理だと大量の罠が生成されてしまうので効率が良くない
-         * 最初に規定数生成しておき、クリックの個所に移動させる
-         * キューで保存しておくと良い感じ
-         */
-    }
-
     void OnTriggerEnter(Collider other)
     {
         ActorHpControl actorHpControl = other.gameObject.GetComponentInParent<ActorHpControl>();
+        if (actorHpControl == null) return;
 
-        if (actorHpControl != null)
-        {
-            // キャラクターのHPを減らす処理
-            _particle.SetActive(true);
-            Debug.Log("踏み");
-            transform.localScale = Vector3.zero;
-        }
+        _particle.transform.position = transform.position;
+        _particle.SetActive(true);
+
+        actorHpControl.DecreaseHp(_damage);
     }
 }

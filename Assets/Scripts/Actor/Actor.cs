@@ -96,6 +96,7 @@ public class Actor : MonoBehaviour, IStateControl
     float IStateControl.GetAnimationClipLength(string name) => _actorAnimation.GetStateLength(name);
     bool IStateControl.IsTargetPosArrival() => _actorMoveSystem.IsArrivalTargetPos();
     bool IStateControl.IsBelowHpThreshold() => _actorHpModel.IsBelowHpThreshold();
+    bool IStateControl.IsHpEqualZero() => _actorHpModel.IsHpEqualZero();
     SightableObject IStateControl.GetInSightAvailableMovingTarget()
     {
         Queue<SightableObject> inSightObjectQueue = _actorSight.InSightObjectQueue;

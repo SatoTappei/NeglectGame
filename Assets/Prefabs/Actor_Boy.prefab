@@ -525,7 +525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 4038228652531750984}
-  _moveSpeed: 5
+  _moveSpeed: 3
   _runSpeedMag: 2
 --- !u!114 &-7539302287781479863
 MonoBehaviour:

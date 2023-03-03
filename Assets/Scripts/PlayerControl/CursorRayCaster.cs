@@ -15,19 +15,26 @@ public class CursorRayCaster : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, _layerMask))
-            {
-                if (hit.collider.CompareTag(TrapSettableFloorTag))
-                {
-                    GameObject trap = _trapManager.TryGetTrap(hit.collider.transform.position);
-                    if (trap != null)
-                    {
-                        trap.transform.position = hit.collider.transform.position;
-                    }
-                }
-            }
+            Ray();
         }
+    }
+
+    void Ray()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, _layerMask))
+        {
+            RaycastHit(hit);
+        }
+    }
+
+    void RaycastHit(RaycastHit hit)
+    {
+        if (!hit.collider.CompareTag(TrapSettableFloorTag)) return;
+        GameObject trap = _trapManager.TryGetTrap(hit.collider.transform.position);
+        if (trap == null) return;
+
+        trap.transform.position = hit.collider.transform.position;
     }
 }

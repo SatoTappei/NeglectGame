@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,30 +5,30 @@ using UnityEngine;
 /// </summary>
 public class TrapManager : MonoBehaviour
 {
-    class Trap
+    class TrapInstanceData
     {
         GameObject _instance;
-        Vector3 _pos;
+        Vector3 _actualPos;
 
-        public Trap(GameObject instance, Vector3 pos)
+        public TrapInstanceData(GameObject instance, Vector3 actualPos)
         {
             _instance = instance;
-            _pos = pos;
+            _actualPos = actualPos;
         }
 
-        public Vector3 Pos { get => _pos; set => _pos = value; }
+        public Vector3 ActualPos { get => _actualPos; set => _actualPos = value; }
         public GameObject Instance { get => _instance; }
     }
 
     static readonly int TrapQuantity = 4;
 
     [Header("設置する罠のプレハブ")]
-    [SerializeField] GameObject _prefab;
+    [SerializeField] Trap _prefab;
     [Header("生成した罠を登録しておく親")]
     [SerializeField] Transform _trapParent;
 
     int _trapIndex;
-    Trap[] _trapPool = new Trap[TrapQuantity];
+    TrapInstanceData[] _trapPool = new TrapInstanceData[TrapQuantity];
 
     /// <summary>ありえない値の位置に生成する</summary>
     Vector3 TrapInitPos => Vector3.one * 999;
@@ -38,22 +37,22 @@ public class TrapManager : MonoBehaviour
     {
         for (int i = 0; i < TrapQuantity; i++)
         {
-            GameObject instance = Instantiate(_prefab, TrapInitPos, Quaternion.identity, _trapParent);
-            _trapPool[i] = new Trap(instance, TrapInitPos);
+            Trap trap = Instantiate(_prefab, TrapInitPos, Quaternion.identity, _trapParent);
+            _trapPool[i] = new TrapInstanceData(trap.gameObject, TrapInitPos);
         }
     }
 
-    public GameObject TryGetTrap(Vector3 pos)
+    public GameObject TryGetTrap(Vector3 estimatePos)
     {
-        foreach (Trap t in _trapPool)
+        // 高々4つ程度なので線形探索で大丈夫
+        foreach (TrapInstanceData t in _trapPool)
         {
-            Debug.Log(t.Pos + " " + pos);
-            if (t.Pos == pos) return null;
+            if (t.ActualPos == estimatePos) return null;
         }
 
-        Trap trap = _trapPool[_trapIndex % TrapQuantity];
-        trap.Pos = pos;
-        _trapIndex++;
+        TrapInstanceData trap = _trapPool[_trapIndex++ % TrapQuantity];
+        trap.ActualPos = estimatePos;
+
         return trap.Instance;
     }
 }

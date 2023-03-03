@@ -16,5 +16,6 @@ public interface IStateControl
     float GetAnimationClipLength(string name);
     bool IsTargetPosArrival();
     bool IsBelowHpThreshold();
+    bool IsHpEqualZero();
     SightableObject GetInSightAvailableMovingTarget();
 }

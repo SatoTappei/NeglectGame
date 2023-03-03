@@ -373,7 +373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 7779028308847724028}
-  _moveSpeed: 5
+  _moveSpeed: 1.5
   _runSpeedMag: 2
 --- !u!114 &5286240754668127569
 MonoBehaviour:

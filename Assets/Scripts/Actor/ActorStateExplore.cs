@@ -18,6 +18,12 @@ public class ActorStateExplore : ActorStateBase
 
     protected override void Stay()
     {
+        if (_stateMachine.StateControl.IsHpEqualZero())
+        {
+            TryChangeState(StateType.Dead);
+            return;
+        }
+
         if (_stateMachine.StateControl.IsBelowHpThreshold())
         {
             TryChangeState(StateType.SequenceExecute);

@@ -25,6 +25,12 @@ public class ActorStateEnterTheRoom : ActorStateBase
 
     protected override void Stay()
     {
+        if (_stateMachine.StateControl.IsHpEqualZero())
+        {
+            TryChangeState(StateType.Dead);
+            return;
+        }
+
         // 部屋の入口を見つけた場合に遷移を行うと無限ループに陥る可能性があるので弾く
         SightableObject inSightObject = _stateMachine.StateControl.GetInSightAvailableMovingTarget();
         if (inSightObject?.SightableType == SightableType.Treasure ||
@@ -43,8 +49,6 @@ public class ActorStateEnterTheRoom : ActorStateBase
             _tween = DOVirtual.DelayedCall(delayTime, () => TryChangeState(StateType.Explore))
                 .SetLink(_stateMachine.gameObject);
         }
-
-        // やる気が一定以下の時
     }
 
     protected override void Exit()

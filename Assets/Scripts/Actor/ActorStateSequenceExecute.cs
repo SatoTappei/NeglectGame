@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class ActorStateSequenceExecute : ActorStateBase
 {
-    static readonly float BattleWinPercent = 0.9f;
+    static readonly float BattleWinPercent = 0.5f;
 
     public ActorStateSequenceExecute(ActorStateMachine stateMachine, StateType type)
         : base(stateMachine, type) { }
@@ -50,7 +50,11 @@ public class ActorStateSequenceExecute : ActorStateBase
 
     protected override void Stay()
     {
-        // ‘Ì—Í‚ª0ˆÈ‰º‚É‚È‚Á‚½‚çŽ€‚Ê
+        if (_stateMachine.StateControl.IsHpEqualZero())
+        {
+            TryChangeState(StateType.Dead);
+            return;
+        }
     }
 
     protected override void Exit()
