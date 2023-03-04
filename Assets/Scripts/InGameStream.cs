@@ -37,8 +37,9 @@ public class InGameStream : MonoBehaviour
         // 先にダンジョンを生成する必要がある。
         _dungeonBuilder.Build();
 
-        // ここで1フレーム待たないとRayが正常に判定しない
-        await UniTask.Yield();
+        // ここでダンジョン生成時のアニメーション分待たないとRayが反応しない
+        // ↓ゲームスタート！の演出を作る
+        await UniTask.Delay(System.TimeSpan.FromSeconds(1.0f));
 
         // キャラクター生成時にはグリッドの情報が必要なので先に生成する必要がある
         _pathfindingGrid.GenerateGrid();
@@ -49,13 +50,15 @@ public class InGameStream : MonoBehaviour
         // インゲームのタイマーと冒険者の生成はかみ合っていない
         // インゲームのタイマーのスタートと同時に敵の生成を行うGeneratorも起動する
         // Generatorは独自の間隔で生成している
-        //_generator.GenerateRegularlyAsync(new CancellationTokenSource()).Forget();
+        CancellationTokenSource cts = new();
+        _generator.GenerateRegularlyAsync(cts).Forget();
 
         _trapManager.Init();
 
         // インゲームのタイマーの開始はメソッドの呼び出しで行うが
         // 値の加算はMessagePipeを用いたメッセージングで行う
         await _inGameTimer.StartAsync(token);
+        cts.Cancel();
 
         await _resultUIControl.AnimationAsync(token);
     }

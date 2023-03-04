@@ -13,6 +13,7 @@ public class GenerateObservePresenter : MonoBehaviour
     [SerializeField] WaypointManager _waypointManager;
     [SerializeField] ActorStatusUIManager _actorStatusUIManager;
     [SerializeField] ActorMonitor _actorMonitor;
+    [SerializeField] GenerateControl _generateControl;
 
     void Awake()
     {
@@ -21,9 +22,11 @@ public class GenerateObservePresenter : MonoBehaviour
         {
             // Waypointを生成した後にGeneratorコンポーネント生成処理をしないといけない
             // 時間的結合をしているので呼び出し順に注意
-            List<Vector3> list = _waypointManager.GetWaypointListWithWaypointType(WaypointType.Exit);
-            int r = Random.Range(0, list.Count);
-            instance.transform.position = list[r];
+            //List<Vector3> list = _waypointManager.GetWaypointListWithWaypointType(WaypointType.Exit);
+            //int r = Random.Range(0, list.Count);
+            //instance.transform.position = list[r];
+
+            _waypointManager.SetRandomWaypoint(instance, WaypointType.Exit);
 
             // TODO:怒涛の参照取得＆規定数を超えてUIを表示させようとするとエラー
             ActorStatusHolder statusHolder = instance.GetComponent<ActorStatusHolder>();
@@ -34,14 +37,17 @@ public class GenerateObservePresenter : MonoBehaviour
 
             var currentState = instance.GetComponent<ActorStateMachine>().CurrentState;
             currentState.Where(state => state.Type == StateType.Goal || state.Type == StateType.Dead)
-                .Subscribe(state => 
+                .Subscribe(state =>
                 {
                     disposable.Dispose();
                     statusUI.Release();
 
                     _actorMonitor.DetectGoalOrDeadState(state.Type);
+                    _generateControl.Remove();
 
                 }).AddTo(instance);
+
+           _generateControl.Add();
         });
     }
 }

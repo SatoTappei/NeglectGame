@@ -46,6 +46,11 @@ public class WaypointManager : MonoBehaviour, IWaypointManage
         }
     }
 
-    public List<Vector3> GetWaypointListWithWaypointType(WaypointType type) => _waypointDic[type];
+    public void SetRandomWaypoint(GameObject instance, WaypointType type)
+    {
+        List<Vector3> list = _waypointDic[type];
+        int r = UnityEngine.Random.Range(0, list.Count);
+        instance.transform.position = list[r];
+    }
 }
 

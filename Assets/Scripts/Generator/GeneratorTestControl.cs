@@ -35,7 +35,7 @@ public class GeneratorTestControl : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            _generator.GenerateRegularlyCancel();
+            //_generator.GenerateRegularlyCancel();
         }
     }
 }

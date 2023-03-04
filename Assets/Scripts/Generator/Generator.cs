@@ -32,14 +32,11 @@ public class Generator : MonoBehaviour
     [Header("生成したプレハブを登録する親")]
     [SerializeField] Transform _parent;
     [Header("生成する間隔")]
+    [Range(1.0f,99.0f)]
     [SerializeField] float _interval = 1.0f;
 
     bool _isGeneratable = true;
-    /// <summary>
-    /// 外部からキャンセル用のメソッドを呼ぶだけで生成処理をキャンセルできるように
-    /// CancellationTokenSourceをこちら側で保持しておく
-    /// </summary>
-    CancellationTokenSource _cts;
+
     /// <summary>
     /// オブジェクトを生成したタイミングで
     /// 外部からそのオブジェクトを初期化できるように保持しておく
@@ -59,6 +56,7 @@ public class Generator : MonoBehaviour
 
     void Update()
     {
+        // テスト用
         if (Input.GetKeyDown(KeyCode.Space))
         {
             int r = UnityEngine.Random.Range(0, _prefabs.Length);
@@ -66,34 +64,20 @@ public class Generator : MonoBehaviour
         }
     }
 
-    public async UniTask GenerateRegularlyAsync(CancellationTokenSource tokenSource)
+    public async UniTask GenerateRegularlyAsync(CancellationTokenSource cts)
     {
-        _cts = tokenSource;
+        cts.Token.ThrowIfCancellationRequested();
 
-        try
+        while (true)
         {
-            while (true)
+            // インターバル中に生成可能フラグが立っても次の生成タイミングが来るまでは生成されない。
+            if (_isGeneratable)
             {
-                // インターバル中に生成可能フラグが立っても次の生成タイミングが来るまでは生成されない。
-                if (_isGeneratable)
-                {
-                    int r = UnityEngine.Random.Range(0, _prefabs.Length);
-                    // 生成した際の初期化処理を別のコンポーネントに委任する
-                    _lastInstantiatedPrefab.Value = Instantiate(_prefabs[r]/*, _parent*/);
-                }
-                await UniTask.Delay(TimeSpan.FromSeconds(_interval), cancellationToken: tokenSource.Token);
+                int r = UnityEngine.Random.Range(0, _prefabs.Length);
+                // 生成した際の初期化処理を別のコンポーネントに委任する
+                _lastInstantiatedPrefab.Value = Instantiate(_prefabs[r], _parent);
             }
+            await UniTask.Delay(TimeSpan.FromSeconds(_interval), cancellationToken: cts.Token);
         }
-        catch(OperationCanceledException e)
-        {
-            Debug.Log("生成処理がキャンセルされました。: " + e.Message);
-        }
-    }
-
-    public void GenerateRegularlyCancel() => _cts?.Cancel();
-
-    void OnDestroy()
-    {
-        _cts?.Cancel();
     }
 }

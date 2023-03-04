@@ -36,6 +36,7 @@ public class Actor : MonoBehaviour, IStateControl
      *  音
      *  ゲームとしての体裁(タイトル=>インゲーム=>終了=>リロード)を整える
      *  UIの画像とか
+     *  ゲームスタートの演出の作成(エラーの原因になるので必須)
      */
 
     void Start()

@@ -6,15 +6,15 @@ using UnityEngine;
 /// </summary>
 public class ActorStatusUIManager : MonoBehaviour
 {
-    static readonly int InstantiateMax = 5;
-    static readonly int InstantiateOffsetY = -100;
+    public static readonly int InstantiateMax = 10;
+    static readonly int InstantiateOffsetY = -50;
 
     [Header("¶¬‚·‚éUI‚ÌPrefab")]
     [SerializeField] ActorStatusUI _prefab;
     [Header("¶¬‚µ‚½UI‚ð“o˜^‚·‚ée")]
     [SerializeField] Transform _parent;
 
-    Vector3 InitUIPos => new Vector3(-300, 200, 0);
+    Vector3 InitUIPos => new Vector3(-300, 100, 0);
 
     Queue<ActorStatusUI> _unUsedqueue = new(InstantiateMax);
     List<ActorStatusUI> _usedList = new(InstantiateMax);

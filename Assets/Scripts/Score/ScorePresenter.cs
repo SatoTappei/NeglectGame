@@ -16,11 +16,6 @@ public class ScorePresenter : MonoBehaviour
         _actorMonitor.DefeatedCount.Subscribe(i => PrintScore(i)).AddTo(this);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P)) PrintScore(Time.frameCount);
-    }
-
     void PrintScore(int score)
     {
         Sequence sequence = DOTween.Sequence();
