@@ -12,7 +12,7 @@ public class GenerateControl : MonoBehaviour
     [Inject]
     IPublisher<GeneratorControl> _publisher;
 
-    public void Add()
+    public void CountUp()
     {
         _quantity++;
 
@@ -22,7 +22,7 @@ public class GenerateControl : MonoBehaviour
         }
     }
 
-    public void Remove()
+    public void CountDown()
     {
         _quantity--;
 

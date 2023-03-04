@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// カメラの操作を行うコンポーネント
 /// </summary>
-public class VCamController : MonoBehaviour
+public class VCamController : MonoBehaviour, IPauseable
 {
     static readonly float CameraPosBorder = 37.0f;
 
@@ -35,5 +35,10 @@ public class VCamController : MonoBehaviour
                 _targetParent.transform.position = next;
             }
         }
+    }
+
+    void IPauseable.Pause()
+    {
+        enabled = false;
     }
 }

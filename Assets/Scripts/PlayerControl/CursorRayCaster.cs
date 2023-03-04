@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Cursorからクリックした位置に向けてRayを飛ばすコンポーネント
 /// </summary>
-public class CursorRayCaster : MonoBehaviour
+public class CursorRayCaster : MonoBehaviour, IPauseable
 {
     static readonly string TrapSettableFloorTag = "TrapSettableFloor";
 
@@ -11,19 +11,13 @@ public class CursorRayCaster : MonoBehaviour
     [Header("キャラクターが移動可能なLayer")]
     [SerializeField] LayerMask _layerMask;
 
-    bool _isActive;
-
     void Update()
     {
-        if (!_isActive) return;
-
         if (Input.GetMouseButtonDown(0))
         {
             Ray();
         }
     }
-
-    public void Active() => _isActive = true;
 
     void Ray()
     {
@@ -43,5 +37,10 @@ public class CursorRayCaster : MonoBehaviour
 
         AudioManager.Instance.PlaySE("SE_罠設置");
         trap.transform.position = hit.collider.transform.position;
+    }
+
+    void IPauseable.Pause()
+    {
+        enabled = false;
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 /// <summary>
 /// キャラクターの各コンポーネントを制御するコンポーネント
 /// </summary>
-public class Actor : MonoBehaviour, IStateControl
+public class Actor : MonoBehaviour, IStateControl, IPauseable
 {
     [SerializeField] ActorStatusHolder _actorStatusHolder;
     [SerializeField] ActorMoveSystem _actorMoveSystem;
@@ -119,5 +119,8 @@ public class Actor : MonoBehaviour, IStateControl
         }
     }
 
-
+    void IPauseable.Pause()
+    {
+        Debug.Log("キャラクターのポーズ処理");
+    }
 }

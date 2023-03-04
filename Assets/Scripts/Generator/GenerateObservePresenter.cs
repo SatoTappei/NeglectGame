@@ -13,6 +13,7 @@ public class GenerateObservePresenter : MonoBehaviour
     [SerializeField] ActorStatusUIManager _actorStatusUIManager;
     [SerializeField] ActorMonitor _actorMonitor;
     [SerializeField] GenerateControl _generateControl;
+    [SerializeField] PauseControl _pauseControl;
 
     void Awake()
     {
@@ -38,10 +39,12 @@ public class GenerateObservePresenter : MonoBehaviour
                     statusUI.Release();
 
                     _actorMonitor.DetectGoalOrDeadState(state.Type);
-                    _generateControl.Remove();
+                    _generateControl.CountDown();
+                    _pauseControl.Remove(instance);
                 }).AddTo(instance);
 
-           _generateControl.Add();
+            _generateControl.CountUp();
+            _pauseControl.Add(instance);
         });
     }
 }

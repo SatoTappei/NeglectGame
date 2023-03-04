@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 public class InGameStream : MonoBehaviour
 {
+    [SerializeField] PauseControl _pauseControl;
     [SerializeField] CursorRayCaster _cursorRayCaster;
     [SerializeField] TitleUIControl _titleUIControl;
     [SerializeField] ResultUIControl _resultUIControl;
@@ -30,6 +31,8 @@ public class InGameStream : MonoBehaviour
         // ダンジョン生成時にアニメーションさせるのでCapacityを増やして警告を消す
         // 処理負荷が問題になった場合はアニメーションをやめること
         DOTween.SetTweensCapacity(500, 50);
+
+        _pauseControl.Init();
 
         // タイトル画面から遷移するのを待つ
         await _titleUIControl.TitleStateAsync(token);
@@ -58,12 +61,15 @@ public class InGameStream : MonoBehaviour
 
         _trapManager.Init();
 
-        _cursorRayCaster.Active();
+        _cursorRayCaster.enabled = true;
 
         // インゲームのタイマーの開始はメソッドの呼び出しで行うが
         // 値の加算はMessagePipeを用いたメッセージングで行う
         await _inGameTimer.StartAsync(token);
         cts.Cancel();
+
+        token.ThrowIfCancellationRequested();
+        _pauseControl.Pause();
 
         await _resultUIControl.AnimationAsync(token);
     }

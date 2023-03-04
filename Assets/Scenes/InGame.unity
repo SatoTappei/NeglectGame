@@ -2243,6 +2243,7 @@ GameObject:
   - component: {fileID: 1656048325}
   - component: {fileID: 1656048324}
   - component: {fileID: 1656048326}
+  - component: {fileID: 1656048327}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -2262,6 +2263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 933ccaaa86184f54483627ae03a24ace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _pauseControl: {fileID: 1656048327}
   _cursorRayCaster: {fileID: 129153987}
   _titleUIControl: {fileID: 798580798}
   _resultUIControl: {fileID: 798580800}
@@ -2315,6 +2317,21 @@ MonoBehaviour:
     _clip: {fileID: 8300000, guid: 8f7695b9532b0f540bc8975d91757c94, type: 3}
     _volume: 0.5
   _interval: 0.05
+--- !u!114 &1656048327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1656048323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2306155f851a56c45a8ce6ee13f3db97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pauseObjects:
+  - {fileID: 129153985}
+  - {fileID: 450405592}
 --- !u!1 &1735538927
 GameObject:
   m_ObjectHideFlags: 0
