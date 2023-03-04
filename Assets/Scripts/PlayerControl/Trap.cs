@@ -32,6 +32,6 @@ public class Trap : MonoBehaviour
         _particle.transform.position = transform.position;
         _particle.SetActive(true);
 
-        actorHpControl.DecreaseHp(_damage);
+        actorHpControl.Damage(_damage);
     }
 }

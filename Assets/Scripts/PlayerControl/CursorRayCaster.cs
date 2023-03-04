@@ -11,13 +11,19 @@ public class CursorRayCaster : MonoBehaviour
     [Header("キャラクターが移動可能なLayer")]
     [SerializeField] LayerMask _layerMask;
 
+    bool _isActive;
+
     void Update()
     {
+        if (!_isActive) return;
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray();
         }
     }
+
+    public void Active() => _isActive = true;
 
     void Ray()
     {
@@ -35,6 +41,7 @@ public class CursorRayCaster : MonoBehaviour
         GameObject trap = _trapManager.TryGetTrap(hit.collider.transform.position);
         if (trap == null) return;
 
+        AudioManager.Instance.PlaySE("SE_罠設置");
         trap.transform.position = hit.collider.transform.position;
     }
 }

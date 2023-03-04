@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 public class InGameStream : MonoBehaviour
 {
+    [SerializeField] CursorRayCaster _cursorRayCaster;
     [SerializeField] TitleUIControl _titleUIControl;
     [SerializeField] ResultUIControl _resultUIControl;
     [SerializeField] PathfindingGrid _pathfindingGrid;
@@ -56,6 +57,8 @@ public class InGameStream : MonoBehaviour
         _generator.GenerateRegularlyAsync(cts).Forget();
 
         _trapManager.Init();
+
+        _cursorRayCaster.Active();
 
         // インゲームのタイマーの開始はメソッドの呼び出しで行うが
         // 値の加算はMessagePipeを用いたメッセージングで行う

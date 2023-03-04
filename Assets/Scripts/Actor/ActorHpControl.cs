@@ -34,5 +34,19 @@ public class ActorHpControl : MonoBehaviour
     internal void DecreaseHp(int quantity)
     {
         _currentHp.Value = Mathf.Clamp(_currentHp.Value -= quantity, 0, _maxHp);
-    }   
+    }
+
+    public void Damage(int quantity)
+    {
+        DecreaseHp(quantity);
+
+        if (IsHpEqualZero())
+        {
+            AudioManager.Instance.PlaySE("SE_éÄñS");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySE("SE_É_ÉÅÅ[ÉW");
+        }
+    }
 }

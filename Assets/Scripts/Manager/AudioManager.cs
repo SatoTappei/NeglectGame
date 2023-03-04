@@ -160,4 +160,9 @@ public class AudioManager : MonoBehaviour
 
     public void StopBGM() => GetBGMAudioSource().Stop();
     public void FadeOutBGM(float duration = 0.5f) => GetBGMAudioSource().DOFade(0, duration);
+
+    void OnDestroy()
+    {
+        _instance = null;
+    }
 }

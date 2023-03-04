@@ -1,7 +1,8 @@
-using UnityEngine;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System.Threading;
+using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// リザルト画面で使用するUIを制御するコンポーネント
@@ -12,36 +13,28 @@ public class ResultUIControl : MonoBehaviour
     static float SecondAnimDuration = 0.25f;
     static float ThirdAnimDuration = 0.15f;
 
-    [SerializeField] Transform _resultItemRoot;
+    [SerializeField] RawImage _backgroundRawImage;
+    [SerializeField] Transform _resultItem;
 
     void Start()
     {
-        _resultItemRoot.transform.localScale = Vector3.zero;
+        _resultItem.transform.localScale = Vector3.zero;
+        _backgroundRawImage.enabled = false;
     }
 
     public async UniTask AnimationAsync(CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
 
+        _backgroundRawImage.enabled = true;
+
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(_resultItemRoot.transform.DOScale(new Vector3(0.01f, 1.0f, 1.0f), FirstAnimDuration));
-        sequence.Append(_resultItemRoot.transform.DOScale(new Vector3(1.1f, 1.0f, 1.0f), SecondAnimDuration));
-        sequence.Append(_resultItemRoot.transform.DOScale(Vector3.one, ThirdAnimDuration));
+        sequence.Append(_resultItem.transform.DOScale(new Vector3(0.01f, 1.0f, 1.0f), FirstAnimDuration));
+        sequence.Append(_resultItem.transform.DOScale(new Vector3(1.1f, 1.0f, 1.0f), SecondAnimDuration));
+        sequence.Append(_resultItem.transform.DOScale(Vector3.one, ThirdAnimDuration));
         sequence.SetLink(gameObject);
 
         float delay = FirstAnimDuration + SecondAnimDuration + ThirdAnimDuration;
         await UniTask.Delay(System.TimeSpan.FromSeconds(delay), cancellationToken: token);
     }
-
-
-    // 倒した数を記録する必要がある
-    // MVRPで行う
-    // ViewはあるがModelとPresenterがない
-
-    // UIに葬った数を表示する
-    // リザルトのUIを表示
-
-    // ボタンをクリックしたらタイトルに戻る
-    // ボタンの押し込んだアニメーション後にフェードする
-    // シーンのリロード
 }
