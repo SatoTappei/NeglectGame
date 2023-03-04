@@ -33,6 +33,8 @@ public class InGameStream : MonoBehaviour
         // タイトル画面から遷移するのを待つ
         await _titleUIControl.TitleStateAsync(token);
 
+        AudioManager.Instance.PlayBGM("BGM_インゲーム");
+
         // キャラクターを生成するのにダンジョンの地形情報が必要なので
         // 先にダンジョンを生成する必要がある。
         _dungeonBuilder.Build();

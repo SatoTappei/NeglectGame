@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -22,10 +21,6 @@ public class GenerateObservePresenter : MonoBehaviour
         {
             // Waypointを生成した後にGeneratorコンポーネント生成処理をしないといけない
             // 時間的結合をしているので呼び出し順に注意
-            //List<Vector3> list = _waypointManager.GetWaypointListWithWaypointType(WaypointType.Exit);
-            //int r = Random.Range(0, list.Count);
-            //instance.transform.position = list[r];
-
             _waypointManager.SetRandomWaypoint(instance, WaypointType.Exit);
 
             // TODO:怒涛の参照取得＆規定数を超えてUIを表示させようとするとエラー
@@ -44,7 +39,6 @@ public class GenerateObservePresenter : MonoBehaviour
 
                     _actorMonitor.DetectGoalOrDeadState(state.Type);
                     _generateControl.Remove();
-
                 }).AddTo(instance);
 
            _generateControl.Add();
