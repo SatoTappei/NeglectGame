@@ -45,6 +45,7 @@ public class ActorStatusUI : MonoBehaviour
     public void Release()
     {
         _manager.ReturnUI(this);
+        _lineFrameImage.enabled = false;
 
         _tween?.Complete();
         _tween = transform.DOMoveX(-MovingDistance, MovingDuration).SetLink(gameObject);

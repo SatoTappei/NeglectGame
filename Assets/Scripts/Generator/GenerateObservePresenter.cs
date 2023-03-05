@@ -39,15 +39,15 @@ public class GenerateObservePresenter : MonoBehaviour
             {
                 string line = statusHolder.GetLineWithState(state.Type);
                 statusUI.PrintLine(line);
-            });
+            }).AddTo(instance);
             currentState.Where(state => state.Type == StateType.Goal || state.Type == StateType.Dead).Subscribe(state =>
             {
                 disposable.Dispose();
+                _actorMonitor.DetectGoalOrDeadState(state.Type);
 
                 // ‘äŽŒ•\Ž¦‚ÌŽžŠÔ‚ðŠm•Û‚·‚é‚½‚ß’x‰„‚³‚¹‚é
                 DOVirtual.DelayedCall(1.5f, () => 
                 {
-                    _actorMonitor.DetectGoalOrDeadState(state.Type);
                     _generateControl.CountDown();
                     statusUI.Release();
                     _pauseControl.Remove(instance);

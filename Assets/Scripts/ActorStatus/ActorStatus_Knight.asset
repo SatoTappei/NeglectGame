@@ -16,16 +16,14 @@ MonoBehaviour:
   _maxHp: 200
   _lineDatas:
   - _type: 0
-    _line: 
+    _line: "\u306E\u308A\u3053\u3081\u30FC\uFF3E\uFF3E"
   - _type: 1
-    _line: 
-  - _type: 2
-    _line: 
+    _line: "\u8FF7\u3063\u3066\u307E\u3059"
   - _type: 3
-    _line: 
+    _line: "\u6C5A\u306D\u3047\u90E8\u5C4B\u3060\u306A\u3084"
   - _type: 4
-    _line: 
+    _line: "\u6D3E\u624B\u306B\u3084\u3063\u305F\u308B"
   - _type: 5
-    _line: 
+    _line: "\u5E30\u308D"
   - _type: 6
-    _line: 
+    _line: "\u55DA\u547C\u3001\u9A0E\u58EB\u541B\u304C\u901D\u304F"

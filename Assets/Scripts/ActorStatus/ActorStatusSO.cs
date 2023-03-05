@@ -47,7 +47,7 @@ public class ActorStatusSO : ScriptableObject
         }
         else
         {
-            Debug.LogWarning("‘Î‰ž‚·‚é‘äŽŒ‚ª‚ ‚è‚Ü‚¹‚ñ" + type);
+            //Debug.LogWarning("‘Î‰ž‚·‚é‘äŽŒ‚ª‚ ‚è‚Ü‚¹‚ñ" + type);
             return string.Empty;
         }
     }
