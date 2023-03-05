@@ -39,14 +39,17 @@ public class PauseControl : MonoBehaviour
 
     void PauseableListControl(GameObject pauseableObject, UnityAction<IPauseable> listControl)
     {
-        IPauseable pauseable = pauseableObject.GetComponent<IPauseable>();
-        if (pauseable == null)
+        IPauseable[] pauseables = pauseableObject.GetComponents<IPauseable>();
+        if (pauseables == null)
         {
             Debug.LogWarning("IPauseable‚ªŽÀ‘•‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ" + pauseableObject.name);
         }
         else
         {
-            listControl(pauseable);
+            foreach(IPauseable pauseable in pauseables)
+            {
+                listControl(pauseable);
+            }
         }
     }
 

@@ -35,4 +35,9 @@ public class ActorStateEntry : ActorStateBase
     {
         _tween?.Kill();
     }
+
+    public override void OnStateMachinePause()
+    {
+        _tween?.Kill();
+    }
 }

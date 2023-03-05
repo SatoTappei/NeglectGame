@@ -23,10 +23,9 @@ public class ActorStateSequence
 
     public async UniTask ExecuteAsync(CancellationTokenSource cts, UnityAction callback)
     {
-        cts.Token.ThrowIfCancellationRequested();
-
         foreach (ActorNodeBase node in _sequence)
         {
+            cts.Token.ThrowIfCancellationRequested();
             await node.PlayAsync(cts);
         }
 

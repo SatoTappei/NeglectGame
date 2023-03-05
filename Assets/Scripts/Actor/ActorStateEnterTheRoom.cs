@@ -53,8 +53,21 @@ public class ActorStateEnterTheRoom : ActorStateBase
 
     protected override void Exit()
     {
+        ExitProcess();
+    }
+
+    public override void OnStateMachinePause()
+    {
+        ExitProcess();
+    }
+
+    void ExitProcess()
+    {
         _isArraival = false;
         _tween?.Kill();
         _stateMachine.StateControl.MoveCancel();
     }
 }
+
+
+// ‘Îˆ:ƒŠƒUƒ‹ƒg‚Å‚àã©‚ğ“¥‚ñ‚¾‰¹‚ª–Â‚Á‚Ä‚µ‚Ü‚¤•s‹ï‡

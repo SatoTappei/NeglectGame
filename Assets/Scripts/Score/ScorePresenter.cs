@@ -6,7 +6,7 @@ using DG.Tweening;
 /// <summary>
 /// 撃破数をUIに表示するPresenter
 /// </summary>
-public class ScorePresenter : MonoBehaviour
+public class ScorePresenter : MonoBehaviour, IPauseable
 {
     [SerializeField] ActorMonitor _actorMonitor;
     [Header("インゲーム中のスコア表示UI")]
@@ -14,10 +14,13 @@ public class ScorePresenter : MonoBehaviour
     [Header("リザルト画面のスコア表示UI")]
     [SerializeField] Text _resultValueText;
 
+    System.IDisposable _scoreDisposable;
+    System.IDisposable _resultDisposable;
+
     void Start()
     {
-        _actorMonitor.DefeatedCount.Subscribe(i => PrintScore(i, _scoreValueText)).AddTo(this);
-        _actorMonitor.DefeatedCount.Subscribe(i => _resultValueText.text = i.ToString()).AddTo(this);
+        _scoreDisposable = _actorMonitor.DefeatedCount.Subscribe(i => PrintScore(i, _scoreValueText)).AddTo(this);
+        _resultDisposable = _actorMonitor.DefeatedCount.Subscribe(i => _resultValueText.text = i.ToString()).AddTo(this);
     }
 
     void PrintScore(int score, Text textUI)
@@ -28,5 +31,11 @@ public class ScorePresenter : MonoBehaviour
         sequence.SetLink(_scoreValueText.gameObject);
 
         textUI.text = score.ToString();
+    }
+
+    void IPauseable.Pause()
+    {
+        _scoreDisposable.Dispose();
+        _resultDisposable.Dispose();
     }
 }

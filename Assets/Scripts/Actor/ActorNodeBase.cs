@@ -21,3 +21,6 @@ public abstract class ActorNodeBase
 
     protected abstract UniTask ExecuteAsync(CancellationTokenSource cts);
 }
+
+// missing対策のnullチェック
+// ダンジョンに障害物を配置

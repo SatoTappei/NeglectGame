@@ -16,7 +16,7 @@ MonoBehaviour:
   _maxHp: 100
   _lineDatas:
   - _type: 0
-    _line: "\u3044\u3093\u3057\u305F\u304A"
+    _line: "\u3053\u3093\u3061\u308F"
   - _type: 1
     _line: "\u3046\u30FC\u3093\u2026"
   - _type: 3
@@ -26,4 +26,4 @@ MonoBehaviour:
   - _type: 5
     _line: "\uFF89\uFF7C"
   - _type: 6
-    _line: "\u3042\u3001\u5144\u8CB4\u30A3\u2026\u3082\u3046\u3060\u3081\u3060"
+    _line: "\u3082\u3046\u3060\u3081\u307D"

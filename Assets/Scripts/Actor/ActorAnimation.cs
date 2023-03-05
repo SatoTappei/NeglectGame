@@ -88,7 +88,7 @@ public class ActorAnimation : MonoBehaviour
                     .AppendCallback(() =>
                     {
                         _anim.Play(stateData.Hash);
-                        DOVirtual.DelayedCall(stateData.Length, () => callback?.Invoke());
+                        DOVirtual.DelayedCall(stateData.Length, () => callback?.Invoke()).SetLink(gameObject);
                     })
                     .SetLink(gameObject);
         }

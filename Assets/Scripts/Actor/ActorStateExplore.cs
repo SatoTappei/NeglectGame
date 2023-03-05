@@ -51,6 +51,16 @@ public class ActorStateExplore : ActorStateBase
 
     protected override void Exit()
     {
+        ExitProcess();
+    }
+
+    public override void OnStateMachinePause()
+    {
+        ExitProcess();
+    }
+
+    void ExitProcess()
+    {
         _isArraival = false;
         _tween?.Kill();
         _stateMachine.StateControl.MoveCancel();

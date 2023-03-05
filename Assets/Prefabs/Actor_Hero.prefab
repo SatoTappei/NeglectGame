@@ -1632,6 +1632,7 @@ MonoBehaviour:
   _actorEffecter: {fileID: -2716983940602796543}
   _actorPerformance: {fileID: 9168177098149328450}
   _actorHpModel: {fileID: 6172865319239556958}
+  _trapDetectorCollider: {fileID: 5906770772204640023}
 --- !u!114 &-2316506786906029119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2406,6 +2407,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4636c8a6774851a43bf0ebeb8caf3a7c, type: 3}
+--- !u!135 &5906770772204640023 stripped
+SphereCollider:
+  m_CorrespondingSourceObject: {fileID: 1193160417808395434, guid: 4636c8a6774851a43bf0ebeb8caf3a7c, type: 3}
+  m_PrefabInstance: {fileID: 4717491664836131773}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7558906727979196511 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2995250208900570082, guid: 4636c8a6774851a43bf0ebeb8caf3a7c, type: 3}

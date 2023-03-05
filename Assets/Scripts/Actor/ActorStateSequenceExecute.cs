@@ -63,6 +63,11 @@ public class ActorStateSequenceExecute : ActorStateBase
         _cts?.Cancel();
     }
 
+    public override void OnStateMachinePause()
+    {
+        _cts?.Cancel();
+    }
+
     void ExecuteSequence(SequenceType sequenceType, StateType transitionStateType)
     {
         ActorStateSequence sequence = _stateMachine.GetSequence(sequenceType);

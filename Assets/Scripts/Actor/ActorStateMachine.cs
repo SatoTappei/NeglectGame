@@ -25,7 +25,7 @@ public enum SequenceType
 /// <summary>
 /// キャラクターの行動を制御するステートマシン
 /// </summary>
-public class ActorStateMachine : MonoBehaviour
+public class ActorStateMachine : MonoBehaviour, IPauseable
 {
     static readonly int StateDicCapacity = Enum.GetValues(typeof(StateType)).Length;
     static readonly int SequenceDicCapacity = Enum.GetValues(typeof(SequenceType)).Length;
@@ -130,5 +130,10 @@ public class ActorStateMachine : MonoBehaviour
             Debug.LogError("Sequenceが辞書内にありません: " + type);
             return null;
         }
+    }
+
+    void IPauseable.Pause()
+    {
+        _currentState.Value.OnStateMachinePause();
     }
 }

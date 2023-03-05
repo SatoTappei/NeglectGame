@@ -45,11 +45,9 @@ public class EffectableTreasure : EffectableObjectBase
         _chestCover.DOLocalRotate(new Vector3(0, 0, -TweenRotAngle), TweenDuration)
             .SetEase(Ease.InOutQuad).SetLink(gameObject);
         _openedParticle.SetActive(true);
-        await UniTask.Delay(TimeSpan.FromSeconds(TweenDuration + _lifeTime));
-
-        token.ThrowIfCancellationRequested();
+        await UniTask.Delay(TimeSpan.FromSeconds(TweenDuration + _lifeTime), cancellationToken: token);
         gameObject.SetActive(false);
-        await UniTask.Delay(TimeSpan.FromSeconds(_repopInterval));
+        await UniTask.Delay(TimeSpan.FromSeconds(_repopInterval), cancellationToken: token);
         gameObject.SetActive(true);
 
         _chestCover.DOLocalRotate(new Vector3(0, 0, 0), 0).SetLink(gameObject);

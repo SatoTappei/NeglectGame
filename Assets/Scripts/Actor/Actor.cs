@@ -15,6 +15,8 @@ public class Actor : MonoBehaviour, IStateControl, IPauseable
     [SerializeField] ActorEffecter _actorEffecter;
     [SerializeField] ActorPerformance _actorPerformance;
     [SerializeField] ActorHpControl _actorHpModel;
+    [Header("罠を踏む判定のコライダー")]
+    [SerializeField] Collider _trapDetectorCollider;
 
     ActorInSightFilter _actorInSightFilter;
 
@@ -29,14 +31,7 @@ public class Actor : MonoBehaviour, IStateControl, IPauseable
      */
 
     /* 
-     *  次のタスク 
-     *  ダンジョン内の全ての部屋を見回っても何もない場合は帰るようにする
-     *  台詞表示機能
      *  死体にコライダーが残っているので罠が反応してしまう、ので直す
-     *  音
-     *  ゲームとしての体裁(タイトル=>インゲーム=>終了=>リロード)を整える
-     *  UIの画像とか
-     *  ゲームスタートの演出の作成(エラーの原因になるので必須)
      */
 
     void Start()
@@ -55,7 +50,7 @@ public class Actor : MonoBehaviour, IStateControl, IPauseable
         _actorStateMachine.Execute();
     }
 
-    void IStateControl.PlayAnimation(string name) => _actorAnimation.PlayAnim(name);
+    void IStateControl.PlayAnimation(string name) => _actorAnimation?.PlayAnim(name);
 
     void IStateControl.PlayGoalPerformance() => PlayPerformance(_actorPerformance.PlayGoalPerformance);
     void IStateControl.PlayDeadPerformance() => PlayPerformance(_actorPerformance.PlayDeadPerformance);
@@ -64,7 +59,7 @@ public class Actor : MonoBehaviour, IStateControl, IPauseable
     void IStateControl.RunToInactiveLookInSight(SightableObject target) => RunTo(target);
     void IStateControl.RunTo(SightableObject target)
     {
-        _actorSight.StartLookInSight();
+        _actorSight?.StartLookInSight();
         RunTo(target);
     }
     void IStateControl.MoveCancel() => _actorMoveSystem.MoveCancel();
@@ -74,8 +69,8 @@ public class Actor : MonoBehaviour, IStateControl, IPauseable
         performance();
         _actorMoveSystem.MoveCancel();
         _actorSight.StopLookInSight();
-        _actorHpModel.DecreaseHp(999);
         _actorHpModel.StopDecreaseHpPerSecond();
+        _trapDetectorCollider.enabled = false;
     }
 
     void MoveTo(UnityAction moveTo)
@@ -94,7 +89,7 @@ public class Actor : MonoBehaviour, IStateControl, IPauseable
         _actorAnimation.PlayAnim("Run");
     }
 
-    void IStateControl.AffectAroundEffectableObject(string message) => _actorEffecter.EffectAround(message);
+    void IStateControl.AffectAroundEffectableObject(string message) => _actorEffecter?.EffectAround(message);
     float IStateControl.GetAnimationClipLength(string name) => _actorAnimation.GetStateLength(name);
     bool IStateControl.IsTargetPosArrival() => _actorMoveSystem.IsArrivalTargetPos();
     bool IStateControl.IsBelowHpThreshold() => _actorHpModel.IsBelowHpThreshold();

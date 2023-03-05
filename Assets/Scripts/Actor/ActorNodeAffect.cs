@@ -1,6 +1,9 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
 
+/// <summary>
+/// ActorStateSequenceクラスで使用する周りの物に影響を及ぼすを行うノード
+/// </summary>
 public class ActorNodeAffect : ActorNodeBase
 {
     string _message;
@@ -15,6 +18,6 @@ public class ActorNodeAffect : ActorNodeBase
         cts.Token.ThrowIfCancellationRequested();
 
         _stateMachine.StateControl.AffectAroundEffectableObject(_message);
-        await UniTask.Yield();
+        await UniTask.Yield(cancellationToken: cts.Token);
     }
 }

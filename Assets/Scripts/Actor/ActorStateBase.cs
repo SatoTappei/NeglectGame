@@ -52,6 +52,8 @@ public abstract class ActorStateBase
     protected virtual void Stay() { }
     protected virtual void Exit() { }
 
+    public virtual void OnStateMachinePause() { }
+
     protected void ChangeState(StateType stateType)
     {
         _nextState = _stateMachine.GetState(stateType);
