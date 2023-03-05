@@ -60,7 +60,6 @@ public class InGameStream : MonoBehaviour
         _generator.GenerateRegularlyAsync(cts).Forget();
 
         _trapManager.Init();
-
         _cursorRayCaster.enabled = true;
 
         // インゲームのタイマーの開始はメソッドの呼び出しで行うが

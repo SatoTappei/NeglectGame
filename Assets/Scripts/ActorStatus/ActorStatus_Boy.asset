@@ -7,10 +7,23 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8f4777eb9566b14faa24879adffb2c6, type: 3}
   m_Name: ActorStatus_Boy
   m_EditorClassIdentifier: 
   _icon: {fileID: 21300000, guid: d5a5aec19f480f34681c897ad4438879, type: 3}
-  _appearLine: "\u6765\u305F\u898B\u305F\u52DD\u3063\u305F"
+  _maxHp: 100
+  _lineDatas:
+  - _type: 0
+    _line: "\u3044\u3093\u3057\u305F\u304A"
+  - _type: 1
+    _line: "\u3046\u30FC\u3093\u2026"
+  - _type: 3
+    _line: "\u304A\u90E8\u5C4B\u767A\u898B\u4F1D"
+  - _type: 4
+    _line: "\u3048\u3082\u306E\u304C\u3044\u305F\u305C\uFF01"
+  - _type: 5
+    _line: "\u52DD\u3061"
+  - _type: 6
+    _line: "\u6B7B\u306B\u307E\u3057\u305F"

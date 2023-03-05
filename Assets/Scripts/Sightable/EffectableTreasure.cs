@@ -46,7 +46,8 @@ public class EffectableTreasure : EffectableObjectBase
             .SetEase(Ease.InOutQuad).SetLink(gameObject);
         _openedParticle.SetActive(true);
         await UniTask.Delay(TimeSpan.FromSeconds(TweenDuration + _lifeTime));
-        
+
+        token.ThrowIfCancellationRequested();
         gameObject.SetActive(false);
         await UniTask.Delay(TimeSpan.FromSeconds(_repopInterval));
         gameObject.SetActive(true);

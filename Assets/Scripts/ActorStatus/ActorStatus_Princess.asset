@@ -7,11 +7,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8f4777eb9566b14faa24879adffb2c6, type: 3}
   m_Name: ActorStatus_Princess
   m_EditorClassIdentifier: 
   _icon: {fileID: 21300000, guid: 8325d5d0d31e2914f8f52d69dfaca1ca, type: 3}
   _maxHp: 80
-  _appearLine: "\u3067\u3059\u308F\uFF5E"
+  _lineDatas:
+  - _type: 0
+    _line: 
+  - _type: 1
+    _line: 
+  - _type: 2
+    _line: 
+  - _type: 3
+    _line: 
+  - _type: 4
+    _line: 
+  - _type: 5
+    _line: 
+  - _type: 6
+    _line: 

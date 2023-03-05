@@ -22,6 +22,15 @@ public class ActorStateEntry : ActorStateBase
         }).SetLink(_stateMachine.gameObject);
     }
 
+    protected override void Stay()
+    {
+        if (_stateMachine.StateControl.IsHpEqualZero())
+        {
+            TryChangeState(StateType.Dead);
+            return;
+        }
+    }
+
     protected override void Exit()
     {
         _tween?.Kill();

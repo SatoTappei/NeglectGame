@@ -13,6 +13,7 @@ public class ResultUIControl : MonoBehaviour
     static float SecondAnimDuration = 0.25f;
     static float ThirdAnimDuration = 0.15f;
 
+    [SerializeField] HeaderUIAnimation _headerUIAnimation;
     [SerializeField] RawImage _backgroundRawImage;
     [SerializeField] Transform _resultItem;
 
@@ -27,6 +28,8 @@ public class ResultUIControl : MonoBehaviour
         token.ThrowIfCancellationRequested();
 
         _backgroundRawImage.enabled = true;
+
+        _headerUIAnimation.HideAnimation();
 
         Sequence sequence = DOTween.Sequence();
         sequence.Append(_resultItem.transform.DOScale(new Vector3(0.01f, 1.0f, 1.0f), FirstAnimDuration));

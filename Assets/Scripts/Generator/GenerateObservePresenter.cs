@@ -1,5 +1,6 @@
 using UniRx;
 using UnityEngine;
+using DG.Tweening;
 
 /// <summary>
 /// Generatorで生成したオブジェクトを生成したタイミングで
@@ -24,24 +25,34 @@ public class GenerateObservePresenter : MonoBehaviour
             // 時間的結合をしているので呼び出し順に注意
             _waypointManager.SetRandomWaypoint(instance, WaypointType.Exit);
 
-            // TODO:怒涛の参照取得＆規定数を超えてUIを表示させようとするとエラー
             ActorStatusHolder statusHolder = instance.GetComponent<ActorStatusHolder>();
             ActorStatusUI statusUI = _actorStatusUIManager.GetNewActiveUI(statusHolder.Icon, statusHolder.MaxHp);
 
             IReadOnlyReactiveProperty<int> currentHp = instance.GetComponent<ActorHpControl>().CurrentHp;
-            System.IDisposable disposable = currentHp.Subscribe(i => statusUI.SetHp(i)).AddTo(instance);
+            System.IDisposable disposable = currentHp.Subscribe(i => 
+            {
+                statusUI.SetHp(i, statusHolder.MaxHp);
+            }).AddTo(instance);
 
             var currentState = instance.GetComponent<ActorStateMachine>().CurrentState;
-            currentState.Where(state => state.Type == StateType.Goal || state.Type == StateType.Dead)
-                .Subscribe(state =>
-                {
-                    disposable.Dispose();
-                    statusUI.Release();
+            currentState.Subscribe(state => 
+            {
+                string line = statusHolder.GetLineWithState(state.Type);
+                statusUI.PrintLine(line);
+            });
+            currentState.Where(state => state.Type == StateType.Goal || state.Type == StateType.Dead).Subscribe(state =>
+            {
+                disposable.Dispose();
 
+                // 台詞表示の時間を確保するため遅延させる
+                DOVirtual.DelayedCall(1.5f, () => 
+                {
                     _actorMonitor.DetectGoalOrDeadState(state.Type);
                     _generateControl.CountDown();
+                    statusUI.Release();
                     _pauseControl.Remove(instance);
-                }).AddTo(instance);
+                }).SetLink(instance);
+            }).AddTo(instance);
 
             _generateControl.CountUp();
             _pauseControl.Add(instance);

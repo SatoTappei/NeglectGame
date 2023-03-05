@@ -121,6 +121,6 @@ public class Actor : MonoBehaviour, IStateControl, IPauseable
 
     void IPauseable.Pause()
     {
-        Debug.Log("キャラクターのポーズ処理");
+        PlayPerformance(_actorPerformance.PlayGoalPerformance);
     }
 }

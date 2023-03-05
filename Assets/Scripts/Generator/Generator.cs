@@ -54,16 +54,6 @@ public class Generator : MonoBehaviour
         }).AddTo(this);
     }
 
-    void Update()
-    {
-        // テスト用
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            int r = UnityEngine.Random.Range(0, _prefabs.Length);
-            _lastInstantiatedPrefab.Value = Instantiate(_prefabs[r], _parent);
-        }
-    }
-
     public async UniTask GenerateRegularlyAsync(CancellationTokenSource cts)
     {
         cts.Token.ThrowIfCancellationRequested();

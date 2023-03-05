@@ -44,12 +44,11 @@ public class TrapManager : MonoBehaviour
 
     public GameObject TryGetTrap(Vector3 estimatePos)
     {
-        if (_trapPool == null) return null;
-
         // 高々4つ程度なので線形探索で大丈夫
         foreach (TrapInstanceData t in _trapPool)
         {
-            if (t.ActualPos == estimatePos) return null;
+            if (t == null) return null;
+            else if (t.ActualPos == estimatePos) return null;
         }
 
         TrapInstanceData trap = _trapPool[_trapIndex++ % TrapQuantity];

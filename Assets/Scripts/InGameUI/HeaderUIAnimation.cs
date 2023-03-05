@@ -9,12 +9,17 @@ public class HeaderUIAnimation : MonoBehaviour
 
     [SerializeField] Transform _headerRoot;
 
-    public async UniTask AnimationAsync(CancellationToken token)
+    public async UniTask InAnimationAsync(CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
 
         _headerRoot.DOMoveY(1080, AnimDuration).SetLink(gameObject);
 
         await UniTask.Delay(System.TimeSpan.FromSeconds(AnimDuration), cancellationToken: token);
+    }
+
+    public void HideAnimation()
+    {
+        _headerRoot.DOMoveY(1300, AnimDuration).SetLink(gameObject);
     }
 }

@@ -20,6 +20,6 @@ public class TitleUIControl : MonoBehaviour
         await handler.OnInvokeAsync();
 
         await _titleItemUIAnim.AnimationAsync(token);
-        await _headerUIAnim.AnimationAsync(token);
+        await _headerUIAnim.InAnimationAsync(token);
     }
 }

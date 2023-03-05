@@ -9,5 +9,6 @@ public class ActorStatusHolder : MonoBehaviour
 
     public Sprite Icon => _actorStatusSO.Icon;
     public int MaxHp => _actorStatusSO.MaxHp;
-    public string AppearLine => _actorStatusSO.AppearLine;
+
+    public string GetLineWithState(StateType type) => _actorStatusSO.GetLineWithState(type);
 }
