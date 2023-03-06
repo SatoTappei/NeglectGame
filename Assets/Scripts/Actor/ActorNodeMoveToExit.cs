@@ -8,7 +8,7 @@ public class ActorNodeMoveToExit : ActorNodeBase
 {
     public ActorNodeMoveToExit(ActorStateMachine stateMachine) : base(stateMachine) { }
 
-    protected override async UniTask ExecuteAsync(CancellationTokenSource cts)
+    protected override async UniTask ActionAsync(CancellationTokenSource cts)
     {
         cts.Token.ThrowIfCancellationRequested();
 

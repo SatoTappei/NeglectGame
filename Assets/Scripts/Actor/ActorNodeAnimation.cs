@@ -17,13 +17,13 @@ public class ActorNodeAnimation : ActorNodeBase
         _iteration = iteration;
     }
 
-    protected override async UniTask ExecuteAsync(CancellationTokenSource cts)
+    protected override async UniTask ActionAsync(CancellationTokenSource cts)
     {
-        // 指定した回数分同じアニメーションを繰り返す
-        for(int i = 0; i < _iteration; i++)
-        {
-            cts.Token.ThrowIfCancellationRequested();
+        cts.Token.ThrowIfCancellationRequested();
 
+        // 指定した回数分同じアニメーションを繰り返す
+        for (int i = 0; i < _iteration; i++)
+        {
             _stateMachine.StateControl.PlayAnimation(_animationName);
             float delay = _stateMachine.StateControl.GetAnimationClipLength(_animationName);
             await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: cts.Token);

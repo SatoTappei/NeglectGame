@@ -13,7 +13,7 @@ public class ActorNodeAffect : ActorNodeBase
         _message = message;
     }
 
-    protected override async UniTask ExecuteAsync(CancellationTokenSource cts)
+    protected override async UniTask ActionAsync(CancellationTokenSource cts)
     {
         cts.Token.ThrowIfCancellationRequested();
 

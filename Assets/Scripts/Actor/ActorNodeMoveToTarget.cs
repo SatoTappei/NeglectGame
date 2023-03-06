@@ -8,7 +8,7 @@ public class ActorNodeMoveToTarget : ActorNodeBase
 {
     public ActorNodeMoveToTarget(ActorStateMachine stateMachine) : base(stateMachine) { }
 
-    protected override async UniTask ExecuteAsync(CancellationTokenSource cts)
+    protected override async UniTask ActionAsync(CancellationTokenSource cts)
     {
         cts.Token.ThrowIfCancellationRequested();
 

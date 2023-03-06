@@ -13,14 +13,10 @@ public abstract class ActorNodeBase
         _stateMachine = stateMachine;
     }
 
-    public async UniTask PlayAsync(CancellationTokenSource cts)
+    public async UniTask ExecuteAsync(CancellationTokenSource cts)
     {
-        cts.Token.ThrowIfCancellationRequested();
-        await ExecuteAsync(cts);
+        await ActionAsync(cts);
     }
 
-    protected abstract UniTask ExecuteAsync(CancellationTokenSource cts);
+    protected abstract UniTask ActionAsync(CancellationTokenSource cts);
 }
-
-// missing対策のnullチェック
-// ダンジョンに障害物を配置
