@@ -14,7 +14,7 @@ public class DungeonMassCandleProp : MonoBehaviour
     {
         if (Random.value > Prob)
         {
-            _candleProp.localScale = Vector3.zero;
+            Destroy(_candleProp.gameObject);
         }
     }
 }

@@ -29,6 +29,7 @@ public class PathfindingSystem : MonoBehaviour, IPathfinding
         }
         if (!targetNode.IsMovable)
         {
+            Instantiate(_debugVisualizer, targetPos, Quaternion.identity);
             Debug.LogError("目標が移動不可能な座標です: " + targetPos);
             return null;
         }

@@ -54,15 +54,15 @@ public class ActorPathfindingMove
 
     async UniTask MoveAsync(Stack<Vector3> stack, float speed, CancellationTokenSource cts)
     {
-        cts.Token.ThrowIfCancellationRequested();
-
         foreach (Vector3 nextPos in stack)
         {
+            cts.Token.ThrowIfCancellationRequested();
             _model.DOLookAt(nextPos, 0.5f).SetLink(_actor);
 
             // GameObjectが破棄されたときにnullが出るのでnullチェックが必要
             while (_actor != null && _actorTransform.position != nextPos)
             {
+                cts.Token.ThrowIfCancellationRequested();
                 if (_actor == null)
                 {
                     cts.Cancel();

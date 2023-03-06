@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 656058fe318eb48558d21d66d1a79a2b, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.19591501, g: 0.23728395, b: 0.31093928, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -175,7 +175,7 @@ MonoBehaviour:
   - {fileID: 6540620725961212598, guid: 3b3f957bd5df76a499507e479a10fafb, type: 3}
   - {fileID: 908045884462929550, guid: af291dda2dcb1b843b1e888dfcc41e9f, type: 3}
   _parent: {fileID: 1192997769}
-  _interval: 1
+  _interval: 10.2
 --- !u!114 &30291596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3272,12 +3272,12 @@ MonoBehaviour:
     - {fileID: 5636894998908565421, guid: 89547cf91daa15c4d9b50a54cf2174a7, type: 3}
     _width: 5
     _depth: 5
-    _maxQuantity: 3
+    _maxQuantity: 2
   - _prefabs:
     - {fileID: 5636894998908565421, guid: b3744975958c36547b28505f8799499b, type: 3}
     _width: 5
     _depth: 4
-    _maxQuantity: 3
+    _maxQuantity: 2
   - _prefabs:
     - {fileID: 5636894998908565421, guid: 1ff1273af92c34247bc094aaa4e9b56b, type: 3}
     _width: 5
